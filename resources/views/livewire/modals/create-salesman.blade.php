@@ -70,10 +70,13 @@
                   </div>
 
                   <select wire:model='department' class="form-select form-select-lg mb-3" aria-label="Large select example">
-                    <option selected>Select Department</option>
-                    <option value="Deparment1">Deparment1</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    <option selected value="">Select Department</option>
+                    @foreach ($departments as $department )
+                    <option selected value="{{$department->department_name}}">
+                      {{$department->department_name}}
+                    </option>
+                    @endforeach
+                    
                   </select>
                   @error('department')
                   <span class="text-danger">{{$message}}</span>

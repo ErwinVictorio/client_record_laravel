@@ -61,7 +61,7 @@
                                             <i class="fas fa-user-clock fa-2x"></i>
                                         </div>
                                         <div>
-                                            <h6 class="text-uppercase fw-semibold mb-1">Total Pending Client</h6>
+                                            <h6 class="text-uppercase fw-semibold mb-1">Total Approve Client</h6>
                                             <h3 class="fw-bold mb-0">{{$countedPending}}</h3>
                                         </div>
                                     </div>

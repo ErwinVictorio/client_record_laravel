@@ -29,11 +29,17 @@
                         <li class="breadcrumb-item active">Dashboard</li>
                     </ol>
                     <div class="row">
-                        <div class="col-xl-3 col-md-6">
-                            <div style="background-color:#1e293b" class="card text-white mb-4">
-                                <div class="card-body">
-                                    <h5>Total Sales</h5>
-                                    <span class="fw-bold">10</span>
+                                        <!-- Total Pending Card -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card text-white" style="background-color: #1e293b">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <h5 class="mb-2">
+                                            <i class="fas fa-hourglass-half me-2"></i>Total Pending
+                                        </h5>
+                                        <span class="fw-bold fs-4">{{$totalPending}}</span>
+                                    </div>
+                                    <i class="fas fa-clock fa-2x opacity-25"></i>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
                                     <a class="small text-white stretched-link" href="#">View Details</a>
@@ -41,11 +47,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div style="background-color: #0f172a" class="card text-white mb-4">
-                                <div class="card-body">
-                                    <h5>Total Client</h5>
-                                    <span class="fw-bold">10</span>
+
+                        <!-- Total Sold Card -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card text-white" style="background-color: #334155">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <h5 class="mb-2">
+                                            <i class="fas fa-user-check me-2"></i>
+                                            Total Sold
+                                        </h5>
+                                        <span class="fw-bold fs-4">
+                                           {{$totalSold}}
+                                        </span>
+                                    </div>
+                                    <i class="fas fa-cash-register fa-2x opacity-25"></i>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
                                     <a class="small text-white stretched-link" href="#">View Details</a>
@@ -53,31 +69,28 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div style="background-color: #1e293b" class="card  text-white mb-4">
-                                <div class="card-body">
-                                    <h5>Total Pending</h5>
-                                    <span class="fw-bold">10</span>
+
+                        <!-- Total Approve Card -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card text-white bg-success">
+                            <div class="card-body d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h5 class="mb-2">
+                                        <i class="fas fa-check-circle me-2"></i>Total Approve
+                                    </h5>
+                                    <span class="fw-bold fs-4">{{$totalApproved}}</span>
                                 </div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
+                                <i class="fas fa-thumbs-up fa-2x opacity-25"></i>
                             </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div style="background-color: #334155" class="card  border-0 text-white mb-4">
-                                <div class="card-body">
-                                    <h5 class="fwbold">Total Sold</h5>
-                                     <span class="fw-bold">10</span>
-                                </div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="#">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                             </div>
                         </div>
                     </div>
+
+                    </div>
+                    
                     <div class="card mb-4">
                         <div class="card-header">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
@@ -89,33 +102,37 @@
                             <table id="datatablesSimple">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Position</th>
-                                        <th>Office</th>
-                                        <th>Age</th>
-                                        <th>Start date</th>
-                                        <th>Salary</th>
+                                        <th>#</th>
+                                        <th>Company Name</th>
+                                        <th>Contact Number</th>
+                                        <th>Email</th>
+                                        <th>Address</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
+                                    @foreach ($clientList as $client )
                                     <tr>
-                                        <td>Dai Rios</td>
-                                        <td>Personnel Lead</td>
-                                        <td>Edinburgh</td>
-                                        <td>35</td>
-                                        <td>2012/09/26</td>
-                                        <td>$217,500</td>
+                                        <td>{{$client->id}}</td>
+                                        <td>{{$client->company_name}}</td>
+                                        <td>{{$client->contact_number}}</td>
+                                        <td>{{$client->email}}</td>
+                                        <td>{{$client->address}}</td>
+                                        <td>{{$client->status}}</td>
+                                        <td>
+                                            <span 
+                                            class="badge rounded-pill text-white px-3 py-2"
+                                            style="{{ $client->status === 'Sold' 
+                                                ? 'background-color: #004998;'  /* Modern green for "Sold" */ 
+                                                : 'background-color: #F44336;'  /* Modern red for other statuses */ }}">
+                                            {{ $client->status }}   
+                                        </span>
+                                        <button style="background-color: #004998" class="btn text-light">View</button>
                                     </tr>
-                                    <tr>
-                                        <td>Jenette Caldwell</td>
-                                        <td>Development Lead</td>
-                                        <td>New York</td>
-                                        <td>30</td>
-                                        <td>2011/09/03</td>
-                                        <td>$345,000</td>
-                                    </tr>
-
+                                    @endforeach
+                                
                                 </tbody>
                             </table>
                         </div>

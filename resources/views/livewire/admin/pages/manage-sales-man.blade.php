@@ -46,6 +46,7 @@
                             <table id="datatablesSimple">
                                 <thead>
                                     <tr>
+                                        <th>#</th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Middle Name</th>
@@ -58,13 +59,14 @@
                                 <tbody>
                                     @foreach ($salesman as $user)
                                     <tr>
+                                        <td>{{$user->id}}</td>
                                         <td>{{$user->first_name}}</td>
                                         <td>{{$user->last_name}}</td>
                                         <td>{{$user->middle_name}}</td>
                                         <td>{{$user->username}}</td>
                                         <td>{{$user->department}}</td>
                                         <td>
-                                            <button class="btn btn-primary">
+                                            <button data-bs-target="#ModalViewSalesManInfo_{{$user->id}}" data-bs-toggle="modal" class="btn btn-primary">
                                                 <i class="fas fa-eye"></i>
                                                 View
                                             </button>
@@ -76,6 +78,9 @@
                                                 <i class="fas fa-trash"></i>
                                                 Delete
                                             </button>
+                                            
+                                        {{-- Modal for Viewing Salesman Info  --}}
+                                        <livewire:modals.view-salesman-info :salesmanID="$user->id" />
                                         </td>
                                     </tr>
                                     @endforeach
@@ -84,8 +89,6 @@
                         </div>
                     </div>
 
-
-                   
                     <div style="height: 100vh"></div>
                     <div class="card mb-4"><div class="card-body">When scrolling, the navigation stays at the top of the page. This is the end of the static navigation demo.</div></div>
                 </div>

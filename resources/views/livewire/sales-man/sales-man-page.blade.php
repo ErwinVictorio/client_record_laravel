@@ -57,8 +57,11 @@
                         </button>
                     </td>
                     <td>
-                        <button class="btn">View</button>
-                        <button data-bs-target="#ModalChangeStatus_{{$client->id}}" data-bs-toggle="modal" style="background-color: oklch(88.2% 0.059 254.128)"  class="btn fw-bold">
+                        <button style="background-color: #004998" class="btn fw-bold text-light">
+                            View
+                        </button>
+                        <button data-bs-target="#ModalChangeStatus_{{$client->id}}" data-bs-toggle="modal" 
+                            style="background-color: #004998"  class="btn fw-bold text-light">
                            Edit
                         </button>
                     </td>

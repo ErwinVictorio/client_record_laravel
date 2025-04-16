@@ -12,6 +12,7 @@ class ManageSalesMan extends Component
     public function render()
     {
         $salesman = User::where('role','3')->select(
+            'id',
             'first_name',
              'last_name',
              'middle_name',

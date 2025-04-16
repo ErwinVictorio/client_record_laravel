@@ -14,13 +14,13 @@ class CahierDashboard extends Component
         $clienAproved = clients::whereIn('status', ['Sold','Approve'])->get();
         // count the the Pending Client
         $clientStatusCount = clients::selectRaw('status, COUNT(*) as total')
-         ->whereIn('status',['Pending', 'Sold'])
+         ->whereIn('status',['Approve', 'Sold'])
          ->groupBy('status')
          ->pluck('total', 'status');
 
         return view('livewire.admin.pages.cahier-dashboard',[
              'cliets' => $clienAproved,
-             'countedPending' => $clientStatusCount['Pending'] ?? 0,
+             'countedPending' => $clientStatusCount['Approve'] ?? 0,
              'counttedSoldClient' => $clientStatusCount['Sold'] ?? 0
         ]);
     }

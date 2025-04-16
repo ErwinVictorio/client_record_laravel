@@ -5,6 +5,7 @@ namespace App\Livewire\Modals;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 use App\Models\User;
+use App\Models\Department;
 
 class CreateSalesman extends Component
 {
@@ -23,7 +24,6 @@ class CreateSalesman extends Component
     public function create_salesman(){
         
        $validated = $this->validate();
-
         User::create($validated);
         
         session()->flash('success','Successfully Created New Salesman');
@@ -31,6 +31,9 @@ class CreateSalesman extends Component
 
     public function render()
     {
-        return view('livewire.modals.create-salesman');
+        $departments = Department::select('department_name')->get();
+        return view('livewire.modals.create-salesman',[
+            'departments' => $departments
+        ]);
     }
 }
