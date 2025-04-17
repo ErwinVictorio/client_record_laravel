@@ -1,7 +1,7 @@
 <div class="container-fluid d-flex flex-column justify-content-center align-items-center" style="height: 100vh; background-color: aliceblue;">
   <form wire:submit='login' class="card col-11 col-sm-8 col-md-6 col-lg-4 col-xl-3 shadow border-0">
     
-    <div class="card-header text-center text-white p-4" style="background-color: #004998;">
+    <div class="card-header text-center text-white p-4" style="background-color: #033c78;">
       <h4 class="fw-bold mb-1">LOGIN</h4>
       <small style="color: rgb(210, 214, 214);">Enter your credentials to access your account</small>
     </div>

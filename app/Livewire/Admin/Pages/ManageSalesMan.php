@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\User;
 
 class ManageSalesMan extends Component
+
 {
 
  

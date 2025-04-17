@@ -29,7 +29,9 @@
                     </ol>
 
                       <nav class="mb-3">
-                        <button data-bs-toggle="modal" data-bs-target="#crerateSalesman" class="btn btn-primary">New Salesman</button>
+                        <button data-bs-toggle="modal" data-bs-target="#crerateSalesman" style="background-color: #004998" class="btn text-light rounded-0">
+                            New Salesman (新业务员)
+                        </button>
                       </nav>
                        
                       {{-- modal --}}
@@ -66,31 +68,37 @@
                                         <td>{{$user->username}}</td>
                                         <td>{{$user->department}}</td>
                                         <td>
-                                            <button data-bs-target="#ModalViewSalesManInfo_{{$user->id}}" data-bs-toggle="modal" class="btn btn-primary">
+                                            <button style="background-color:  #004998" data-bs-target="#ModalViewSalesManInfo_{{$user->id}}" data-bs-toggle="modal" class="btn text-light rounded-0">
                                                 <i class="fas fa-eye"></i>
-                                                View
+                                                View (查看)
                                             </button>
-                                            <button class="btn btn-primary">
+                                            
+                                            <button data-bs-toggle="modal" data-bs-target="#EditSalesman_{{$user->id}}" style="background-color:  #004998" class="btn text-light rounded-0">
                                                 <i class="fas fa-pen"></i>
-                                                Edit
+                                                Edit (编辑)
                                             </button>
-                                            <button class="btn btn-danger">
+                                            
+                                            <button data-bs-target="#deleteSalesmanModal_{{$user->id}}" data-bs-toggle="modal" class="btn btn-danger rounded-0">
                                                 <i class="fas fa-trash"></i>
-                                                Delete
+                                                Delete (删除)
                                             </button>
+                                            
                                             
                                         {{-- Modal for Viewing Salesman Info  --}}
                                         <livewire:modals.view-salesman-info :salesmanID="$user->id" />
                                         </td>
                                     </tr>
+                                    {{-- Modal for Edit --}}
+                                    <livewire:modals.edit-salesman :salesmanID="$user->id" />
+                                    {{--Modal for Delete Confirmation  --}}
+                                    <livewire:modals.delete-salesman :salesmanID='$user->id'/>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <div style="height: 100vh"></div>
-                    <div class="card mb-4"><div class="card-body">When scrolling, the navigation stays at the top of the page. This is the end of the static navigation demo.</div></div>
+                  
                 </div>
             </main>
             <footer class="py-4 bg-light mt-auto">

@@ -29,9 +29,9 @@
                     </ol>
                     {{-- Maian Content Here --}}
                     <div class="container-fluid p-2">
-                       <button data-bs-toggle="modal" data-bs-target="#createModalDepartment" class="btn btn-primary">
-                        New Department
-                       </button>
+                        <button style="background-color: #004998" data-bs-toggle="modal" data-bs-target="#createModalDepartment" class="btn text-light">
+                            New Department (新部门)
+                        </button>
                     </div>
 
                     {{-- table --}}
@@ -59,14 +59,16 @@
                                         <td>{{$department->id}}</td>
                                         <td>{{$department->department_name}}</td>
                                         <td>
-                                            <button class="btn btn-primary">
+                                            <button data-bs-toggle="modal" data-bs-target="#EditDepartmentModal{{$department->id}}" style="background-color:  #004998" class="btn text-light rounded-0">
                                                 <i class="fas fa-pen"></i>
-                                                Edit
+                                                Edit (编辑)
                                             </button>
-                                            <button class="btn btn-danger">
+                                            
+                                            <button data-bs-target="#DeleteDepartmentModal_{{$department->id}}" data-bs-toggle="modal" class="btn btn-danger rounded-0">
                                                 <i class="fas fa-trash"></i>
-                                                Delete
+                                                Delete (删除)
                                             </button>
+                                            
                                         </td>
                                     </tr>
                                     @endforeach
