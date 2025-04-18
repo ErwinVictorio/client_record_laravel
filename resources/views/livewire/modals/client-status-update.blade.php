@@ -2,7 +2,7 @@
     <div wire:ignore.self class="modal fade" id="ModalChangeStatus_{{$clientId}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header text-light"  style="background-color: #004998">
               <h1 class="modal-title fs-5" id="staticBackdropLabel">Update Status</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

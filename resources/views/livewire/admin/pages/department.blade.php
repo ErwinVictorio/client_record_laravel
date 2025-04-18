@@ -59,18 +59,22 @@
                                         <td>{{$department->id}}</td>
                                         <td>{{$department->department_name}}</td>
                                         <td>
-                                            <button data-bs-toggle="modal" data-bs-target="#EditDepartmentModal{{$department->id}}" style="background-color:  #004998" class="btn text-light rounded-0">
+                                            <button data-bs-toggle="modal" data-bs-target="#EditDepartmentModal_{{$department->id}}" style="background-color:  #004998" class="btn text-light rounded-0">
                                                 <i class="fas fa-pen"></i>
                                                 Edit (编辑)
                                             </button>
                                             
-                                            <button data-bs-target="#DeleteDepartmentModal_{{$department->id}}" data-bs-toggle="modal" class="btn btn-danger rounded-0">
+                                            <button data-bs-target="#DeleteDepartment_{{$department->id}}" data-bs-toggle="modal"  class="btn btn-danger rounded-0">
                                                 <i class="fas fa-trash"></i>
                                                 Delete (删除)
                                             </button>
                                             
                                         </td>
                                     </tr>
+                                    {{-- Modal Edit Department --}}
+                                    <livewire:modals.edit-department :department_id="$department->id"/>
+                                    {{-- MoDAL Delete Department --}}
+                                    <livewire:modals.delete-department :department_id="$department->id" />
                                     @endforeach
         
 

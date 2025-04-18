@@ -20,13 +20,12 @@
           </svg>
          Client list
       </div>
-      <button style="background-color: #004998" class="btn text-light" data-bs-toggle="modal" data-bs-target="#add_client">
+      <button style="background-color: #004998" class="btn text-light rounded-0" data-bs-toggle="modal" data-bs-target="#add_client">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
             <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
           </svg>
         Add New Client
-     
     </button>
     </div>
     <div class="card-body">
@@ -52,17 +51,23 @@
                     <td>{{$client->email}}</td>
                     <td>{{$client->contact_number}}</td>
                     <td>
-                        <button style="{{$client->status === 'Pending' ? 'background-color: oklch(93.6% 0.032 17.717); color:oklch(63.7% 0.237 25.331)' : 'background-color:oklch(96.7% 0.067 122.328); color:oklch(76.8% 0.233 130.85)'}}" class="btn fw-bold">
-                            {{$client->status}}
-                        </button>
+                        <span 
+                        class="badge rounded-pill text-white px-3 py-2"
+                        style="{{ $client->status === 'Sold' 
+                            ? 'background-color: #4CAF50;'  /* Modern green for "Sold" */ 
+                            : 'background-color: #F44336;'  /* Modern red for other statuses */ }}">
+                        {{ $client->status }}
                     </td>
                     <td>
-                        <button style="background-color: #004998" class="btn fw-bold text-light">
-                            View
-                        </button>
                         <button data-bs-target="#ModalChangeStatus_{{$client->id}}" data-bs-toggle="modal" 
-                            style="background-color: #004998"  class="btn fw-bold text-light">
-                           Edit
+                            style="background-color: #004998"  class="btn rounded-0  text-light btn-sm">
+                            <i class="fas fa-sync-alt"></i>
+                            Change Status
+                        </button>
+                        <button data-bs-target="#delete_client{{$client->id}}" data-bs-toggle="modal" 
+                            class="btn rounded-0 btn-danger btn-sm">
+                            <i class="fas fa-trash"></i>
+                            Delete
                         </button>
                     </td>
                 </tr>

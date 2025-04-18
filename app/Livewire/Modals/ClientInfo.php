@@ -10,9 +10,9 @@ class ClientInfo extends Component
 {
 
     #[Validate('required')]
-    public $itemSold,$modelNumber,$Specification,$Quantity;
+    public $itemName,$modelNumber,$Specification,$Quantity;
 
-    public $name,$clientId,$status ='Sold';
+    public $clientId,$status ='Sold';
 
     public function soldForm(){
        $this->validate();
@@ -21,7 +21,7 @@ class ClientInfo extends Component
 
        if ($client) {
           $client->update([
-           'item_sold' => $this->itemSold,
+           'item_name' => $this->itemName,
             'model_number' => $this->modelNumber,
             'quantity' => $this->Quantity,
              'specification' => $this->Specification,
@@ -38,7 +38,7 @@ class ClientInfo extends Component
     public function render()
     {
         return view('livewire.modals.client-info',[
-            'name' => $this->name
+
         ]);
     }
 }

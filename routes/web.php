@@ -10,6 +10,7 @@ use App\Livewire\Admin\Pages\Department;
 
 
 
+
 Route::get('/',Login::class)->name('login.view');
 
 // group the admin related routes
@@ -19,6 +20,7 @@ Route::middleware(['isAdmin'])->prefix('admin')->group(function (){
     Route::get('/salesman',ManageSalesMan::class)->name('admin.salesman');
     Route::get('/department',Department::class)->name('view.department');
 });
+
 
 
 // grouping the cashier related routes

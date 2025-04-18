@@ -28,8 +28,8 @@ class ViewSalesmanInfo extends Component
         $soldPercent = 0;
 
         if ($totalClient > 0) {
-            $pendingPecent = ($Pending / $totalClient) * 100;
-            $soldPercent = ($SoldClient / $totalClient) * 100;
+            $pendingPecent = round(($Pending / $totalClient) * 100);
+            $soldPercent =  round(($SoldClient / $totalClient) * 100);
         }
 
 

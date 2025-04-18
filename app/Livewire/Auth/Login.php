@@ -55,6 +55,27 @@ class Login extends Component
   
       session()->flash('error', 'Invalid username or password.');
   }
+
+
+  // To prvent Back To lOgin page if already login
+  public function mount()
+{
+    if (Auth::check()) {
+        $user = Auth::user(); // get the cuurent user na naka login
+
+        switch($user->role) {
+            case 1:
+                return redirect()->route('admin.dashboard');
+            case 3:
+                return redirect()->route('salesman.dashboard');
+            // add other roles if needed
+            default:
+                Auth::logout(); // logout if invalid role
+                return redirect()->route('login.view');
+        }
+    }
+}
+
   
 
     public function render()

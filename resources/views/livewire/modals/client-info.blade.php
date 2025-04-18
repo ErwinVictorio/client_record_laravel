@@ -1,10 +1,13 @@
 <div>
  <!-- Modal -->
- <div wire:ignore.self class="modal fade" id="clientModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+ <div wire:key="client-modal-{{ $clientId }}" wire:ignore.self class="modal fade" id="clientModal_{{$clientId}}">
+
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">{{$name}}</h1>
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+             Product Details
+          </h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form  wire:submit="soldForm">
@@ -15,9 +18,9 @@
              </div>
              @endif
             <div class="form-floating mb-3">
-                <input wire:model='itemSold' type="text" class="form-control" id="ItemSold" placeholder="Item Sold">
-                <label for="ItemSold">Item Sold</label>
-                @error('itemSold')
+                <input wire:model='itemName' type="text" class="form-control" id="ItemName" placeholder="Item Name">
+                <label for="ItemSold">Item Name</label>
+                @error('itemName')
                    <span class="text-danger"> {{$message}}</span>
                 @enderror
               </div>
