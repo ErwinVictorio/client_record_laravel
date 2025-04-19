@@ -11,10 +11,11 @@ class alertMessage extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public $color;
+    public function __construct($color)
     {
         //
-        
+        $this->color = $color;
     }
 
     /**

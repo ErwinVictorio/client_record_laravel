@@ -5,12 +5,15 @@ namespace App\Livewire\Modals;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 use App\Models\clients;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+
 class ClientCreate extends Component
 {
 
     #[Validate('required')] public $contact_person_number;
     #[Validate('required|string')] public $contact_person;
-    #[Validate('required|email|unique:clients,email')] public $email;
+    #[Validate('required|email|email')] public $email;
     #[Validate('required')] public $address;
     #[Validate('required|string')] public $CompanyName;
     #[Validate('nullable')] public $bank_Account_number;
@@ -19,6 +22,28 @@ class ClientCreate extends Component
  
      public function create_client(){
        $this->validate();
+
+    // Get The id of the autheticated user
+     $currentSalesman = Auth::id();
+
+       // Check if the client with this email already exists
+    $existingClient = Clients::where('email', $this->email)->first();
+
+    if ($existingClient) {
+        // If the client is already assigned to a different salesman
+        if ($existingClient->salesman_id != $currentSalesman) {
+            $assignedSalesman = User::find($existingClient->salesman_id);
+            $salesmanName = $assignedSalesman ? $assignedSalesman->first_name. ' ' . $assignedSalesman->last_name : 'another salesman';
+            
+            session()->flash('error',"This client is already assigned to {$salesmanName}");
+            return;
+        } else {
+            // Optional: if the same salesman tries to add the same client again
+            session()->flash('error',"You have already added this client.");
+            return;
+        }
+    }
+
        
       clients::create([
          'company_name' => $this->CompanyName,

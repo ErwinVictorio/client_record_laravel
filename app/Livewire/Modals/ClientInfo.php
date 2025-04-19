@@ -16,7 +16,7 @@ class ClientInfo extends Component
 
     public function soldForm(){
        $this->validate();
-        
+       
        $client = clients::find($this->clientId);
 
        if ($client) {
@@ -37,8 +37,6 @@ class ClientInfo extends Component
 
     public function render()
     {
-        return view('livewire.modals.client-info',[
-
-        ]);
+        return view('livewire.modals.client-info');
     }
 }

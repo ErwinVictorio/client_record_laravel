@@ -44,10 +44,6 @@
                                     </div>
                                     <i class="fas fa-clock fa-2x opacity-25"></i>
                                 </div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
                             </div>
                         </div>
 
@@ -66,10 +62,6 @@
                                     </div>
                                     <i class="fas fa-cash-register fa-2x opacity-25"></i>
                                 </div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
                             </div>
                         </div>
 
@@ -86,10 +78,7 @@
                                 </div>
                                 <i class="fas fa-thumbs-up fa-2x opacity-25"></i>
                             </div>
-                            <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="#">View Details</a>
-                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                            </div>
+                           
                         </div>
                     </div>
 
@@ -125,17 +114,20 @@
                                         <td>{{$client->email}}</td>
                                         <td>{{$client->address}}</td>
                                         <td>
+                                            @php
+                                                $Sold = $client->status === 'Sold' ? '卖出' : '待处理';
+                                            @endphp
                                             <span 
                                             class="badge rounded-pill text-white px-3 py-2"
                                             style="{{ $client->status === 'Sold' 
-                                                ? 'background-color: #004998;'  /* Modern green for "Sold" */ 
+                                                ? 'background-color: #4CAF50;'  /* Modern green for "Sold" */ 
                                                 : 'background-color: #F44336;'  /* Modern red for other statuses */ }}">
-                                            {{ $client->status }}   
+                                            {{ $client->status .' / '. $Sold}}   
                                         </span>
                                         </td>
                                         <td> 
                                         <button data-bs-toggle="modal" data-bs-target="#viewClientDetails_{{$client->id}}" style="background-color: #004998" class="btn text-light rounded-0">
-                                            View More
+                                            See More / 查看更多
                                         </button>
                                     </tr>
                                     <livewire:modals.view-client-details :clientId="$client->id" />

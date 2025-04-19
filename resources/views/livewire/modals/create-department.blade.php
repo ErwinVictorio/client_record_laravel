@@ -10,9 +10,9 @@
             <div class="modal-body">
 
               @if (session()->has('success'))
-                 <div class="alert alert-success">
-                   {{session('success')}}
-                 </div>
+                 <x-alert-message :color="'alert-success'">
+                  {{session('success')}}
+                 </x-alert-message>
               @endif
 
                 <div class="form-floating mb-3">

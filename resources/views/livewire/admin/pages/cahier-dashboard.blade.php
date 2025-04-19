@@ -146,11 +146,12 @@
                                                  Record Transaction
                                             </button>
                                      
-                                              {{-- Modal for Viewing Client Details --}}
-                                             <livewire:modals.client-info  :clientId="$client->id"/>
+                                             
                                         </td>
-                                     
                                     </tr>
+
+                                     {{-- Modal for Viewing Client Details dapat nasa labas ng tr para hindi mag error --}}
+                                     <livewire:modals.client-info :clientId="$client->id"/>
                                     @endforeach
                                 </tbody>
                             </table>

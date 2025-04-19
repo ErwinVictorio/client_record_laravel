@@ -30,6 +30,8 @@ Route::middleware(['isSalesman'])->prefix('salesman')->group(function(){
   
 });
 
-    
+// Route for Cashier
+Route::middleware(['isCashier'])->prefix('cashier')->group(function(){
 
-Route::get('cashier/dashboard',CahierDashboard::class)->name('casher.dashboard');
+    Route::get('/dashboard',CahierDashboard::class)->name('casher.dashboard');
+});

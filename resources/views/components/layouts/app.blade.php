@@ -12,7 +12,7 @@
     'resources/css/app.css',
     'resources/js/app.js',
     ])
-    <title>{{env('APP_NAME')}}</title>
+    <title>{{'Client Record Management'}}</title>
 </head>
 <body>
    

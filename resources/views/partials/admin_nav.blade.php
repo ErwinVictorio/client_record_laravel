@@ -13,11 +13,6 @@
                     <div class="sb-sidenav-menu-heading">Interface</div>
                    
 
-                    <a class="nav-link" href="#">
-                        <div class="sb-nav-link-icon"><i class="fas fa-coins"></i></div>
-                         Manage Sales
-                    </a>
-
                     <a class="nav-link" href="/admin/salesman">
                         <div class="sb-nav-link-icon">
                             <i class="fas fa-users"></i>

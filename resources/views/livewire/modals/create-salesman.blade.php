@@ -7,16 +7,13 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
              
             </div>
+
              @if (session()->has('success'))
-            <div 
-                x-data="{ show: true }" 
-                x-init="setTimeout(() => show = false, 2000)" 
-                x-show="show" 
-                class="alert alert-success"
-            >
-                {{ session('success') }}
-            </div>
-        @endif
+                <x-alert-message :color=" 'alert-success' ">
+                  {{session('success')}}
+                </x-alert-message>
+            @endif
+
 
             <form wire:submit='create_salesman'>
             <div class="modal-body">

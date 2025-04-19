@@ -44,6 +44,10 @@ class Login extends Component
 
               case 3:
                  return redirect()->route('salesman.dashboard');
+
+               case 2:
+                  return redirect()->route('casher.dashboard');
+                      
                    
               // you can add case 2, 3 here
               default:
@@ -68,6 +72,9 @@ class Login extends Component
                 return redirect()->route('admin.dashboard');
             case 3:
                 return redirect()->route('salesman.dashboard');
+
+            case 2:
+               return redirect()->route('casher.dashboard');
             // add other roles if needed
             default:
                 Auth::logout(); // logout if invalid role
