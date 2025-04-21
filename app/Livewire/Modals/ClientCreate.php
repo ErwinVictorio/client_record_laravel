@@ -32,10 +32,8 @@ class ClientCreate extends Component
     if ($existingClient) {
         // If the client is already assigned to a different salesman
         if ($existingClient->salesman_id != $currentSalesman) {
-            $assignedSalesman = User::find($existingClient->salesman_id);
-            $salesmanName = $assignedSalesman ? $assignedSalesman->first_name. ' ' . $assignedSalesman->last_name : 'another salesman';
-            
-            session()->flash('error',"This client is already assigned to {$salesmanName}");
+            $assignedSalesman = User::find($existingClient->salesman_id);  
+            session()->flash('error',"The client is already taken!");
             return;
         } else {
             // Optional: if the same salesman tries to add the same client again

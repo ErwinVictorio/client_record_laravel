@@ -15,6 +15,12 @@
                  </x-alert-message>
               @endif
 
+              @if (session()->has('error'))
+                <x-alert-message :color=" 'alert-danger' ">
+                  {{session('error')}}
+                </x-alert-message>
+              @endif
+
                 <div class="form-floating mb-3">
                     <input wire:model='department_name' type="text" class="form-control" id="DepartmentName" placeholder="Department Name">
                     <label for="DepartmentName">Department Name</label>

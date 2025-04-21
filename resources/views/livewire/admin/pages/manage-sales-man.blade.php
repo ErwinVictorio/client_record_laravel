@@ -13,7 +13,9 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">Logout</a></li>
+                    <li>
+                        <livewire:auth.logout/>
+                    </li>
                 </ul>
             </li>
         </ul>
@@ -22,15 +24,15 @@
         <div id="layoutSidenav_content">
             <main style="width: 100%">
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Manage salesman</h1>
+                    <h1 class="mt-4">Manage  Sales Executive</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Salesman</li>
+                        <li class="breadcrumb-item active">sales executive</li>
                     </ol>
 
                       <nav class="mb-3">
                         <button data-bs-toggle="modal" data-bs-target="#crerateSalesman" style="background-color: #004998" class="btn text-light rounded-0">
-                            New Salesman (新业务员)
+                            New  Sales Executive (新业务员)
                         </button>
                       </nav>
                        

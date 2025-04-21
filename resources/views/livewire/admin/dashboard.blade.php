@@ -1,7 +1,7 @@
 <div class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="/admin/dashboard">Admin Dashaboard</a>
+        <a class="navbar-brand ps-3" href="/admin/dashboard">Dashaboard</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
@@ -97,6 +97,8 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Company Name</th>
+                                        <th>Sales Executive</th>
+                                        <th>Department</th>
                                         <th>Contact Number</th>
                                         <th>Email</th>
                                         <th>Address</th>
@@ -108,8 +110,11 @@
                                 <tbody>
                                     @foreach ($clientList as $client )
                                     <tr>
+                                        
                                         <td>{{$client->id}}</td>
                                         <td>{{$client->company_name}}</td>
+                                        <td>{{$client->salesman->first_name . ' ' .$client->salesman->last_name }}</td>
+                                        <td>{{$client->salesman->department}}</td>
                                         <td>{{$client->contact_number}}</td>
                                         <td>{{$client->email}}</td>
                                         <td>{{$client->address}}</td>
@@ -130,6 +135,7 @@
                                             See More / 查看更多
                                         </button>
                                     </tr>
+                                    {{-- for show details ng mga clients --}}
                                     <livewire:modals.view-client-details :clientId="$client->id" />
                                     @endforeach
                                 

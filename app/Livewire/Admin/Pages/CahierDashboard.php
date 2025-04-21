@@ -4,24 +4,40 @@ namespace App\Livewire\Admin\Pages;
 
 use Livewire\Component;
 use App\Models\clients;
+use Illuminate\Support\Facades\DB;
 
 class CahierDashboard extends Component
 {
 
-    public function render()
-    {
-        // query the  clients has Approve status
-        $clienAproved = clients::whereIn('status', ['Sold','Approve'])->get();
-        // count the the Pending Client
+    public $clients,$countedAprove,$counttedSoldClient;
+
+    public function mount(){
+        $this->clients = clients::with(['salesman'])
+        ->whereIn('status', ['Sold', 'Approve']) // 👈 Only these statuses
+        ->select([
+            'id',
+            'company_name',
+            'address',
+            'contact_number',
+             'contact_person',
+            'email',
+            'status',
+            'salesman_id'
+        ])
+        ->get();
+    
+
         $clientStatusCount = clients::selectRaw('status, COUNT(*) as total')
          ->whereIn('status',['Approve', 'Sold'])
          ->groupBy('status')
          ->pluck('total', 'status');
 
-        return view('livewire.admin.pages.cahier-dashboard',[
-             'cliets' => $clienAproved,
-             'countedPending' => $clientStatusCount['Approve'] ?? 0,
-             'counttedSoldClient' => $clientStatusCount['Sold'] ?? 0
-        ]);
+         $this->countedAprove = $clientStatusCount['Approve'] ?? 0;
+         $this->counttedSoldClient = $clientStatusCount['Sold'] ?? 0;
+    }
+
+    public function render()
+    {
+        return view('livewire.admin.pages.cahier-dashboard');
     }
 }

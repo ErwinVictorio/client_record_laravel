@@ -1,48 +1,52 @@
-<div class="container-fluid d-flex flex-column justify-content-center align-items-center" style="height: 100vh; background-color: aliceblue;">
-  <form wire:submit='login' class="card col-11 col-sm-8 col-md-6 col-lg-4 col-xl-3 shadow border-0">
-    
-    <div class="card-header text-center text-white p-4" style="background-color: #033c78;">
-      <h4 class="fw-bold mb-1">LOGIN</h4>
-      <small style="color: rgb(210, 214, 214);">Enter your credentials to access your account</small>
-    </div>
+<div class="container-fluid vh-100 p-0 d-flex">
+  <!-- Left side: Testimonial -->
+  <style>
+    #bg{
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 100vh;
+    background-image: linear-gradient(to bottom,#033c78, rgba(16, 12, 12, 0.8)), url({{asset('images/bg_image.jpg')}});
+    }
+  </style>
+  <div id="bg" class="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-center text-white p-5" style="background-color:  #033c78; background-size: cover; background-position: center;">
+      <img src="{{asset('images/asap_logo.jpg.avif')}}" alt="ss">
+    <h1 class="fw-bold mb-4">Client Record Management System</h1>
+  </div>
 
-    @if (session()->has('error'))
-    <div class="alert alert-danger m-3 mb-0">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
-        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-      </svg>
-      {{ session('error') }}
-    </div>
-    @endif
+  <!-- Right side: Login form -->
+  <div class="col-lg-6 d-flex justify-content-center align-items-center bg-light">
+    <form wire:submit='login' class="w-75 w-md-50 shadow-sm p-4 rounded bg-white">
+      <h1 class="fw-bold mb-1 text-center">Welcome Back</h1>
+      <p class="text-muted text-center mb-4">
+        Enter your credentials to access your account
+      </p>
 
-    <div class="card-body p-4">
+      @if (session()->has('error'))
+      <div class="alert alert-danger">
+        <i class="bi bi-exclamation-circle-fill me-2"></i>
+        {{ session('error') }}
+      </div>
+      @endif
 
       <div class="mb-3">
-        <div class="input-group">
-          <span class="input-group-text">
-            <i class="fas fa-user"></i>
-          </span>
-          <input wire:model='username' type="text" class="form-control" placeholder="Username" aria-label="Username">
-        </div>
+        <label class="form-label">Username</label>
+        <input wire:model='username' type="text" class="form-control" placeholder="username">
         @error('username')
         <span class="text-danger small">{{ $message }}</span>
         @enderror
       </div>
 
       <div class="mb-3">
-        <div class="input-group">
-          <span class="input-group-text">
-            <i class="fas fa-lock"></i>
-          </span>
-          <input wire:model='password' type="password" class="form-control" placeholder="Password" aria-label="Password">
-        </div>
+        <label class="form-label">Password</label>
+        <input wire:model='password' type="password" class="form-control" placeholder="Password">
         @error('password')
         <span class="text-danger small">{{ $message }}</span>
         @enderror
       </div>
 
       <div class="mb-3">
+        <label class="form-label">Select Role</label>
         <select wire:model='role' class="form-select">
           <option value="">Select role</option>
           <option value="1">Admin</option>
@@ -54,12 +58,15 @@
         @enderror
       </div>
 
-      <div class="d-grid">
-        <button type="submit" class="btn text-white" style="background-color: #0C2968;">
-          Login <i class="fas fa-arrow-right ms-1"></i>
+      <div class="d-grid mb-3">
+        <button type="submit" class="btn text-white fw-semibold" style="background-color:  #033c78;">
+          Log in
+          <span wire:loading.delay.longest>
+            Please Wait...
+          </span>         
         </button>
+    
       </div>
-
-    </div>
-  </form>
+    </form>
+  </div>
 </div>

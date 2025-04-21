@@ -31,13 +31,13 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
-                        <div class="sb-sidenav-menu-heading">Interface</div>
-                       
-    
-                        <a class="nav-link" href="tables.html">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                             Sales Department
+
+                        <div class="sb-sidenav-menu-heading">Reports</div>
+                        <a class="nav-link" href="department-summary">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
+                            Department Summary
                         </a>
+                    
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
@@ -56,7 +56,7 @@
                     </ol>
                     <div class="row">
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card text-white bg-primary shadow rounded-4 h-100 border-0">
+                            <div class="card text-white shadow bg-danger rounded-4 h-100 border-0">
                                 <div class="card-body d-flex flex-column justify-content-between">
                                     <div class="d-flex align-items-center mb-3">
                                         <div class="me-3">
@@ -64,13 +64,9 @@
                                         </div>
                                         <div>
                                             <h6 class="text-uppercase fw-semibold mb-1">Total Approve Client</h6>
-                                            <h3 class="fw-bold mb-0">{{$countedPending}}</h3>
+                                            <h3 class="fw-bold mb-0">{{$countedAprove}}</h3>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="card-footer d-flex align-items-center justify-content-between bg-transparent border-0 pt-0">
-                                    <a class="small text-white text-decoration-underline stretched-link" href="#">View Details</a>
-                                    <i class="fas fa-arrow-circle-right text-white"></i>
                                 </div>
                             </div>
                         </div>
@@ -78,10 +74,10 @@
        
           
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card text-white bg-danger shadow rounded-4 h-100 border-0">
+                            <div style="background-color:  #004998" class="card text-white shadow rounded-4 h-100 border-0">
                                 <div class="card-body d-flex flex-column justify-content-between">
                                     <div class="d-flex align-items-center mb-3">
-                                        <div class="me-3">
+                                        <div class="me-3"> 
                                             <i class="fas fa-user-check fa-2x"></i>
                                         </div>
                                         <div>
@@ -89,10 +85,6 @@
                                             <h3 class="fw-bold mb-0">{{$counttedSoldClient}}</h3>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="card-footer d-flex align-items-center justify-content-between bg-transparent border-0 pt-0">
-                                    <a class="small text-white text-decoration-underline stretched-link" href="#">View Details</a>
-                                    <i class="fas fa-arrow-circle-right text-white"></i>
                                 </div>
                             </div>
                         </div>
@@ -109,6 +101,8 @@
                                 <thead>
                                     <tr>
                                         <th>Company Name</th>
+                                        <th>Sales Executive</th>
+                                        <th>Department</th>
                                         <th>Email</th>
                                         <th>Contact Number</th>
                                         <th>Address</th>
@@ -120,9 +114,11 @@
                                 </thead>
 
                                 <tbody>
-                                    @foreach ($cliets as $client)
+                                    @foreach ($clients as $client)
                                     <tr>
                                         <td>{{$client->company_name}}</td>
+                                        <td>{{$client->salesman->first_name . ' ' .$client->salesman->last_name}}</td>
+                                        <td>{{$client->salesman->department}}</td>
                                         <td>{{$client->email}}</td>
                                         <td>{{$client->contact_number}}</td>
                                         <td>{{$client->address}}</td>
@@ -132,7 +128,7 @@
                                             <span 
                                             class="badge rounded-pill text-white px-3 py-2"
                                             style="{{ $client->status === 'Sold' 
-                                                ? 'background-color: #4CAF50;'  /* Modern green for "Sold" */ 
+                                                ? 'background-color:  #004998;'  /* Modern green for "Sold" */ 
                                                 : 'background-color: #F44336;'  /* Modern red for other statuses */ }}">
                                             {{ $client->status }}
                                         </span>

@@ -3,7 +3,7 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div style="background-color: #004998" class="modal-header">
-              <h1 class="modal-title fs-5 text-light" id="staticBackdropLabel">Create New Salesman</h1>
+              <h1 class="modal-title fs-5 text-light" id="staticBackdropLabel">Create New  Sales Executive</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
              
             </div>

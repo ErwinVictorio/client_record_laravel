@@ -7,6 +7,7 @@ use App\Livewire\Auth\Login;
 use App\Livewire\Admin\Pages\ManageSalesMan;
 use App\Livewire\SalesMan\SalesManPage;
 use App\Livewire\Admin\Pages\Department;
+use App\Livewire\Admin\Pages\DepartmentSummary;
 
 
 
@@ -19,6 +20,7 @@ Route::middleware(['isAdmin'])->prefix('admin')->group(function (){
     Route::get('/dashboard',Dashboard::class)->name('admin.dashboard');
     Route::get('/salesman',ManageSalesMan::class)->name('admin.salesman');
     Route::get('/department',Department::class)->name('view.department');
+    Route::get('/department-summary',DepartmentSummary::class)->name('department-summary');
 });
 
 
@@ -34,4 +36,5 @@ Route::middleware(['isSalesman'])->prefix('salesman')->group(function(){
 Route::middleware(['isCashier'])->prefix('cashier')->group(function(){
 
     Route::get('/dashboard',CahierDashboard::class)->name('casher.dashboard');
+    Route::get('/department-summary',DepartmentSummary::class)->name('department-summary');
 });

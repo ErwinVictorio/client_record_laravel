@@ -9,8 +9,6 @@ use App\Models\Department;
 
 class CreateSalesman extends Component
 {
-
-    
     #[Validate('required|min:8|confirmed')]
     public $password;
 
