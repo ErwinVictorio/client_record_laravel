@@ -30,6 +30,9 @@
                                 <h6 class="text-muted mt-3">Specification /规格</h6>
                                 <p class="fw-bold mb-1">{{ $client->specification ?? 'N/A' }}</p>
 
+                                <h6 class="text-muted mt-3">Model Number /型号</h6>
+                                <p class="fw-bold mb-1">{{ $client->model_number ?? 'N/A' }}</p>
+
                                 <h6 class="text-muted mt-3">Quantity /数量</h6>
                                 <p class="fw-bold mb-1">{{$client->quantity ?? 'N/A' }}</p>
                             </div>

@@ -11,6 +11,7 @@
   </style>
   <div id="bg" class="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-center text-white p-5" style="background-color:  #033c78; background-size: cover; background-position: center;">
       <img src="{{asset('images/asap_logo.jpg.avif')}}" alt="ss">
+      <p> ASAP FORKLIFT PHILIPPINES, INC.</p>
     <h1 class="fw-bold mb-4">Client Record Management System</h1>
   </div>
 
@@ -20,7 +21,7 @@
       <h1 class="fw-bold mb-1 text-center">Welcome Back</h1>
       <p class="text-muted text-center mb-4">
         Enter your credentials to access your account
-      </p>
+      </p>  
 
       @if (session()->has('error'))
       <div class="alert alert-danger">

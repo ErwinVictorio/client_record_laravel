@@ -20,6 +20,7 @@ class ViewClientDetails extends Component
                    'item_name',
                    'specification',
                     'quantity',
+                    'model_number',
                     'address'
             ])
          ->where('id', $this->clientId)->get();;

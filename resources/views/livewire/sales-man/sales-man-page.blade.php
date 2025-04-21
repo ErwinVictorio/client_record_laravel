@@ -96,9 +96,7 @@
 
                                     default:
                                      $style = 'background-color:  #ff0000;';
-                            }
-
-                            
+                              }
                         @endphp
                         <span 
                         class="badge rounded-pill text-white px-3 py-2"
@@ -108,22 +106,32 @@
                     <td>
                         @php
                             $status = $client->status === "Sold" ? "disabled" : '';
-                            $disabledDeleteButton = $client->status !== 'Pending' ? 'disabled' : '';
                         @endphp
                         <button {{$status}}  data-bs-target="#ModalChangeStatus_{{$client->id}}" data-bs-toggle="modal" 
                             style="background-color: #004998"  class="btn rounded-0  text-light btn-sm">
                             <i class="fas fa-sync-alt"></i>
                             Change Status
                         </button>
-                        <button {{$disabledDeleteButton}} data-bs-target="#delete_client{{$client->id}}" data-bs-toggle="modal" 
+
+                        <button {{$status}} data-bs-target="#edit_client_{{$client->id}}" data-bs-toggle="modal" style="background-color: #0609cd  ;" class="btn btn-sm btn-sm rounded-0 text-light">
+                            <i class="fas fa-pen"></i>
+                            Edit
+                        </button>
+                        <button {{$status}} data-bs-target="#DeleteClient_{{$client->id}}" data-bs-toggle="modal" 
                             class="btn rounded-0 btn-danger btn-sm">
                             <i class="fas fa-trash"></i>
                             Delete
                         </button>
                     </td>
                 </tr>
-                 {{-- Modal --}}  
-                 <livewire:modals.client-status-update :clientId="$client->id"/>                                                                                                                                                                                                                                     
+                 {{-- Modal updating status --}}  
+                 <livewire:modals.client-status-update :clientId="$client->id"/>        
+
+                 {{-- Modal for Editing Client Info --}}
+                 <livewire:modals.edit-client-info :clientId="$client->id" />
+
+                 {{--Modal Deleting client --}}
+                 <livewire:modals.delete-client :clientId="$client->id"/>
                 @endforeach
             </tbody>
         </table>

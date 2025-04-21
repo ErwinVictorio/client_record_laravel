@@ -7,7 +7,7 @@
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
+    <link rel="icon" type="image/png" href="{{ asset('images/asap_logo.jpg.avif') }}">
    @vite([
     'resources/css/app.css',
     'resources/js/app.js',
