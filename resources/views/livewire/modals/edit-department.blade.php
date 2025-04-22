@@ -3,7 +3,7 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div style="background-color: #004998" class="modal-header text-light">
-              <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Department</h1>
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Department (编辑部门)</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form wire:submit='Update_Department'>
@@ -24,7 +24,7 @@
 
                 <div class="form-floating mb-3">
                     <input wire:model='department_name' type="text" class="form-control" id="DepartmentName" placeholder="Department Name">
-                    <label for="DepartmentName">Department Name</label>
+                    <label for="DepartmentName">Department Name (部门名称)</label>
                     @error('department_name')
                       <span class="text-danger">
                         {{$message}}
@@ -40,6 +40,7 @@
                     <path d="M3 16h10v-5.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5zm9-16H4v5.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5zM9 1h2v4H9z"/>
                   </svg>                       
                 Save Changes
+                (保存更改)
             </button>
           </form>
             </div>

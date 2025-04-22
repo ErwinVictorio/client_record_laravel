@@ -22,9 +22,9 @@
             <form wire:submit.prevent='change_status'> 
               <div class="modal-body">
                   <select wire:model='SelectedStatus' class="form-select form-select-lg mb-3">
-                      <option value="">Select Status</option>
-                      <option value="Approve">Approve</option>
-                      <option value="Pending">Pending</option>
+                      <option value="">Select Status (更改状态)</option>
+                      <option value="Approve">Approve (批复)</option>
+                      <option value="Pending">Pending(未成交)</option>
                   </select>
                   @error('SelectedStatus') 
                       <span class="text-danger">{{ $message }}</span> 
@@ -33,7 +33,7 @@
       
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button  style="background-color: #004998" type="submit" class="btn text-light">Submit</button>
+                <button  style="background-color: #004998" type="submit" class="btn text-light">Submit (提交)</button>
               </div>
             </form>
           </div>

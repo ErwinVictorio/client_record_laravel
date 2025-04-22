@@ -36,6 +36,7 @@
                         <a class="nav-link" href="department-summary">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
                             Department Summary
+                            (部门摘要)
                         </a>
                     
                     </div>
@@ -63,7 +64,7 @@
                                             <i class="fas fa-user-clock fa-2x"></i>
                                         </div>
                                         <div>
-                                            <h6 class="text-uppercase fw-semibold mb-1">Total Approve Client</h6>
+                                            <h6 class="text-uppercase fw-semibold mb-1">Total Approve Client (总批准客户 )</h6>
                                             <h3 class="fw-bold mb-0">{{$countedAprove}}</h3>
                                         </div>
                                     </div>
@@ -81,7 +82,7 @@
                                             <i class="fas fa-user-check fa-2x"></i>
                                         </div>
                                         <div>
-                                            <h6 class="text-uppercase fw-semibold mb-1">Total Sold Client</h6>
+                                            <h6 class="text-uppercase fw-semibold mb-1">Total Sold Client (总销售出客户)</h6>
                                             <h3 class="fw-bold mb-0">{{$counttedSoldClient}}</h3>
                                         </div>
                                     </div>
@@ -95,6 +96,7 @@
                         <div class="card-header">
                             <i class="fas fa-table me-1"></i>
                            Client List
+                           (客户列表)                    
                         </div>
                         <div class="card-body">
                             <table id="datatablesSimple">
@@ -125,12 +127,30 @@
                                         <td>{{$client->contact_person}}</td>
                                         <td>{{$client->bank_account_number ?? 'N/A'}}</td>
                                         <td>
+                                            @php
+                                                $style = '';
+                                                $label = '';
+
+                                                switch ($client->status) {
+                                                    case 'Sold':
+                                                           $style = 'background-color:  #004998;';
+                                                           $label = '已售出';
+                                                        break;
+
+                                                        case 'Approve':
+                                                        $style = 'background-color: #F44336;';
+                                                            $label = '批准';
+                                                            break;
+                                                    default:
+                                                        # code...
+                                                        break;
+                                                }
+                                            @endphp
                                             <span 
-                                            class="badge rounded-pill text-white px-3 py-2"
-                                            style="{{ $client->status === 'Sold' 
-                                                ? 'background-color:  #004998;'  /* Modern green for "Sold" */ 
-                                                : 'background-color: #F44336;'  /* Modern red for other statuses */ }}">
-                                            {{ $client->status }}
+                                            style="{{$style}}"
+                                            class="badge rounded-pill text-white px-3 py-2">
+                                              {{$client->status}}
+                                            {{$label}}
                                         </span>
             
                                         </td>
@@ -140,12 +160,10 @@
                                              {{$client->status === 'Sold' ? 'disabled' : ''}} 
                                              data-bs-toggle="modal" data-bs-target="#clientModal_{{$client->id}}" class="btn text-light">
                                                  Record Transaction
+                                                 (记录交易)
                                             </button>
-                                     
-                                             
                                         </td>
                                     </tr>
-
                                      {{-- Modal for Viewing Client Details dapat nasa labas ng tr para hindi mag error --}}
                                      <livewire:modals.client-info :clientId="$client->id"/>
                                     @endforeach

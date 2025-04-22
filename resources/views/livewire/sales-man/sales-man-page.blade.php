@@ -19,7 +19,7 @@
                         <i class="fas fa-user-check fa-2x "></i>
                     </div>
                     <div>
-                        <h6 class="text-uppercase mb-bold mb-1">Total Sold</h6>
+                        <h6 class="text-uppercase mb-bold mb-1">Total Sold (已成交客户总计)</h6>
                         <h3 class="fw-bold mb-0">{{$countedSold}}</h3>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                         <i class="fas fa-user-clock fa-2x"></i>
                     </div>
                     <div>
-                        <h6 class="text-uppercase mb-bold mb-1">Total Pending</h6>
+                        <h6 class="text-uppercase mb-bold mb-1">Total Pending (未成交客户总计)</h6>
                         <h3 class="fw-bold mb-0">{{$countedPending}}</h3>
                     </div>
                 </div>
@@ -55,6 +55,7 @@
                 <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
               </svg>
             Add New
+            (增加新客户)
         </button>
       </div>
      
@@ -84,24 +85,30 @@
                     <td>
                         @php
                             $style;
+                            $label = '';
 
                             switch ($client->status) {
                                 case 'Approve':
                                       $style = 'background-color: #47ba9b;';
+                                      $label = '(批复)';
                                     break;
 
                                   case 'Sold':
                                     $style = 'background-color: #004998;';
+                                     $label = '(已售)';
                                     break;
 
                                     default:
                                      $style = 'background-color:  #ff0000;';
+                                     $label = '(编辑)';
                               }
                         @endphp
                         <span 
                         class="badge rounded-pill text-white px-3 py-2"
                         style="{{$style}}">
                         {{ $client->status }}
+                         {{$label}}
+                      <spa/>
                     </td>
                     <td>
                         @php
@@ -111,16 +118,19 @@
                             style="background-color: #004998"  class="btn rounded-0  text-light btn-sm">
                             <i class="fas fa-sync-alt"></i>
                             Change Status
+                            (更改状态)
                         </button>
 
                         <button {{$status}} data-bs-target="#edit_client_{{$client->id}}" data-bs-toggle="modal" style="background-color: #0609cd  ;" class="btn btn-sm btn-sm rounded-0 text-light">
                             <i class="fas fa-pen"></i>
                             Edit
+                            (编辑)
                         </button>
                         <button {{$status}} data-bs-target="#DeleteClient_{{$client->id}}" data-bs-toggle="modal" 
                             class="btn rounded-0 btn-danger btn-sm">
                             <i class="fas fa-trash"></i>
                             Delete
+                            (删除)
                         </button>
                     </td>
                 </tr>

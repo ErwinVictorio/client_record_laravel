@@ -3,7 +3,7 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div style="background-color: #004998" class="modal-header text-light">
-              <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete Connfirmation {{$clientId}} / 删除确认</h1>
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete Connfirmation / 删除确认</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form wire:submit='delete_client'>

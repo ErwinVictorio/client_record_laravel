@@ -24,7 +24,7 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Department Summary</h1>
+                    <h1 class="mt-4">Department Summary  (部门摘要)</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
                         <li class="breadcrumb-item active">department dummary</li>
@@ -35,10 +35,10 @@
                             <table id="datatablesSimple">
                                 <thead>
                                     <tr>
-                                        <th>Department</th>
-                                        <th>Total Sold Client</th>
-                                        <th>Total Pending Client</th>
-                                        <th>Total Approve Client</th>
+                                        <th>Department(部门)</th>
+                                        <th>Total Sold Client  (总销售客户)</th>
+                                        <th>Total Pending Client (总待处理客户)</th>
+                                        <th>Total Approve Client (总批准客户)</th>
                                     </tr>
                                 </thead>
 
