@@ -6,7 +6,13 @@
       background-repeat: no-repeat;
       background-size: cover;
       height: 100vh;
-    background-image: linear-gradient(to bottom,#033c78, rgba(16, 12, 12, 0.8)), url({{asset('images/bg_image.jpg')}});
+      background-image: linear-gradient(to bottom,#033c78, rgba(16, 12, 12, 0.8)), url({{asset('images/bg_image.jpg')}});
+    }
+    img{
+       height: 120px;
+       width: 120px;
+       object-fit: cover;
+
     }
   </style>
   <div id="bg" class="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-center text-white p-5" style="background-color:  #033c78; background-size: cover; background-position: center;">

@@ -6,19 +6,17 @@ use Livewire\Component;
 use Livewire\Attributes\Validate;
 use App\Models\clients;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
 class ClientCreate extends Component
 {
 
     #[Validate('required')] public $contact_person_number;
     #[Validate('required|string')] public $contact_person;
-    #[Validate('required|email|email')] public $email;
+    #[Validate('required|email')] public $email;
     #[Validate('required')] public $address;
     #[Validate('required|string')] public $CompanyName;
     #[Validate('nullable')] public $bank_Account_number;
     #[Validate('required')] public $contact_number;
- //    public $userId = session('userId');
  
      public function create_client(){
        $this->validate();

@@ -6,6 +6,7 @@
         </button>
         <ul class="dropdown-menu">
            <livewire:auth.logout/>
+           <livewire:refresh-page/>
         </ul>
       </div>
    </header>
@@ -42,21 +43,40 @@
             </div>
         </div>
     </div>
-
    </section>
 
    
    <div class="card">
     <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center">
-      <div>
-        <button style="background-color: #004998" class="btn btn-light rounded-5 btn-sm text-light p-2 shadow-sm d-flex  gap-1 justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#add_client">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
-                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
-                <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
-              </svg>
-            Add New
-            (增加新客户)
-        </button>
+      <div class=" d-flex gap-2">
+
+        <div class="dropdown">
+            <button style="background-color:#004998 " class="btn text-light dropdown-toggle rounded-pill px-4 py-2 shadow" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-users me-2"></i> CLIENT TYPE
+            </button>
+          
+            <ul class="dropdown-menu dropdown-menu-end p-3 border-0 shadow rounded-4 mt-2" style="min-width: 250px;">
+              <li class="mb-2">
+                <button class="btn btn-dark w-100 d-flex align-items-center gap-2 py-2 rounded-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#add_client">
+                  <i class="bi bi-person-plus"></i> Add New <small class="text-muted ms-auto">(增加新客户)</small>
+                </button>
+              </li>
+              
+              <li class="mb-2">
+                <a href="/salesman/autorepair" class="btn btn-dark w-100 d-flex align-items-center gap-2 py-2 rounded-3 shadow-sm">
+                  <i class="fas fa-wrench"></i> Auto Repair
+                </a>
+              </li>
+              
+              <li>
+                <a href="/salesman/repair-and-maintenance" class="btn btn-dark w-100 d-flex align-items-center gap-1 py-2 rounded-3 shadow-sm">
+                  <i class="fas fa-tools"></i>
+                   Repair and Maintenance
+                </a>
+              </li>
+            </ul>
+          </div>
+          
       </div>
      
     </div>

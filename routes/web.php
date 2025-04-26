@@ -8,9 +8,8 @@ use App\Livewire\Admin\Pages\ManageSalesMan;
 use App\Livewire\SalesMan\SalesManPage;
 use App\Livewire\Admin\Pages\Department;
 use App\Livewire\Admin\Pages\DepartmentSummary;
-
-
-
+use App\Livewire\SalesMan\AutoRepair;
+use App\Livewire\Salesman\RepairAndMaintence;
 
 Route::get('/',Login::class)->name('login.view');
 
@@ -23,13 +22,12 @@ Route::middleware(['isAdmin'])->prefix('admin')->group(function (){
     Route::get('/department-summary',DepartmentSummary::class)->name('department-summary');
 });
 
-
-
 // grouping the cashier related routes
 Route::middleware(['isSalesman'])->prefix('salesman')->group(function(){
-
+    
     Route::get('/dashboard',SalesManPage::class)->name('salesman.dashboard');
-  
+    Route::get('/autorepair',AutoRepair::class)->name('salesman.autoRepair');
+    Route::get('/repair-and-maintenance',RepairAndMaintence::class)->name('salesman.maintenance_and_repair');
 });
 
 // Route for Cashier

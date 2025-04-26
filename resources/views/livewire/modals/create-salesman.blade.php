@@ -3,7 +3,10 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div style="background-color: #004998" class="modal-header">
-              <h1 class="modal-title fs-5 text-light" id="staticBackdropLabel">Create New  Sales Executive</h1>
+              <h1 class="modal-title fs-5 text-light" id="staticBackdropLabel">
+                Create New  Sales Executive
+                (新增销售执行官)
+              </h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
              
             </div>
@@ -19,7 +22,7 @@
             <div class="modal-body">
                 <div class="form-floating mb-3">
                     <input wire:model='first_name' type="text" class="form-control" id="FirstName" placeholder="First Name">
-                    <label for="FirstName">First Name</label>
+                    <label for="FirstName">First Name (名字)</label>
                     @error('first_name')
                         <span class="text-danger">{{$message}}</span>
                     @enderror
@@ -27,7 +30,7 @@
 
                   <div class="form-floating mb-3">
                     <input wire:model='last_name' type="text" class="form-control" id="LastName" placeholder="Last Name">
-                    <label for="LastName">Last Name</label>
+                    <label for="LastName">Last Name (姓)</label>
                     @error('last_name')
                     <span class="text-danger">{{$message}}</span>
                   @enderror
@@ -35,7 +38,7 @@
 
                   <div class="form-floating mb-3">
                     <input wire:model='middle_name' type="text" class="form-control" id="LastName" placeholder="Middle Name">
-                    <label for="middle_name">Middle Name</label>
+                    <label for="middle_name">Middle Name (中间名)</label>
                     @error('middle_name')
                     <span class="text-danger">{{$message}}</span>
                   @enderror
@@ -43,7 +46,7 @@
 
                   <div class="form-floating mb-3">
                     <input wire:model='username' type="text" class="form-control" id="Username" placeholder="Username">
-                    <label for="Username">Username</label>
+                    <label for="Username">Username (用户名)</label>
                     @error('username')
                     <span class="text-danger">{{$message}}</span>
                   @enderror
@@ -52,7 +55,7 @@
 
                   <div class="form-floating mb-3">
                     <input wire:model='password' type="password" class="form-control" id="Password" placeholder="Password">
-                    <label for="Password">Password</label>
+                    <label for="Password">Password (密码)</label>
                     @error('password')
                     <span class="text-danger">{{$message}}</span>
                   @enderror
@@ -60,14 +63,14 @@
 
                   <div class="form-floating mb-3">
                     <input wire:model='password_confirmation' type="password" class="form-control" id="Password" placeholder="Password">
-                    <label for="Password">Confirm Password</label>
+                    <label for="Password">Confirm Password (确认密码)</label>
                     @error('password_confirmation')
                     <span class="text-danger">{{$message}}</span>
                   @enderror
                   </div>
 
                   <select wire:model='department' class="form-select form-select-lg mb-3" aria-label="Large select example">
-                    <option selected value="">Select Department</option>
+                    <option selected value="">Select Department(选择部门)</option>
                     @foreach ($departments as $department )
                     <option selected value="{{$department->department_name}}">
                       {{$department->department_name}}

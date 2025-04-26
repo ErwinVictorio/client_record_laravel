@@ -12,8 +12,9 @@ class EditClientInfo extends Component
 
     #[Validate('required')]
      public $CompanyName,$address,$email,$contact_person,$contact_person_number,$contact_number,$bank_Account_number;
-     public function mount($clientId){
 
+     
+     public function mount($clientId){
         $this->clientId = $clientId;
         // Get the client info base on ClientId
         $client = clients::findOrFail($clientId);

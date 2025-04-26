@@ -74,7 +74,7 @@
             <div class="col-lg-3">
               <div class="form-floating">
                 <input wire:model='contact_person_number' type="text" class="form-control" id="contact_person_number" placeholder="Contact Person Number">
-                <label for="contact_person_number">Contact Number  (联系人)</label>
+                <label for="contact_person_number">Contact Number  (联系电话)</label>
                 @error('contact_person_number') <span class="text-danger">{{ $message }}</span> @enderror
               </div>
             </div>
