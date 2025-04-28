@@ -24,62 +24,48 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Manage Department (管理部门)</h1>
+                    <h1 class="mt-4">Repair & Maintenance Records (维修与保养记录)</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Department</li>
+                        <li class="breadcrumb-item active">repair & maintenance records (维修与保养记录)</li>
                     </ol>
-                    {{-- Maian Content Here --}}
-                    <div class="container-fluid p-2">
-                        <button style="background-color: #004998" data-bs-toggle="modal" data-bs-target="#createModalDepartment" class="btn rounded-0 text-light">
-                            New Department (新部门)
-                        </button>
-                    </div>
-
+             
                     {{-- table --}}
                     <div class="card mb-4">
                         <div class="card-header">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
                                 <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
                               </svg>
-                              Department List (部门列表 )
-                             
+                              Record List
+                              (记录列表)
                         </div>
                         <div class="card-body">
                             <table id="datatablesSimple">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Department Name</th>
-                                        <th>Action</th>
+                                        <th>Company Name</th>
+                                        <th>Job Order Number</th>
+                                        <th>Contact Number</th>
+                                        <th>Email</th>
+                                        <th>Address</th>
+                                        
+                                        <th>Contact Person</th>
+                                        <th>Contact Number</th>
+                                        <th>Bank Account Number</th>
                                     </tr>
                                 </thead>
-
+                                 
                                 <tbody>
-                                    @foreach ($departmentList as $department )
-                                    <tr>
-                                        <td>{{$department->id}}</td>
-                                        <td>{{$department->department_name}}</td>
-                                        <td>
-                                            <button data-bs-toggle="modal" data-bs-target="#EditDepartmentModal_{{$department->id}}" style="background-color:  #004998" class="btn text-light rounded-0">
-                                                <i class="fas fa-pen"></i>
-                                                Edit (编辑)
-                                            </button>
-                                            
-                                            <button data-bs-target="#DeleteDepartment_{{$department->id}}" data-bs-toggle="modal"  class="btn btn-danger rounded-0">
-                                                <i class="fas fa-trash"></i>
-                                                Delete (删除)
-                                            </button>
-                                            
-                                        </td>
-                                    </tr>
-                                    {{-- Modal Edit Department --}}
-                                    <livewire:modals.edit-department :department_id="$department->id"/>
-                                    {{-- MoDAL Delete Department --}}
-                                    <livewire:modals.delete-department :department_id="$department->id" />
-                                    @endforeach
-        
-
+                                @foreach ($records as $record )
+                                    <td>{{$record->company_name}}</td>
+                                    <td>{{$record->job_order_number}}</td>
+                                    <td>{{$record->contact_number}}</td>
+                                    <td>{{$record->email}}</td>
+                                    <td>{{$record->address}}</td>
+                                    <td>{{$record->contact_person}}</td>
+                                    <td>{{$record->contact_number_person}}</td>
+                                    <td>{{$record->bank_account_number === '' ? 'N/A' : $record->bank_account_number }}</td>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>

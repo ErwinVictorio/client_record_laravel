@@ -10,6 +10,8 @@ use App\Livewire\Admin\Pages\Department;
 use App\Livewire\Admin\Pages\DepartmentSummary;
 use App\Livewire\SalesMan\AutoRepair;
 use App\Livewire\Salesman\RepairAndMaintence;
+use App\Livewire\Admin\Pages\AutoRepairAndMaintenance;
+use App\Livewire\Admin\Pages\AutoRepairRecords;
 
 Route::get('/',Login::class)->name('login.view');
 
@@ -20,6 +22,9 @@ Route::middleware(['isAdmin'])->prefix('admin')->group(function (){
     Route::get('/salesman',ManageSalesMan::class)->name('admin.salesman');
     Route::get('/department',Department::class)->name('view.department');
     Route::get('/department-summary',DepartmentSummary::class)->name('department-summary');
+    Route::get('/auto-repair-record',AutoRepairRecords::class)->name('view.repair_records');
+    Route::get('/repair-maintenance-record',AutoRepairAndMaintenance::class)->name('view.repair_maintenance');
+
 });
 
 // grouping the cashier related routes

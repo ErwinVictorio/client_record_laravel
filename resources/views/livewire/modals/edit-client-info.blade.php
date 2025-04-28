@@ -18,6 +18,7 @@
             <x-alert-message :color="'alert-success'">{{ session('success') }}</x-alert-message>
           @endif
         @endif
+        <livewire:refresh-page/>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 

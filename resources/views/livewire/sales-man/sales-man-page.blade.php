@@ -6,7 +6,6 @@
         </button>
         <ul class="dropdown-menu">
            <livewire:auth.logout/>
-           <livewire:refresh-page/>
         </ul>
       </div>
    </header>
@@ -58,13 +57,16 @@
             <ul class="dropdown-menu dropdown-menu-end p-3 border-0 shadow rounded-4 mt-2" style="min-width: 250px;">
               <li class="mb-2">
                 <button class="btn btn-dark w-100 d-flex align-items-center gap-2 py-2 rounded-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#add_client">
-                  <i class="bi bi-person-plus"></i> Add New <small class="text-muted ms-auto">(增加新客户)</small>
+                  <i class="bi bi-person-plus"></i> 
+                  Add New
+                   <small class="text-muted ms-auto">(增加新客户)</small>
                 </button>
               </li>
               
               <li class="mb-2">
                 <a href="/salesman/autorepair" class="btn btn-dark w-100 d-flex align-items-center gap-2 py-2 rounded-3 shadow-sm">
-                  <i class="fas fa-wrench"></i> Auto Repair
+                  <i class="fas fa-wrench"></i> 
+                  Auto Repair
                 </a>
               </li>
               

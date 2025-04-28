@@ -2,8 +2,9 @@
     <div wire:ignore.self class="modal fade" id="EditDepartmentModal_{{$department_id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
-            <div style="background-color: #004998" class="modal-header text-light">
+            <div class="modal-header">
               <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Department (编辑部门)</h1>
+              <livewire:refresh-page/>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form wire:submit='Update_Department'>

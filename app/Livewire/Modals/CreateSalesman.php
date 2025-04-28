@@ -9,15 +9,19 @@ use App\Models\Department;
 
 class CreateSalesman extends Component
 {
-    #[Validate('required|min:8|confirmed')]
-    public $password;
-
-    #[Validate('required|min:4')]
-    public $username;
+    #[Validate('required|min:8|confirmed')] public $password;
+    #[Validate('required|min:4')] public $username;
+  
+    public $departments;
 
     #[Validate('required')]
-    public $first_name,$last_name,$department,$password_confirmation,$middle_name,$role = 3;
+    public $first_name,$last_name,$department,$password_confirmation,$middle_name,$role = 3,$NickName;
 
+
+    public function mount(){
+        $departments = Department::select('department_name')->get();
+        $this->departments = $departments;
+    }
 
     public function create_salesman(){
         
@@ -29,9 +33,6 @@ class CreateSalesman extends Component
 
     public function render()
     {
-        $departments = Department::select('department_name')->get();
-        return view('livewire.modals.create-salesman',[
-            'departments' => $departments
-        ]);
+        return view('livewire.modals.create-salesman');
     }
 }

@@ -6,6 +6,7 @@
               <form wire:submit.prevent="soldForm">
                   <div class="modal-header">
                       <h5 class="modal-title">Product Details (产品详情)</h5>
+                      <livewire:refresh-page/>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
 

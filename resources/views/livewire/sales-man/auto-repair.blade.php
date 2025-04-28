@@ -8,7 +8,21 @@
      </a>
    </header>
 
-   <section class="container-fluid mt-5">
+    
+   <div class="container-fluid mt-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb  rounded-3 p-2">
+        <li class="breadcrumb-item">
+          <a href="/salesman/dashboard" class="text-decoration-none text-primary">Sales Executive</a>
+        </li>
+        <li class="breadcrumb-item active text-capitalize" aria-current="page">
+          Repair Records
+        </li>
+      </ol>
+    </nav>
+  </div>
+
+   <section class="container-fluid mt-3">
      <table wire:ignore id="datatablesSimple">        
       <thead>
         <tr>
@@ -35,7 +49,7 @@
          <td>{{$record->contact_number}}</td>
          <td>{{$record->contact_person}}</td>
          <td>{{$record->contact_number_person}}</td>
-         <td>{{$record->bank_account_number}}</td>
+         <td>{{$record->bank_account_number === '' ? 'N/A' : $record->bank_account_number}}</td>
          <td>
           <button data-bs-target="#AutoRepair_{{$record->id}}" data-bs-toggle="modal" style="background-color: #004998" class="btn text-light">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">

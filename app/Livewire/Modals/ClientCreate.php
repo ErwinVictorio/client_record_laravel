@@ -17,7 +17,6 @@ class ClientCreate extends Component
     #[Validate('required|string')] public $CompanyName;
     #[Validate('nullable')] public $bank_Account_number;
     #[Validate('required')] public $contact_number;
- 
      public function create_client(){
        $this->validate();
 

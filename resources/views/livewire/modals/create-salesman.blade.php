@@ -1,12 +1,15 @@
 <div>
     <div wire:ignore.self class="modal fade" id="crerateSalesman" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
           <div class="modal-content">
-            <div style="background-color: #004998" class="modal-header">
-              <h1 class="modal-title fs-5 text-light" id="staticBackdropLabel">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">
                 Create New  Sales Executive
                 (新增销售执行官)
               </h1>
+              
+            {{-- for refresh the page --}}
+            <livewire:refresh-page/>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
              
             </div>
@@ -16,7 +19,6 @@
                   {{session('success')}}
                 </x-alert-message>
             @endif
-
 
             <form wire:submit='create_salesman'>
             <div class="modal-body">
@@ -40,6 +42,15 @@
                     <input wire:model='middle_name' type="text" class="form-control" id="LastName" placeholder="Middle Name">
                     <label for="middle_name">Middle Name (中间名)</label>
                     @error('middle_name')
+                    <span class="text-danger">{{$message}}</span>
+                  @enderror
+                  </div>
+
+                  
+                  <div class="form-floating mb-3">
+                    <input wire:model='NickName' type="text" class="form-control" id="NickName" placeholder="NickName">
+                    <label for="NickName">NickName (昵称)</label>
+                    @error('NickName')
                     <span class="text-danger">{{$message}}</span>
                   @enderror
                   </div>
@@ -90,6 +101,7 @@
                     <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
                   </svg>
                  Crete Now
+                 (创建新的)
             </button>
             </div>
         </form>
