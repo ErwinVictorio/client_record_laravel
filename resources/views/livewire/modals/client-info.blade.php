@@ -6,7 +6,6 @@
               <form wire:submit.prevent="soldForm">
                   <div class="modal-header">
                       <h5 class="modal-title">Product Details (产品详情)</h5>
-                      <livewire:refresh-page/>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
 
@@ -47,7 +46,7 @@
 
                   <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Sold(已售出)</button>
+                      <button style="background-color: #0d629b" type="submit" class="btn text-light">Sold(已售出)</button>
                   </div>
               </form>
           </div>

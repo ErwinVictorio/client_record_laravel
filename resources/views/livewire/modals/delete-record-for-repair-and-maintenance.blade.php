@@ -1,6 +1,6 @@
 <div>
     <div wire:ignore.self class="modal fade" id="DeleteMaintenanceRecord_{{$recordId}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
           <div class="modal-content">
             <div  class="modal-header">
               <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete Connfirmation  / 删除确认</h1>

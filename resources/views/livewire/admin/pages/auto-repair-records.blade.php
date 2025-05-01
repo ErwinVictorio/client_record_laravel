@@ -24,7 +24,7 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Auto Repair Records</h1>
+                    <h1 class="mt-4">Auto Parts Sales Records</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
                         <li class="breadcrumb-item active">auto repair records</li>
@@ -42,8 +42,8 @@
                             <table id="datatablesSimple">
                                 <thead>
                                     <tr>
-                                        <th>Company Name</th>
                                         <th>Stock out Number</th>
+                                        <th>Company Name</th>
                                         <th>Contact Number</th>
                                         <th>Email</th>
                                         <th>Address</th>
@@ -55,8 +55,8 @@
                                  
                                 <tbody>
                                 @foreach ($records as $record )
-                                    <td>{{$record->company_name}}</td>
                                     <td>{{$record->stock_out_number}}</td>
+                                    <td>{{$record->company_name}}</td>
                                     <td>{{$record->contact_number}}</td>
                                     <td>{{$record->email}}</td>
                                     <td>{{$record->address}}</td>

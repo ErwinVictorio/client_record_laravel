@@ -8,11 +8,11 @@ use App\Models\clients;
 class ViewClientDetails extends Component
 {
 
-    public $clientId;
+    public $clientId,$findClient;
 
-    public function render()
-    {
-        $findClient = clients::select(
+
+    public function mount(){
+        $this->findClient = clients::select(
             [
                 'contact_person',
                  'contact_number_person',
@@ -24,11 +24,10 @@ class ViewClientDetails extends Component
                     'address'
             ])
          ->where('id', $this->clientId)->get();;
-        
-  
+    }
 
-        return view('livewire.modals.view-client-details',[
-           'findClient' => $findClient
-        ]);
+    public function render()
+    {
+        return view('livewire.modals.view-client-details');
     }
 }

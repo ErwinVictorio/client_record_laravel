@@ -11,7 +11,7 @@
    </header>
 
    <section class="container-fluid row gap-3 p-5">
-    <div class="col-xl-3 col-md-6 mb-4">
+    <div class="col-lg-5 mb-4">
         <div style="background-color: #f6f6f6; color:#004998" class="card rounded-2 shadow-sm h-100 border-0">
             <div class="card-body d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-center mb-3">
@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <div class="col-xl-3 col-md-6 mb-4">
+    <div class="col-lg-5 mb-4">
         <div style="background-color: #f6f6f6; color:#004998" class="card rounded-2 shadow-sm h-100 border-0">
             <div class="card-body d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-center mb-3">
@@ -57,16 +57,17 @@
             <ul class="dropdown-menu dropdown-menu-end p-3 border-0 shadow rounded-4 mt-2" style="min-width: 250px;">
               <li class="mb-2">
                 <button class="btn btn-dark w-100 d-flex align-items-center gap-2 py-2 rounded-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#add_client">
-                  <i class="bi bi-person-plus"></i> 
-                  Add New
-                   <small class="text-muted ms-auto">(增加新客户)</small>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-car-front-fill" viewBox="0 0 16 16">
+                        <path d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679q.05.242.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.8.8 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2m10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17s3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z"/>
+                      </svg>
+                   Finish Vehicle
                 </button>
               </li>
               
               <li class="mb-2">
                 <a href="/salesman/autorepair" class="btn btn-dark w-100 d-flex align-items-center gap-2 py-2 rounded-3 shadow-sm">
                   <i class="fas fa-wrench"></i> 
-                  Auto Repair
+                  Auto Parts
                 </a>
               </li>
               
@@ -108,7 +109,6 @@
                         @php
                             $style;
                             $label = '';
-
                             switch ($client->status) {
                                 case 'Approve':
                                       $style = 'background-color: #47ba9b;';
@@ -142,28 +142,10 @@
                             Change Status
                             (更改状态)
                         </button>
-
-                        <button {{$status}} data-bs-target="#edit_client_{{$client->id}}" data-bs-toggle="modal" style="background-color: #0609cd  ;" class="btn btn-sm btn-sm rounded-0 text-light">
-                            <i class="fas fa-pen"></i>
-                            Edit
-                            (编辑)
-                        </button>
-                        <button {{$status}} data-bs-target="#DeleteClient_{{$client->id}}" data-bs-toggle="modal" 
-                            class="btn rounded-0 btn-danger btn-sm">
-                            <i class="fas fa-trash"></i>
-                            Delete
-                            (删除)
-                        </button>
                     </td>
                 </tr>
                  {{-- Modal updating status --}}  
                  <livewire:modals.client-status-update :clientId="$client->id"/>        
-
-                 {{-- Modal for Editing Client Info --}}
-                 <livewire:modals.edit-client-info :clientId="$client->id" />
-
-                 {{--Modal Deleting client --}}
-                 <livewire:modals.delete-client :clientId="$client->id"/>
                 @endforeach
             </tbody>
         </table>

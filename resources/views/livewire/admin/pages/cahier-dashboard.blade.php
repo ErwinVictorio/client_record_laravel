@@ -64,7 +64,7 @@
                                             <i class="fas fa-user-clock fa-2x"></i>
                                         </div>
                                         <div>
-                                            <h6 class="text-uppercase fw-semibold mb-1">Total Approve Client (总批准客户 )</h6>
+                                            <h6 class="text-uppercase fw-semibold mb-1">Total Registered Clients (已登记客户总计)</h6>
                                             <h3 class="fw-bold mb-0">{{$countedAprove}}</h3>
                                         </div>
                                     </div>

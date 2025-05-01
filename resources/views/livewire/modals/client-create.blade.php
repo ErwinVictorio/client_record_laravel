@@ -23,7 +23,7 @@
       </div>
 
       <div class="modal-body">
-        <form wire:submit.prevent='create_client'>
+        <form wire:submit.prevent='validateAndConfirm'>
           <section class="row g-3">
 
             {{-- Company Name --}}
@@ -35,7 +35,7 @@
               </div>
             </div>
 
-            {{-- Address --}}
+            
             <div class="col-lg-3">
               <div class="form-floating">
                 <input wire:model='address' type="text" class="form-control" id="address" placeholder="Address">
@@ -108,4 +108,25 @@
 
     </div>
   </div>
+
+  @if ($showConfirmation)
+<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Please Confirm (请确认)</h5>
+        <button type="button" class="btn-close" wire:click="$set('showConfirmation', false)"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to create this client? (您确定要创建此客户吗?)</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" wire:click="$set('showConfirmation', false)">Cancel</button>
+        <button  style="background-color: #004998" type="button" class="btn text-light" wire:click="createClient">Yes, Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+@endif
+
 </div>

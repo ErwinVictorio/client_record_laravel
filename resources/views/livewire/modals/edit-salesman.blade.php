@@ -2,22 +2,18 @@
     <div wire:ignore.self class="modal fade" id="EditSalesman_{{$salesmanID}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
-            <div style="background-color: #004998" class="modal-header">
-              <h1 class="modal-title fs-5 text-light" id="staticBackdropLabel">Edit Salesman Details</h1>
+            <div  class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Salesman Details</h1>
+               <livewire:refresh-page/>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-             
             </div>
-             @if (session()->has('success'))
-            <div 
-                x-data="{ show: true }" 
-                x-init="setTimeout(() => show = false, 2000)" 
-                x-show="show" 
-                class="alert alert-success"
-            >
-                {{ session('success') }}
+            <div class="p-2">
+              @if (session()->has('success'))
+              <x-alert-message :color=" 'alert-success' ">
+                {{session('success')}}
+              </x-alert-message> 
+             @endif
             </div>
-        @endif
-
             <form wire:submit='UpdateSalesman'>
             <div class="modal-body">
                 <div class="form-floating mb-3">

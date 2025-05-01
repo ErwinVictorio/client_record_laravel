@@ -62,13 +62,7 @@
                 </div>
               </div>
 
-              <div class="col-lg-3">
-                <div class="form-floating">
-                  <input wire:model='job_order_number' type="text" class="form-control" id="JobOrderNumber" placeholder="Job Order Number.">
-                  <label for="job_order_number">Job Order Number.(工单编号)</label>
-                  @error('job_order_number') <span class="text-danger">{{ $message }}</span> @enderror
-                </div>
-              </div>
+
   
               {{-- Contact Person --}}
               <div class="col-lg-3">
@@ -89,10 +83,18 @@
               </div>
   
               {{-- Bank Account Number (Optional) --}}
-              <div class="col-lg-7">
+              <div class="col-lg-3">
                 <div class="form-floating">
                   <input wire:model='bank_account_number' type="text" class="form-control" id="bank_Account_number" placeholder="Bank Account Number">
                   <label for="bank_account_number">Bank Account Number (optional) 银行账号</label>
+                </div>
+              </div>
+
+              <div class="col-lg-7">
+                <div class="form-floating">
+                  <input wire:model='job_order_number' type="text" class="form-control" id="JobOrderNumber" placeholder="Job Order Number.">
+                  <label for="job_order_number">Job Order No.(工单编号)</label>
+                  @error('job_order_number') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
               </div>
   

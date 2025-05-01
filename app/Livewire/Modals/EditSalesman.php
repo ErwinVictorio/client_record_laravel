@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Modals;
 
-use App\Models\clients;
 use Livewire\Component;
 use App\Models\Department;
 use App\Models\User;
@@ -12,7 +11,7 @@ class EditSalesman extends Component
 {
     public $salesmanID;
     #[Validate('required')]
-    public $first_name, $last_name, $middle_name, $username, $department;
+    public $first_name, $last_name, $middle_name, $username, $department,$departments;
 
    
     // Render the data into modal blade
@@ -27,6 +26,9 @@ class EditSalesman extends Component
         $this->middle_name = $user->middle_name;
         $this->username = $user->username;
         $this->department = $user->department;
+
+        // Get all the departments
+        $this->departments = Department::all();
     }
 
 
@@ -47,9 +49,6 @@ class EditSalesman extends Component
     
     public function render()
     {
-        $departments = Department::all();
-        return view('livewire.modals.edit-salesman',[
-            'departments' => $departments
-        ]);
+        return view('livewire.modals.edit-salesman');
     }
 }

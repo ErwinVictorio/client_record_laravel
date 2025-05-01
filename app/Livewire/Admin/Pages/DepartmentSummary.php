@@ -16,8 +16,7 @@ class DepartmentSummary extends Component
         ->select(
             'users.department',
             DB::raw("SUM(CASE WHEN clients.status = 'Pending' THEN 1 ELSE 0 END) as Total_pending "),
-            DB::raw("SUM(CASE WHEN clients.status = 'Sold' THEN 1 ELSE 0 END) as Total_sold "),
-            DB::raw("SUM(CASE WHEN clients.status = 'Approve' THEN 1 ELSE 0 END) as Total_approve ")
+            DB::raw("SUM(CASE WHEN clients.status = 'Sold' THEN 1 ELSE 0 END) as Total_sold ")
         )->groupBy('users.department')->get();
     }
 

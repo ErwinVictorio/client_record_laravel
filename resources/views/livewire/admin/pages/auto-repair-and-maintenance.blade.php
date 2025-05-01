@@ -43,12 +43,11 @@
                             <table id="datatablesSimple">
                                 <thead>
                                     <tr>
-                                        <th>Company Name</th>
                                         <th>Job Order Number</th>
+                                        <th>Company Name</th>
                                         <th>Contact Number</th>
                                         <th>Email</th>
                                         <th>Address</th>
-                                        
                                         <th>Contact Person</th>
                                         <th>Contact Number</th>
                                         <th>Bank Account Number</th>
@@ -57,8 +56,8 @@
                                  
                                 <tbody>
                                 @foreach ($records as $record )
-                                    <td>{{$record->company_name}}</td>
                                     <td>{{$record->job_order_number}}</td>
+                                    <td>{{$record->company_name}}</td>
                                     <td>{{$record->contact_number}}</td>
                                     <td>{{$record->email}}</td>
                                     <td>{{$record->address}}</td>

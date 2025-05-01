@@ -38,17 +38,23 @@
                                         <th>Department(部门)</th>
                                         <th>Total Sold Client  (总销售客户)</th>
                                         <th>Total Pending Client (总待处理客户)</th>
-                                        <th>Total Approve Client (总批准客户)</th>
+                                        {{-- <th>Total Approve Client (总批准客户)</th> --}}
+                                        <th>Total Registerd Client ()</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     @foreach ($departmentSummary as $summary )
+                                    @php
+                                        // get the total of sold and Pending display as total registered client
+                                        $totalRegisteredClient = $summary->Total_sold + $summary->Total_pending;
+                                    @endphp
                                      <tr>
                                         <td>{{$summary->department}}</td>
                                         <td>{{$summary->Total_sold}}</td>
                                         <td>{{$summary->Total_pending}}</td>
-                                        <td>{{$summary->Total_approve}}</td>
+                                        {{-- <td>{{''}}</td> --}}
+                                        <td>{{$totalRegisteredClient}}</td>
                                     </tr>
                                     @endforeach
                               

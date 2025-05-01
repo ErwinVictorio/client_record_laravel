@@ -7,7 +7,7 @@ use App\Models\clients;
 
 class Dashboard extends Component
 {
-    public $totalClient,$totalPending,$totalSold,$totalApproved,$clientList;
+    public $totalClient,$totalPending,$totalSold,$clientList;
 
     public function mount(){
         $this->clientList = clients::with('salesman')->select([
@@ -23,7 +23,6 @@ class Dashboard extends Component
          $this->totalClient = clients::count();
          $this->totalPending = clients::where('status', 'Pending')->count();
          $this->totalSold = clients::where('status', 'Sold')->count();
-         $this->totalApproved = clients::where('status', 'Approve')->count();
     }
 
     public function render()

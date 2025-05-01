@@ -68,7 +68,7 @@
                                         <td>{{$user->first_name}}</td>
                                         <td>{{$user->last_name}}</td>
                                         <td>{{$user->middle_name}}</td>
-                                        <td>{{$user->username}}</td>
+                                        <td>{{$user->NickName}}</td>
                                         <td>{{$user->department}}</td>
                                         <td>
                                             <button style="background-color:  #004998" data-bs-target="#ModalViewSalesManInfo_{{$user->id}}" data-bs-toggle="modal" class="btn text-light rounded-0">
