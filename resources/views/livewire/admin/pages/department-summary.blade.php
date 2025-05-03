@@ -36,10 +36,9 @@
                                 <thead>
                                     <tr>
                                         <th>Department(部门)</th>
-                                        <th>Total Sold Client  (总销售客户)</th>
+                                        <th>Total Sold Client (总销售客户)</th>
                                         <th>Total Pending Client (总待处理客户)</th>
-                                        {{-- <th>Total Approve Client (总批准客户)</th> --}}
-                                        <th>Total Registerd Client ()</th>
+                                        <th>Total Registerd Client (已登记客户总计)</th>
                                     </tr>
                                 </thead>
 
@@ -53,7 +52,6 @@
                                         <td>{{$summary->department}}</td>
                                         <td>{{$summary->Total_sold}}</td>
                                         <td>{{$summary->Total_pending}}</td>
-                                        {{-- <td>{{''}}</td> --}}
                                         <td>{{$totalRegisteredClient}}</td>
                                     </tr>
                                     @endforeach

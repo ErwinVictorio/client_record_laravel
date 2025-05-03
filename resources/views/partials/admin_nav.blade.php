@@ -29,15 +29,15 @@
                     <a class="nav-link" href="/admin/department">
                         <div class="sb-nav-link-icon"><i class="fas fa-building"></i></div>
                         Manage Department
-                        (管理部门)
+                        (部门信息管理)
                     </a>
 
                     <a class="nav-link" href="/admin/auto-repair-record">
                         <div class="sb-nav-link-icon">
                             <i class="fas fa-wrench"></i> 
                         </div>
-                        Auto Repair Records
-                        (汽车维修记录)
+                        Auto Parts Records
+                        (配件销售记录)
                     </a>
 
                     <a class="nav-link" href="/admin/repair-maintenance-record">

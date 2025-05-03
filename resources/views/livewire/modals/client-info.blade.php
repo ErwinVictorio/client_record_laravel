@@ -27,7 +27,14 @@
                           <label for="modelNumber">Product Model (产品型号)</label>
                           @error('modelNumber') <span class="text-danger">{{ $message }}</span> @enderror
                       </div>
-                      
+ 
+                      <div class="form-floating mb-3">
+                          <input wire:model='Quantity' type="number" class="form-control" id="Quantity" placeholder="Quantity">
+                          <label for="Quantity">Quantity (数量)</label>
+                          @error('Quantity') <span class="text-danger">{{ $message }}</span> @enderror
+                      </div>
+
+                                           
                       <div class="mb-3">
                         <div class="form-floating">
                             <textarea wire:model='Specification'  class="form-control" placeholder="Specification" id="Specification" style="height: 100px"></textarea>
@@ -36,12 +43,6 @@
                           @error('Specification') <span class="text-danger">{{ $message }}</span> @enderror
                       </div>
   
-
-                      <div class="form-floating mb-3">
-                          <input wire:model='Quantity' type="number" class="form-control" id="Quantity" placeholder="Quantity">
-                          <label for="Quantity">Quantity (数量)</label>
-                          @error('Quantity') <span class="text-danger">{{ $message }}</span> @enderror
-                      </div>
                   </div>
 
                   <div class="modal-footer">

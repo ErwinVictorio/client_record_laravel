@@ -38,7 +38,7 @@
                                     <div>
                                         <h5 class="mb-2">
                                             <i class="fas fa-hourglass-half me-2"></i>
-                                            Total Pending (总待处理 )
+                                            Total Pending (未成交客户总计 )
                                         </h5>
                                         <span class="fw-bold fs-4">{{$totalPending}}</span>
                                     </div>
@@ -54,7 +54,7 @@
                                     <div>
                                         <h5 class="mb-2">
                                             <i class="fas fa-user-check me-2"></i>
-                                            Total Sold (售出总额)
+                                            Total Sold (已成交客户总计)
                                         </h5>
                                         <span class="fw-bold fs-4">
                                            {{$totalSold}}
