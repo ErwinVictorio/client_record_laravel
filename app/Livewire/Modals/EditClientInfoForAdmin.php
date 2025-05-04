@@ -26,7 +26,7 @@ class EditClientInfoForAdmin extends Component
       $this->clientId = $clientId;
 
       $client = clients::findOrFail($clientId);
-
+      
       $this->company_name = $client->company_name;
       $this->contact_number = $client->contact_number;
       $this->email = $client->email;
@@ -38,7 +38,6 @@ class EditClientInfoForAdmin extends Component
       $this->specification = $client->specification;
       $this->quantity = $client->quantity;
       $this->bank_account_number = $client->bank_account_number;
-          
     }
 
     public function updateClientInfo(){

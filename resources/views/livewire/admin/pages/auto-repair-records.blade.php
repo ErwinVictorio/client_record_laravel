@@ -39,7 +39,7 @@
                         
                         </div>
                         <div class="card-body">
-                            <table id="datatablesSimple">
+                            <table class="table">
                                 <thead>
                                     <tr>
                                         <th>Stock out Number</th>

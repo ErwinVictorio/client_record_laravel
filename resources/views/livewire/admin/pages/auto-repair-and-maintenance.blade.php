@@ -40,7 +40,7 @@
                               (记录列表)
                         </div>
                         <div class="card-body">
-                            <table id="datatablesSimple">
+                            <table class="table">
                                 <thead>
                                     <tr>
                                         <th>Job Order Number</th>
@@ -56,17 +56,20 @@
                                  
                                 <tbody>
                                 @foreach ($records as $record )
-                                    <td>{{$record->job_order_number}}</td>
-                                    <td>{{$record->company_name}}</td>
-                                    <td>{{$record->contact_number}}</td>
-                                    <td>{{$record->email}}</td>
-                                    <td>{{$record->address}}</td>
-                                    <td>{{$record->contact_person}}</td>
-                                    <td>{{$record->contact_number_person}}</td>
-                                    <td>{{$record->bank_account_number === '' ? 'N/A' : $record->bank_account_number }}</td>
+                                    <tr>
+                                        <td>{{$record->job_order_number}}</td>
+                                        <td>{{$record->company_name}}</td>
+                                        <td>{{$record->contact_number}}</td>
+                                        <td>{{$record->email}}</td>
+                                        <td>{{$record->address}}</td>
+                                        <td>{{$record->contact_person}}</td>
+                                        <td>{{$record->contact_number_person}}</td>
+                                        <td>{{$record->bank_account_number ?? 'N/A' }}</td>
+                                    </tr>
                                 @endforeach
                                 </tbody>
                             </table>
+                            {{$records->links()}}
                         </div>
                     </div>
                 </div>

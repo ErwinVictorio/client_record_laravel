@@ -68,9 +68,6 @@
       <div class="d-grid mb-3">
         <button type="submit" class="btn text-white fw-semibold" style="background-color:  #033c78;">
           Log in
-          <span wire:loading.delay.longest>
-            Please Wait...
-          </span>         
         </button>
     
       </div>

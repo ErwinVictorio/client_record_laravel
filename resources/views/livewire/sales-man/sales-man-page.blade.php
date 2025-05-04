@@ -84,7 +84,7 @@
      
     </div>
     <div class="card-body">
-        <table id="datatablesSimple">
+        <table class="table">
             <thead>
                 <tr>
                     <th>#</th>
@@ -136,7 +136,8 @@
                         @php
                             $status = $client->status === "Sold" ? "disabled" : '';
                         @endphp
-                        <button {{$status}}  data-bs-target="#ModalChangeStatus_{{$client->id}}" data-bs-toggle="modal" 
+                        <button {{$status}}  data-bs-target="#ModalChangeStatus_{{$client->id}}" wire:key="change-status-{{$client->id}}" data-bs-toggle="modal" 
+                    
                             style="background-color: #004998"  class="btn rounded-0  text-light btn-sm">
                             <i class="fas fa-sync-alt"></i>
                             Change Status
@@ -145,10 +146,11 @@
                     </td>
                 </tr>
                  {{-- Modal updating status --}}  
-                 <livewire:modals.client-status-update :clientId="$client->id"/>        
+                 <livewire:modals.client-status-update :clientId="$client->id" :wire:key="'client-status-update-'.$client->id"/>        
                 @endforeach
             </tbody>
         </table>
+        {{$clients->links()}}
     </div>
 </div>
 

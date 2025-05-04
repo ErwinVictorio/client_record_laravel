@@ -4,22 +4,26 @@ namespace App\Livewire\Admin;
 
 use Livewire\Component;
 use App\Models\clients;
+use Livewire\WithPagination;
+
 
 class Dashboard extends Component
 {
-    public $totalClient,$totalPending,$totalSold,$clientList;
+    use WithPagination;
 
-    public function mount(){
-        $this->clientList = clients::with('salesman')->select([
-            'company_name',
-             'id',
-             'address',
-            'contact_number',
-             'email',
-             'status',
-             'salesman_id'
-         ])->get();
+    public $totalClient,$totalPending,$totalSold;
+
+    public $ClientSearch = '';
+    public $searchQuery = '';
+
+    public function applySearch()
+    {
+        $this->searchQuery = $this->ClientSearch;
+        $this->resetPage();
+    }
+    
  
+    public function mount(){
          $this->totalClient = clients::count();
          $this->totalPending = clients::where('status', 'Pending')->count();
          $this->totalSold = clients::where('status', 'Sold')->count();
@@ -27,6 +31,21 @@ class Dashboard extends Component
 
     public function render()
     {
-        return view('livewire.admin.dashboard');
+        $search = '%' . $this->searchQuery . '%';
+    
+        $clientList = clients::with('salesman')
+            ->where(function ($query) use ($search) {
+                $query->where('company_name', 'like', $search)
+                      ->orWhere('email', 'like', $search)
+                      ->orWhere('contact_number', 'like', $search)
+                      ->orWhere('status', 'like', $search);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
+    
+        return view('livewire.admin.dashboard', [
+            'clientList' => $clientList
+        ]);
     }
+    
 }

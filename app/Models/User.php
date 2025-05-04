@@ -6,7 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\clients;
+use App\Models\clients as Clients;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
@@ -32,11 +32,12 @@ class User extends Authenticatable
     ];
 
     // Define Relationships
-    public function Clients():HasMany
+    public function clients():HasMany
     {
-        return $this->hasMany(clients::class,'salesman_id');
+        return $this->hasMany(Clients::class,'salesman_id');
     }
 
+ 
 
     /**
      * The attributes that should be hidden for serialization.

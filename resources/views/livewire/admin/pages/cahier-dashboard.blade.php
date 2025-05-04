@@ -99,7 +99,7 @@
                            (客户列表)                    
                         </div>
                         <div class="card-body">
-                            <table id="datatablesSimple">
+                            <table class="table"
                                 <thead>
                                     <tr>
                                         <th>Company Name</th>
@@ -116,7 +116,7 @@
                                 </thead>
 
                                 <tbody>
-                                    @foreach ($clients as $client)
+                                    @foreach ($clientList as $client)
                                     <tr>
                                         <td>{{$client->company_name}}</td>
                                         <td>{{$client->salesman->first_name . ' ' .$client->salesman->last_name}}</td>
@@ -158,17 +158,19 @@
                                             <button
                                              style="background-color: #004998 "
                                              {{$client->status === 'Sold' ? 'disabled' : ''}} 
-                                             data-bs-toggle="modal" data-bs-target="#clientModal_{{$client->id}}" class="btn text-light">
+                                             data-bs-toggle="modal" data-bs-target="#clientModal_{{$client->id}}" wire:key='record-transaction-{{$client->id}}' class="btn text-light">
                                                  Record Transaction
                                                  (记录交易)
                                             </button>
                                         </td>
                                     </tr>
                                      {{-- Modal for Viewing Client Details dapat nasa labas ng tr para hindi mag error --}}
-                                     <livewire:modals.client-info :clientId="$client->id"/>
+                                     <livewire:modals.client-info :clientId="$client->id" wire:key='clientInfo-{{$client->id}}'/>
                                     @endforeach
                                 </tbody>
+                               
                             </table>
+                            {{$clientList->links()}}
                         </div>
                     </div>
                 </div>

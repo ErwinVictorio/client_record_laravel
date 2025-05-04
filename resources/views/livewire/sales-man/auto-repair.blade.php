@@ -23,7 +23,7 @@
   </div>
 
    <section class="container-fluid mt-3">
-     <table wire:ignore id="datatablesSimple">        
+     <table class="table">        
       <thead>
         <tr>
             <th>#</th>
@@ -74,9 +74,9 @@
     @endforeach
 
     <tbody>
-
     </tbody>
      </table>
+     {{$records->links()}}
    </section>
 
 

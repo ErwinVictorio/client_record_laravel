@@ -48,7 +48,7 @@
                             (业务员名单)
                         </div>
                         <div class="card-body">
-                            <table id="datatablesSimple">
+                            <table class="table">
                                 <thead>
                                     <tr>
                                         <th>#</th>

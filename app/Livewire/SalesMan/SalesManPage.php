@@ -1,25 +1,33 @@
 <?php
 
 namespace App\Livewire\SalesMan;
+
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
-
+use Livewire\WithPagination;
 
 class SalesManPage extends Component
 {
+    use WithPagination;
 
-    public $countedPending,$countedSold,$clients;
+    public $countedPending, $countedSold;
 
-    public function mount(){
-          // Get the Authentecated user
-         $currentUser = Auth::user();
-         $this->countedPending = $currentUser->Clients->where('status', 'Pending')->count();
-         $this->countedSold = $currentUser->Clients->where('status', 'Sold')->count();
-         $this->clients = $currentUser->Clients;
-        }
+    public function mount()
+    {
+        $user = Auth::user();
+
+        $this->countedPending = $user->clients->where('status', 'Pending')->count();
+        $this->countedSold = $user->clients->where('status', 'Sold')->count();
+    }
 
     public function render()
     {
-        return view('livewire.sales-man.sales-man-page');
+        $user = Auth::user();
+
+        $clients = $user->clients()->paginate(9); 
+
+        return view('livewire.sales-man.sales-man-page', [
+            'clients' => $clients,
+        ]);
     }
-} 
+}
