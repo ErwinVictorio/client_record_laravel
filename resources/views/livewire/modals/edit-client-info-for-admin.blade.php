@@ -12,7 +12,7 @@
                         </svg>
                             Edit Client Info
                         </h1>
-                        
+
                         <livewire:refresh-page/>
                       </div>
 
@@ -22,14 +22,14 @@
                       </x-alert-message>
                     @endif
                     </section>
-        
+
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                  <form wire:submit.prevent='updateClientInfo'> 
+                  <form wire:submit.prevent='updateClientInfo'>
                   <div class="modal-body">
                     <section class="row gap-3">
                       <div class="form-floating mb-3 col-lg-5">
-                        <input wire:model='company_name' type="text" class="form-control" id="company_name" placeholder="company name">
+                        <input wire:model.live='company_name' type="text" class="form-control" id="company_name" placeholder="company name">
                         <label for="company_name">company name</label>
                          @error('company_name')
                            <span class="text-danger">{{$message}}</span>
@@ -37,7 +37,7 @@
                     </div>
 
                     <div class="form-floating mb-3 col-lg-5">
-                        <input wire:model='contact_number' type="text" class="form-control" id="contact_number" placeholder="contact number">
+                        <input wire:model.live='contact_number' type="text" class="form-control" id="contact_number" placeholder="contact number">
                         <label for="contact_number">contact number</label>
                         @error('contact_number')
                         <span class="text-danger">{{$message}}</span>
@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="form-floating mb-3 col-lg-5">
-                        <input wire:model='email' type="email" class="form-control" id="email" placeholder="Email">
+                        <input wire:model.live='email' type="email" class="form-control" id="email" placeholder="Email">
                         <label for="email">Email Address</label>
                         @error('email')
                         <span class="text-danger">{{$message}}</span>
@@ -53,7 +53,7 @@
                     </div>
 
                     <div class="form-floating mb-3 col-lg-5">
-                        <input wire:model='address' type="text" class="form-control" id="address" placeholder="Address">
+                        <input wire:model.live='address' type="text" class="form-control" id="address" placeholder="Address">
                         <label for="address">Address</label>
                         @error('address')
                         <span class="text-danger">{{$message}}</span>
@@ -61,7 +61,7 @@
                     </div>
 
                     <div class="form-floating mb-3 col-lg-5">
-                        <input wire:model='contact_person' type="text" class="form-control" id="contact_person" placeholder="contact person">
+                        <input wire:model.live='contact_person' type="text" class="form-control" id="contact_person" placeholder="contact person">
                         <label for="contact_person">contact person</label>
                         @error('contact_person')
                         <span class="text-danger">{{$message}}</span>
@@ -69,7 +69,7 @@
                     </div>
 
                     <div class="form-floating mb-3 col-lg-5">
-                        <input wire:model='contact_number_person' type="text" class="form-control" id="contact_number_person" placeholder="contact number">
+                        <input wire:model.live='contact_number_person' type="text" class="form-control" id="contact_number_person" placeholder="contact number">
                         <label for="contact_number_person">contact number</label>
                         @error('contact_number_person')
                         <span class="text-danger">{{$message}}</span>
@@ -77,31 +77,32 @@
                     </div>
 
                     <div class="form-floating mb-3 col-lg-5">
-                        <input wire:model='bank_account_number' type="text" class="form-control" id="bank_account_number" placeholder="bank account number">
+                        <input wire:model.live='bank_account_number' type="text" class="form-control" id="bank_account_number" placeholder="bank account number">
                         <label for="bank_account_number">bank account number</label>
                     </div>
 
                     <h5 class="text-muted">Product Info</h5>
 
                     <div class="form-floating mb-3 col-lg-5">
-                        <input wire:model='model_number' type="text" class="form-control" id="model_number" placeholder="model number">
+                        <input wire:model.live='model_number' type="text" class="form-control" id="model_number" placeholder="model number">
                         <label for="model_number">model number</label>
                     </div>
 
                     <div class="form-floating mb-3 col-lg-5">
-                      <input wire:model='quantity' type="text" class="form-control" id="quantity" placeholder="quantity">
+                      <input wire:model.live='quantity' type="text" class="form-control" id="quantity" placeholder="quantity">
                       <label for="quantity">quantity</label>
                   </div>
 
                     <div class="form-floating mb-3 ">
-                      <textarea wire:model='specification' class="form-control" placeholder="specification" id="specification" style="height: 100px"></textarea>
+                      <textarea wire:model.live='specification' class="form-control" placeholder="specification" id="specification" style="height: 100px"></textarea>
                       <label for="specification">specification</label>
                     </div>
                     </section>
                   </div>
                   <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button style="background-color: #004998" type="submit" class="btn text-light">
+                      <button style="background-color: #004998" type="submit" class="btn text-light" wire:loading.attr="disabled">
+                        <span wire:loading wire:target="updateClientInfo" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
                           <path d="M11 2H9v3h2z"/>
                           <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
@@ -113,4 +114,20 @@
           </div>
       </div>
   </div>
+
+  <script>
+    document.addEventListener('livewire:initialized', () => {
+      @this.on('clientUpdated', () => {
+        // Close the modal after successful update
+        const modal = document.getElementById('EditClientIfo_{{$clientId}}');
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+        if (modalInstance) {
+          modalInstance.hide();
+        }
+
+        // Refresh the parent component to show updated data
+        Livewire.dispatch('refreshClients');
+      });
+    });
+  </script>
 </div>
