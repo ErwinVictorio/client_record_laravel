@@ -24,6 +24,7 @@ class ClientStatusUpdate extends Component
             $client->status = $this->SelectedStatus;
             $client->save();// to save the changes
 
+            $this->dispatch('clientUpdated');
             // Flash success message
             session()->flash('success', 'Client status updated successfully.');
 

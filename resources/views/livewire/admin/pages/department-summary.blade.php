@@ -31,33 +31,43 @@
                     {{-- table --}}
                     <div class="card mb-4">
                         <div class="card-body">
-                            <table class="table">
-                                <thead>
+                            <table class="table table-bordered table-hover align-middle text-center">
+                                <thead class="table-dark">
                                     <tr>
-                                        <th>Department(部门)</th>
+                                        <th>Department (部门)</th>
                                         <th>Total Sold Client (总销售客户)</th>
                                         <th>Total Pending Client (总待处理客户)</th>
-                                        <th>Total Registerd Client (已登记客户总计)</th>
+                                        <th>Total Registered Client (已登记客户总计)</th>
+                                        <th>Sold Percentage (%)</th>
                                     </tr>
                                 </thead>
-
                                 <tbody>
-                                    @foreach ($departmentSummary as $summary )
-                                    @php
-                                        // get the total of sold and Pending display as total registered client
-                                        $totalRegisteredClient = $summary->Total_sold + $summary->Total_pending;
-                                    @endphp
-                                     <tr>
-                                        <td>{{$summary->department}}</td>
-                                        <td>{{$summary->Total_sold}}</td>
-                                        <td>{{$summary->Total_pending}}</td>
-                                        <td>{{$totalRegisteredClient}}</td>
-                                    </tr>
+                                    @foreach ($departmentSummary as $summary)
+                                        @php
+                                            $totalRegisteredClient = $summary->Total_sold + $summary->Total_pending;
+                                            $percentageSold = $totalRegisteredClient > 0 
+                                                ? round(($summary->Total_sold / $totalRegisteredClient) * 100, 2) 
+                                                : 0;
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $summary->department }}</td>
+                                            <td>
+                                                <span class="badge bg-success fs-6">
+                                                    {{ $summary->Total_sold }}
+                                                </span>
+                                            </td>
+                                            <td>{{ $summary->Total_pending }}</td>
+                                            <td>{{ $totalRegisteredClient }}</td>
+                                            <td>
+                                                <span class="badge bg-info text-dark fs-6">
+                                                    {{ $percentageSold }}%
+                                                </span>
+                                            </td>
+                                        </tr>
                                     @endforeach
-                              
-
                                 </tbody>
                             </table>
+                            
                         </div>
                     </div>
                 </div>
