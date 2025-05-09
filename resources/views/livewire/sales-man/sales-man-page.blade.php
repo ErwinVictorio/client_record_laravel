@@ -83,6 +83,18 @@
       </div>
      
     </div>
+     <div class="card-header d-flex justify-content-between align-items-center">
+        <h6>Client List</h6>
+
+        <div class="d-flex justify-content-center align-items-center">
+            <input type="text" class="form-control" wire:model.live="clientSearch" placeholder="Search clients...">
+          <div>
+            <button class="btn btn-primary rounded-0" type="button" wire:click="applySearch">
+                <i class="fas fa-search me-1"></i>
+            </button>
+          </div>
+        </div>
+     </div>
     <div class="card-body">
         <table class="table">
             <thead>

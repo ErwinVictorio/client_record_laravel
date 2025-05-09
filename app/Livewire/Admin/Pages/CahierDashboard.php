@@ -10,7 +10,7 @@ use Livewire\WithPagination;
 class CahierDashboard extends Component
 {
 
-    public $clients,$countedAprove,$counttedSoldClient;
+    public $clients,$countedAprove,$counttedSoldClient,$searchQuery = '',$clientSearch = '';
 
     use WithPagination;
 
@@ -24,10 +24,24 @@ class CahierDashboard extends Component
          $this->counttedSoldClient = $clientStatusCount['Sold'] ?? 0;
     }
 
+
+    public function applySearch(){
+        $this->searchQuery = $this->clientSearch;
+        $this->resetPage();
+    }
+
     public function render()
     {
+        $search  = '%' . $this->searchQuery . '%';
+
         $clientList = clients::with(['salesman'])
         ->whereIn('status', ['Sold', 'Approve'])
+        ->where(function($query) use ($search){
+            $query->where('company_name', 'like', $search);
+            $query->orwhere('email', 'like' ,$search);
+            $query->orwhere('address', 'like', $search);
+            $query->orwhere('status', 'like' ,$search);
+        })
         ->select([
             'id',
             'company_name',

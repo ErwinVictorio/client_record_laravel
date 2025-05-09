@@ -1,5 +1,4 @@
 <div>
-  <!-- Single shared modal -->
   <div wire:ignore.self wire:key="client-modal_{{$clientId}}" class="modal fade" id="clientModal_{{$clientId}}" tabindex="-1" aria-labelledby="clientModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
