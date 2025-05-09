@@ -118,7 +118,6 @@
   <script>
     document.addEventListener('livewire:initialized', () => {
       @this.on('clientUpdated', () => {
-        // console.log('clientUpdated triggered'); // Add this line
         // Close the modal after successful update
         const modal = document.getElementById('EditClientIfo_{{$clientId}}');
         const modalInstance = bootstrap.Modal.getInstance(modal);

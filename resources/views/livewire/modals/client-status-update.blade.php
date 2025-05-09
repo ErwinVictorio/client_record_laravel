@@ -50,7 +50,7 @@
 
 <script>
   document.addEventListener('livewire:initialized', () => {
-    @this.on('change_status', () => {
+    @this.on('statusUpdated', () => {
       // Close the modal after successful update
       const modal = document.getElementById('ModalChangeStatus_{{$clientId}}');
       const modalInstance = bootstrap.Modal.getInstance(modal);
