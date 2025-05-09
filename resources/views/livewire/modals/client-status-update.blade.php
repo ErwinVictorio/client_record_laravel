@@ -21,7 +21,7 @@
 
               <form wire:submit.prevent="change_status">
                   <div class="modal-body">
-                      <select wire:model="SelectedStatus" class="form-select form-select-lg mb-3">
+                      <select wire:model.live="SelectedStatus" class="form-select form-select-lg mb-3">
                           <option value="">Select Status (更改状态)</option>
                           <option value="Approve">Approve (批复)</option>
                           <option value="Pending">Pending (未成交)</option>
@@ -48,18 +48,3 @@
 </div>
 
 
-<script>
-  document.addEventListener('livewire:initialized', () => {
-    @this.on('statusUpdated', () => {
-      // Close the modal after successful update
-      const modal = document.getElementById('ModalChangeStatus_{{$clientId}}');
-      const modalInstance = bootstrap.Modal.getInstance(modal);
-      if (modalInstance) {
-        modalInstance.hide();
-      }
-
-      // Refresh the parent component to show updated data
-      Livewire.dispatch('refreshClients');
-    });
-  });
-</script>

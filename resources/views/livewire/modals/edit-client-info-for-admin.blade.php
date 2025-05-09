@@ -1,6 +1,6 @@
 <div>
   <div wire:ignore.self class="modal fade" id="EditClientIfo_{{$clientId}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
           <div class="modal-content">
                   <div class="modal-header">
                     <section class="d-flex gap-2">
