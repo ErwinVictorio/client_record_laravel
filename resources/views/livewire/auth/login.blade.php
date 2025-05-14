@@ -58,7 +58,7 @@
           <option value="">Select role</option>
           <option value="1">Admin (管理员)</option>
           <option value="2">Cashier (出纳)</option>
-          <option value="3">Sales Executive (销售主管)</option>
+          <option value="3">Sales Executive (销售业务员)</option>
         </select>
         @error('role')
         <span class="text-danger small">{{ $message }}</span>

@@ -17,7 +17,7 @@
             <form wire:submit='UpdateSalesman'>
             <div class="modal-body">
                 <div class="form-floating mb-3">
-                    <input wire:model='first_name' type="text"  class="form-control" id="FirstName" placeholder="First Name">
+                    <input wire:model.live='first_name' type="text"  class="form-control" id="FirstName" placeholder="First Name">
                     <label for="FirstName">First Name</label>
                     @error('first_name')
                         <span class="text-danger">{{$message}}</span>
@@ -25,7 +25,7 @@
                   </div>
 
                   <div class="form-floating mb-3">
-                    <input wire:model='last_name' type="text" class="form-control" id="LastName" placeholder="Last Name">
+                    <input wire:model.live='last_name' type="text" class="form-control" id="LastName" placeholder="Last Name">
                     <label for="LastName">Last Name</label>
                     @error('last_name')
                     <span class="text-danger">{{$message}}</span>
@@ -33,7 +33,7 @@
                   </div>
 
                   <div class="form-floating mb-3">
-                    <input wire:model='middle_name' type="text" class="form-control" id="middle_name" placeholder="Middle Name">
+                    <input wire:model.live='middle_name' type="text" class="form-control" id="middle_name" placeholder="Middle Name">
                     <label for="middle_name">Middle Name</label>
                     @error('middle_name')
                     <span class="text-danger">{{$message}}</span>
@@ -41,14 +41,14 @@
                   </div>
 
                   <div class="form-floating mb-3">
-                    <input wire:model='username' type="text" class="form-control" id="Username" placeholder="Username">
+                    <input wire:model.live='username' type="text" class="form-control" id="Username" placeholder="Username">
                     <label for="Username">Username</label>
                     @error('username')
                     <span class="text-danger">{{$message}}</span>
                   @enderror
                   </div>
                   
-                  <select wire:model='department' class="form-select form-select-lg mb-3" aria-label="Large select example">
+                  <select wire:model.live='department' class="form-select form-select-lg mb-3" aria-label="Large select example">
                     <option value="{{$department}}" selected>{{$department}}</option>
                     @foreach ($departments as $department )
                     <option selected value="{{$department->department_name}}">

@@ -13,7 +13,7 @@ class AutoRepairAndMaintenance extends Component
 
     public function render()
     {
-        $records = ClientRecordForMaintenanceAndRepair::paginate(10);
+        $records = ClientRecordForMaintenanceAndRepair::paginate(1);
 
         return view('livewire.admin.pages.auto-repair-and-maintenance',[
             'records' => $records

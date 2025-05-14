@@ -8,10 +8,11 @@ use Livewire\WithPagination;
 
 class AutoRepair extends Component
 {
+  use WithPagination;
 
     public function render()
     {
-      $records = CreateRecordForAutoRepair::paginate();
+      $records = CreateRecordForAutoRepair::paginate(10);
 
         return view('livewire.sales-man.auto-repair',[
           'records' => $records

@@ -12,6 +12,7 @@ use App\Livewire\SalesMan\AutoRepair;
 use App\Livewire\Salesman\RepairAndMaintence;
 use App\Livewire\Admin\Pages\AutoRepairAndMaintenance;
 use App\Livewire\Admin\Pages\AutoRepairRecords;
+use App\Livewire\Cashier\DepartmentSummary as SummaryDepartment;
 
 Route::get('/',Login::class)->name('login.view');
 
@@ -39,5 +40,6 @@ Route::middleware(['isSalesman'])->prefix('salesman')->group(function(){
 Route::middleware(['isCashier'])->prefix('cashier')->group(function(){
 
     Route::get('/dashboard',CahierDashboard::class)->name('casher.dashboard');
-    Route::get('/department-summary',DepartmentSummary::class)->name('department-summary');
+    Route::get('/summary',SummaryDepartment::class)->name('summary');
+
 });

@@ -23,6 +23,7 @@ class CreateAutoRepairRecords extends Component
 
       CreateRecordForAutoRepair::create($validated);
       session()->flash('success','New Record is Successfully Created');
+      $this->reset();
     }
 
     public function render()

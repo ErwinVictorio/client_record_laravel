@@ -18,9 +18,9 @@ class CreateSalesman extends Component
     public $first_name,$last_name,$department,$password_confirmation,$middle_name,$role = 3,$NickName;
 
 
-    public function mount(){
-        $departments = Department::select('department_name')->get();
-        $this->departments = $departments;
+  public function mount()
+    {
+        $this->departments = Department::select('department_name')->get();
     }
 
     public function create_salesman(){
@@ -29,6 +29,7 @@ class CreateSalesman extends Component
         User::create($validated);
         
         session()->flash('success','Successfully Created New Salesman');
+        $this->reset();
     }
 
     public function render()

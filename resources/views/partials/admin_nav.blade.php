@@ -12,7 +12,7 @@
                         Dashboard
                     </a>
                     <div class="sb-sidenav-menu-heading">Reports</div>
-                    <a class="nav-link" href="department-summary">
+                    <a class="nav-link" href="/admin/department-summary">
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
                         Department Summary
                         (部门摘要)
@@ -23,7 +23,7 @@
                     <a class="nav-link" href="/admin/salesman">
                         <div class="sb-nav-link-icon"><i class="fas fa-user-tie"></i></div>
                         Manage  sales executive
-                        (管理销售主管)
+                        (管理销售业务员)
                     </a>
 
                     <a class="nav-link" href="/admin/department">
@@ -47,7 +47,7 @@
                               </svg>
                         </div>
                          Repair & Maintenance Records
-                        (管理部门)
+                        (维修&保养记录)
                     </a>
 
 

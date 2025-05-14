@@ -51,11 +51,10 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Middle Name</th>
-                                        <th>Username</th>
+                                        <th>NickName</th>
                                         <th>Department</th>
                                         <th>Action</th>
                                     </tr>
@@ -64,7 +63,6 @@
                                 <tbody>
                                     @foreach ($salesman as $user)
                                     <tr>
-                                        <td>{{$user->id}}</td>
                                         <td>{{$user->first_name}}</td>
                                         <td>{{$user->last_name}}</td>
                                         <td>{{$user->middle_name}}</td>
@@ -92,14 +90,15 @@
                                         </td>
                                     </tr>
                                     {{-- Modal for Edit --}}
-                                    <livewire:modals.edit-salesman :salesmanID="$user->id" />
+                                    <livewire:modals.edit-salesman wire:key='edit-salesman{{$user->id}}' :salesmanID="$user->id" />
                                     {{--Modal for Delete Confirmation  --}}
-                                    <livewire:modals.delete-salesman :salesmanID='$user->id'/>
+                                    <livewire:modals.delete-salesman wire:key='delete-salesman{{$user->id}}' :salesmanID='$user->id'/>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                      {{ $salesman->links() }}
 
                   
                 </div>

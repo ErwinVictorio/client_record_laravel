@@ -82,11 +82,14 @@
 
                   <select wire:model='department' class="form-select form-select-lg mb-3" aria-label="Large select example">
                     <option selected value="">Select Department(选择部门)</option>
-                    @foreach ($departments as $department )
-                    <option selected value="{{$department->department_name}}">
+                    @if (!is_null($departments))
+                      @foreach ($departments as $department )
+                    <option wire:key='department{{$department->department_name}}' selected value="{{$department->department_name}}">
                       {{$department->department_name}}
                     </option>
                     @endforeach
+                    @endif
+      
                     
                   </select>
                   @error('department')

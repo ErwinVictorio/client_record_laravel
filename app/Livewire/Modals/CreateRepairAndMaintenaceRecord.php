@@ -24,7 +24,7 @@ class CreateRepairAndMaintenaceRecord extends Component
        ClientRecordForMaintenanceAndRepair::create($validated);
 
        session()->flash('success', 'New Record is Successfully');
-       
+        $this->reset();
        $this->resetErrorBag();
     }
 

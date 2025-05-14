@@ -26,14 +26,9 @@
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Core</div>
-                        <a class="nav-link" href="/cashier/dashboard">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
-                        </a>
-
+    
                         <div class="sb-sidenav-menu-heading">Reports</div>
-                        <a class="nav-link" href="department-summary">
+                        <a class="nav-link" href="{{route('summary')}}">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
                             Department Summary
                             (部门摘要)
@@ -72,8 +67,7 @@
                             </div>
                         </div>
                         
-       
-          
+                
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div style="background-color:  #004998" class="card text-white shadow rounded-4 h-100 border-0">
                                 <div class="card-body d-flex flex-column justify-content-between">

@@ -30,7 +30,7 @@
               {{-- Company Name --}}
               <div class="col-lg-3">
                 <div class="form-floating">
-                  <input wire:model='company_name' type="text" class="form-control" id="company_name" placeholder="Company Name">
+                  <input wire:model.live='company_name' type="text" class="form-control" id="company_name" placeholder="Company Name">
                   <label for="company_name">Company Name (公司名称)</label>
                   @error('company_name') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
@@ -39,7 +39,7 @@
               {{-- Address --}}
               <div class="col-lg-3">
                 <div class="form-floating">
-                  <input wire:model='address' type="text" class="form-control" id="address" placeholder="Address">
+                  <input wire:model.live='address' type="text" class="form-control" id="address" placeholder="Address">
                   <label for="address">Address (地址)</label>
                   @error('address') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
@@ -48,7 +48,7 @@
               {{-- Email --}}
               <div class="col-lg-3">
                 <div class="form-floating">
-                  <input wire:model='email' type="email" class="form-control" id="email" placeholder="Email Address">
+                  <input wire:model.live='email' type="email" class="form-control" id="email" placeholder="Email Address">
                   <label for="email">Email Address (邮箱)</label>
                   @error('email') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
@@ -57,7 +57,7 @@
               {{-- Contact Number --}}
               <div class="col-lg-3">
                 <div class="form-floating">
-                  <input wire:model='contact_number' type="text" class="form-control" id="contact_number" placeholder="Contact Number">
+                  <input wire:model.live='contact_number' type="text" class="form-control" id="contact_number" placeholder="Contact Number">
                   <label for="contact_number">Contact Number (联系电话)</label>
                   @error('contact_number') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
@@ -65,7 +65,7 @@
 
               <div class="col-lg-3">
                 <div class="form-floating">
-                  <input wire:model='stock_out_number' type="text" class="form-control" id="stock_out_number" placeholder="Stock out Form No.">
+                  <input wire:model.live='stock_out_number' type="text" class="form-control" id="stock_out_number" placeholder="Stock out Form No.">
                   <label for="stock_out_number">Stock out Form No.(出库订单号)</label>
                   @error('stock_out_number') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
@@ -74,7 +74,7 @@
               {{-- Contact Person --}}
               <div class="col-lg-3">
                 <div class="form-floating">
-                  <input wire:model='contact_person' type="text" class="form-control" id="contact_person" placeholder="Contact Person">
+                  <input wire:model.live='contact_person' type="text" class="form-control" id="contact_person" placeholder="Contact Person">
                   <label for="contact_person">Contact Person (联系人)</label>
                   @error('contact_person') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
@@ -83,7 +83,7 @@
               {{-- Contact Person Number --}}
               <div class="col-lg-3">
                 <div class="form-floating">
-                  <input wire:model='contact_number_person' type="text" class="form-control" id="contact_number_person" placeholder="Contact Person Number">
+                  <input wire:model.live='contact_number_person' type="text" class="form-control" id="contact_number_person" placeholder="Contact Person Number">
                   <label for="contact_number_person">Contact Number  (联系电话)</label>
                   @error('contact_number_person') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
@@ -92,7 +92,7 @@
               {{-- Bank Account Number (Optional) --}}
               <div class="col-lg-7">
                 <div class="form-floating">
-                  <input wire:model='bank_account_number' type="text" class="form-control" id="bank_Account_number" placeholder="Bank Account Number">
+                  <input wire:model.live='bank_account_number' type="text" class="form-control" id="bank_Account_number" placeholder="Bank Account Number">
                   <label for="bank_Account_number">Bank Account Number (optional) 银行账号</label>
                 </div>
               </div>

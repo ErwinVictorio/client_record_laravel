@@ -14,7 +14,7 @@ class RepairAndMaintence extends Component
     
     public function render()
     {
-       $records = ClientRecordForMaintenanceAndRepair::paginate();
+       $records = ClientRecordForMaintenanceAndRepair::paginate(10);
         return view('livewire.sales-man.repair-and-maintence',[
            'records' => $records
         ]);

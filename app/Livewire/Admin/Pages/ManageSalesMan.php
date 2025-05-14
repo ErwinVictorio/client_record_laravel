@@ -14,7 +14,7 @@ class ManageSalesMan extends Component
 
     public function render()
     {
-        $salesman = User::where('role','3')->paginate();
+        $salesman = User::where('role','3')->paginate(2);
         return view('livewire.admin.pages.manage-sales-man',[
             'salesman' => $salesman
         ]);

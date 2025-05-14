@@ -10,6 +10,7 @@ class EditRepairAndMaintence extends Component
 {
     public $recordId;
 
+
     #[Validate('required|string')] public $company_name;
     #[Validate('required')] public $address;
     #[Validate('required|email')] public $email;

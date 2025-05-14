@@ -80,6 +80,14 @@
                 </div>
               </div>
   
+               <div class="col-lg-10">
+                <div class="form-floating">
+                  <input wire:model='stock_out_number' type="text" class="form-control" id="stock_out_number" placeholder="Stock out Form No.">
+                  <label for="stock_out_number">Stock out Form No.(出库订单号)</label>
+                  @error('stock_out_number') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+              </div>
+
               {{-- Bank Account Number (Optional) --}}
               <div class="col-lg-3">
                 <div class="form-floating">
@@ -88,13 +96,8 @@
                 </div>
               </div>
 
-              <div class="col-lg-7">
-                <div class="form-floating">
-                  <input wire:model='stock_out_number' type="text" class="form-control" id="stock_out_number" placeholder="Stock out Form No.">
-                  <label for="stock_out_number">Stock out Form No.(出库订单号)</label>
-                  @error('stock_out_number') <span class="text-danger">{{ $message }}</span> @enderror
-                </div>
-              </div>
+   
+
   
             </section>
   

@@ -4,7 +4,7 @@ namespace App\Livewire\Modals;
 
 use Livewire\Attributes\Rule;
 use Livewire\Component;
-use App\Models\Clients;
+use App\Models\clients;
 use Illuminate\Support\Facades\Auth;
 
 class ClientCreate extends Component
@@ -23,7 +23,7 @@ class ClientCreate extends Component
     {
         $this->validate();
 
-        $existingClient = Clients::where('email', $this->email)->first();
+        $existingClient = clients::where('email', $this->email)->first();
         $currentSalesman = Auth::id();
 
         if ($existingClient) {
