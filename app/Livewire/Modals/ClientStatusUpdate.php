@@ -12,6 +12,10 @@ class ClientStatusUpdate extends Component
 
     #[Validate('required')] 
     public $SelectedStatus;
+    
+     #[Validate('required')] 
+     public $salesList_no;
+    
 
     public function change_status()
     {
@@ -22,9 +26,10 @@ class ClientStatusUpdate extends Component
 
         if ($client) { // check if we have client or the result is not found
             $client->status = $this->SelectedStatus;
+            $client->salesList_no =  $this->salesList_no;
             $client->save();// to save the changes
 
-
+ 
             // Flash success message
             session()->flash('success', 'Client status updated successfully.');
             $this->dispatch('clientUpdated');

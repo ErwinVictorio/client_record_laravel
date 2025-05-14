@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('contact_number');
             $table->string('email')->unique();
             $table->string('address');
+            $table->string('salesList_no')->nullable(); // new Add;
             $table->string('contact_person');
             $table->string('contact_number_person');
             $table->string('bank_account_number')->nullable();

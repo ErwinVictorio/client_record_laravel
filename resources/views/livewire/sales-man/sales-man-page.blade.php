@@ -99,7 +99,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>Sales List No</th>
                     <th>Company Name</th>
                     <th>Address</th>
                     <th>Email</th>
@@ -112,11 +112,12 @@
             <tbody>
                 @foreach ($clients as $client)
                 <tr>
-                    <td>{{$client->id}}</td> 
+                   <td>{{$client->salesList_no ?? 'N/A'}}</td>
                     <td>{{$client->company_name}}</td>
                     <td>{{$client->address}}</td>
                     <td>{{$client->email}}</td>
                     <td>{{$client->contact_number}}</td>
+                    
                     <td>
                         @php
                             $style;

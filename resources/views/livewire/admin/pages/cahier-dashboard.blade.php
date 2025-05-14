@@ -108,6 +108,7 @@
                             <table class="table"
                                 <thead>
                                     <tr>
+                                        <th>Sales List No</th>
                                         <th>Company Name</th>
                                         <th>Sales Executive</th>
                                         <th>Department</th>
@@ -124,6 +125,7 @@
                                 <tbody>
                                     @foreach ($clientList as $client)
                                     <tr>
+                                        <td>{{$client->salesList_no}}</td>
                                         <td>{{$client->company_name}}</td>
                                         <td>{{$client->salesman->first_name . ' ' .$client->salesman->last_name}}</td>
                                         <td>{{$client->salesman->department}}</td>

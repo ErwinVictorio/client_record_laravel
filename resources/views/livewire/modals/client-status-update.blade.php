@@ -29,8 +29,12 @@
                       @error('SelectedStatus') 
                           <span class="text-danger">{{ $message }}</span> 
                       @enderror
-                  </div>
 
+                      <div class="form-floating mb-3">
+                        <input wire:model.live='salesList_no' type="text" class="form-control" id="SalesList_no" placeholder="Sales List No">
+                        <label for="SalesList_no">SalesList No:</label>
+                        </div>
+                    </div>
                   <div class="modal-footer">
                       <button type="submit" class="btn text-light" style="background-color: #004998">
                           <span wire:loading wire:target="change_status" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

@@ -50,7 +50,8 @@ class CahierDashboard extends Component
              'contact_person',
             'email',
             'status',
-            'salesman_id'
+            'salesman_id',
+            'salesList_no'
         ])
         ->paginate(5);
 
