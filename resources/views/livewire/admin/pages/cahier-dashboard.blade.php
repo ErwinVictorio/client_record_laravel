@@ -145,7 +145,7 @@
                                                            $label = '已售出';
                                                         break;
 
-                                                        case 'Approve':
+                                                        case 'For Approval':
                                                         $style = 'background-color: #F44336;';
                                                             $label = '批准';
                                                             break;

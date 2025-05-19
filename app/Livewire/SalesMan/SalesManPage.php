@@ -34,6 +34,7 @@ class SalesManPage extends Component
         $clients = $user->clients()->where(function ($query) use ($search){
             $query->where('company_name','like',$search);
             $query->orwhere('status', 'like', $search);
+               $query->orwhere('salesList_no', 'like', $search);
         })->paginate(5);
 
         return view('livewire.sales-man.sales-man-page', [

@@ -123,9 +123,9 @@
                             $style;
                             $label = '';
                             switch ($client->status) {
-                                case 'Approve':
+                                case 'For Approval':
                                       $style = 'background-color: #47ba9b;';
-                                      $label = '(批复)';
+                                      $label = '(供批准)';
                                     break;
 
                                   case 'Sold':
@@ -149,7 +149,7 @@
                         @php
                             $status = $client->status === "Sold" ? "disabled" : '';
                         @endphp
-                        <button {{$status}}  data-bs-target="#ModalChangeStatus_{{$client->id}}" wire:key="change-status-{{$client->id}}" data-bs-toggle="modal" 
+                        <button   data-bs-target="#ModalChangeStatus_{{$client->id}}" wire:key="change-status-{{$client->id}}" data-bs-toggle="modal" 
                     
                             style="background-color: #004998"  class="btn rounded-0  text-light btn-sm">
                             <i class="fas fa-sync-alt"></i>

@@ -24,16 +24,24 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Auto Parts Sales Records</h1>
+                    <h1 class="mt-4">Auto Parts Sales Records (汽车零部件销售记录)</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
-                        <li class="breadcrumb-item active">auto repair records</li>
+                        <li class="breadcrumb-item active">auto repair records </li>
                     </ol>
              
                     {{-- table --}}
                     <div class="card mb-4">
-                        <div class="card-header">
-                            Auto Parts Records List
+                        <div class="card-header d-flex justify-content-between">
+                            <h6>Auto Parts Records List</h6>
+                             <div class="d-flex justify-content-center align-items-center">
+                                <input type="text" class="form-control" wire:model.live="clientSearch" placeholder="Search clients...">
+                            <div>
+                                <button class="btn btn-primary rounded-0" type="button" wire:click="ApplySearch">
+                                    <i class="fas fa-search me-1"></i>
+                                </button>
+                            </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <table class="table">

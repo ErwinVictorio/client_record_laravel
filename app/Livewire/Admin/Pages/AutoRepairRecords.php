@@ -10,10 +10,24 @@ class AutoRepairRecords extends Component
 {
   
     use WithPagination;
-    
+
+      public $searchQuery = '', $clientSearch = '';
+
+    public function ApplySearch(){
+        $this->searchQuery = $this->clientSearch;
+        $this->resetPage();
+    }
+
     public function render()
     {
-        $records = CreateRecordForAutoRepair::paginate(10);
+             $search = '%' . $this->searchQuery . '%';
+
+        $records = CreateRecordForAutoRepair::where(function($query) use ($search){
+          $query->where('company_name', 'like',$search);
+          $query->orwhere('email', 'like',$search);
+          $query->orwhere('stock_out_number','like',$search);
+        })->paginate(10);
+
         return view('livewire.admin.pages.auto-repair-records',[
             'records' => $records
         ]);

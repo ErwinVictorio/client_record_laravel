@@ -23,7 +23,7 @@
                   <div class="modal-body">
                       <select wire:model.live="SelectedStatus" class="form-select form-select-lg mb-3">
                           <option value="">Select Status (更改状态)</option>
-                          <option value="Approve">Approve (批复)</option>
+                          <option value="For Approval">For Approval (供批准)</option>
                           <option value="Pending">Pending (未成交)</option>
                       </select>
                       @error('SelectedStatus') 

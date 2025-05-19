@@ -16,11 +16,11 @@ class CahierDashboard extends Component
 
     public function mount(){
         $clientStatusCount = clients::selectRaw('status, COUNT(*) as total')
-         ->whereIn('status',['Approve', 'Sold'])
+         ->whereIn('status',['For Approval', 'Sold'])
          ->groupBy('status')
          ->pluck('total', 'status');
 
-         $this->countedAprove = $clientStatusCount['Approve'] ?? 0;
+         $this->countedAprove = $clientStatusCount['For Approval'] ?? 0;
          $this->counttedSoldClient = $clientStatusCount['Sold'] ?? 0;
     }
 
@@ -35,7 +35,7 @@ class CahierDashboard extends Component
         $search  = '%' . $this->searchQuery . '%';
 
         $clientList = clients::with(['salesman'])
-        ->whereIn('status', ['Sold', 'Approve'])
+        ->whereIn('status', ['Sold', 'For Approval'])
         ->where(function($query) use ($search){
             $query->where('company_name', 'like', $search);
             $query->orwhere('email', 'like' ,$search);
