@@ -5,7 +5,7 @@ namespace App\Livewire\Modals;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use App\Models\CreateRecordForAutoRepair;
-
+use Illuminate\Support\Facades\Auth;
 
 class CreateAutoRepairRecords extends Component
 {
@@ -19,9 +19,19 @@ class CreateAutoRepairRecords extends Component
     #[Validate('nullable')] public $bank_account_number;
 
     public function create_client(){
-     $validated = $this->validate();
+     $this->validate();
 
-      CreateRecordForAutoRepair::create($validated);
+      CreateRecordForAutoRepair::create([
+        'company_name' => $this->company_name,
+        'address' => $this->address,
+        'email' => $this->email,
+        'contact_number' => $this->contact_number,
+        'stock_out_number' => $this->stock_out_number,
+        'contact_person' =>$this->contact_person,
+        'contact_number_person' => $this->contact_number_person,
+        'bank_account_number' => $this->bank_account_number,
+        'salesmanId' => Auth::id() // to get the current salesman na naka login 
+      ]);
       session()->flash('success','New Record is Successfully Created');
       $this->reset();
     }

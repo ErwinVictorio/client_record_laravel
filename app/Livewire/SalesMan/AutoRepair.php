@@ -4,7 +4,9 @@ namespace App\Livewire\SalesMan;
 
 use Livewire\Component;
 use App\Models\CreateRecordForAutoRepair;
+use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
+
 
 class AutoRepair extends Component
 {
@@ -12,7 +14,7 @@ class AutoRepair extends Component
 
     public function render()
     {
-      $records = CreateRecordForAutoRepair::paginate(10);
+      $records = CreateRecordForAutoRepair::where('salesmanId', Auth::id())->paginate(20);
 
         return view('livewire.sales-man.auto-repair',[
           'records' => $records

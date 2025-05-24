@@ -41,7 +41,7 @@ class Dashboard extends Component
                       ->orWhere('status', 'like', $search);
             })
             ->orderBy('created_at', 'desc')
-            ->paginate(5);
+            ->paginate(20);
     
         return view('livewire.admin.dashboard', [
             'clientList' => $clientList

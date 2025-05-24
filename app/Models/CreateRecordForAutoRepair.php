@@ -8,6 +8,10 @@ class CreateRecordForAutoRepair extends Model
 {
     //
 
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
     protected $fillable =[
        'company_name',
        'address',
@@ -16,6 +20,7 @@ class CreateRecordForAutoRepair extends Model
        'contact_number',
        'contact_person',
        'contact_number_person',
-       'stock_out_number'
+       'stock_out_number',
+       'salesmanId'
     ];
 }

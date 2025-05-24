@@ -149,7 +149,7 @@
                         @php
                             $status = $client->status === "Sold" ? "disabled" : '';
                         @endphp
-                        <button   data-bs-target="#ModalChangeStatus_{{$client->id}}" wire:key="change-status-{{$client->id}}" data-bs-toggle="modal" 
+                        <button {{$status}} data-bs-target="#ModalChangeStatus_{{$client->id}}" wire:key="change-status-{{$client->id}}" data-bs-toggle="modal" 
                     
                             style="background-color: #004998"  class="btn rounded-0  text-light btn-sm">
                             <i class="fas fa-sync-alt"></i>
@@ -158,7 +158,7 @@
                         </button>
                     </td>
                 </tr>
-                 {{-- Modal updating status --}}  
+                 {{-- Modal updating status --}}    
                  <livewire:modals.client-status-update :clientId="$client->id" :wire:key="'client-status-update-'.$client->id"/>        
                 @endforeach
             </tbody>

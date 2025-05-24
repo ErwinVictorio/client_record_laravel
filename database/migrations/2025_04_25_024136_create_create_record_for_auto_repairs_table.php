@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('contact_person');
             $table->string('contact_number_person');
             $table->string('stock_out_number');
+            $table->foreignId('salesmanId')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

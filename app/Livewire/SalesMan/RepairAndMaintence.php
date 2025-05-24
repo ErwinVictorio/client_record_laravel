@@ -3,9 +3,9 @@
 namespace App\Livewire\Salesman;
 
 use Livewire\Component;
-use App\Models\ClientRecordForMaintenanceAndRepair;
 use Livewire\WithPagination;
-
+use Illuminate\Support\Facades\Auth;
+use App\Models\ClientRecordForMaintenanceAndRepair;
 class RepairAndMaintence extends Component
 {
 
@@ -14,7 +14,8 @@ class RepairAndMaintence extends Component
     
     public function render()
     {
-       $records = ClientRecordForMaintenanceAndRepair::paginate(10);
+       $records = ClientRecordForMaintenanceAndRepair::where('salesmanId', Auth::id())->paginate(10);
+
         return view('livewire.sales-man.repair-and-maintence',[
            'records' => $records
         ]);

@@ -16,7 +16,7 @@ class SalesManPage extends Component
     {
         $user = Auth::user();
 
-        $this->countedPending = $user->clients->where('status', 'Pending')->count();
+        $this->countedPending = $user->clients->where('status', 'For Approval')->count();
         $this->countedSold = $user->clients->where('status', 'Sold')->count();
     }
 
@@ -35,8 +35,9 @@ class SalesManPage extends Component
             $query->where('company_name','like',$search);
             $query->orwhere('status', 'like', $search);
                $query->orwhere('salesList_no', 'like', $search);
-        })->paginate(5);
+        })->paginate(20);
 
+        
         return view('livewire.sales-man.sales-man-page', [
             'clients' => $clients,
         ]);

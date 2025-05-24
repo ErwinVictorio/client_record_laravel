@@ -16,14 +16,11 @@ class AutoRepairAndMaintenance extends Component
     public function ApplySearch(){
         $this->searchQuery = $this->clientSearch;
         $this->resetPage();
-
     }
 
     public function render()
     {
         $search = '%' . $this->searchQuery . '%';
-
-
         $records = ClientRecordForMaintenanceAndRepair::where(function($query) use ($search){
           $query->where('company_name', 'like',$search);
           $query->orwhere('email', 'like',$search);

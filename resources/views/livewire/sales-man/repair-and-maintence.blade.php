@@ -20,7 +20,7 @@
         </ol>
       </nav>
     </div>
-    
+    {{$records}}
     <section class="container-fluid mt-3">
       <table class="table">        
        <thead>
@@ -37,6 +37,7 @@
          </tr>
      </thead>
      <tbody>
+
      @foreach ($records as $record )
      <tr>
       <td>{{$record->id}}</td>

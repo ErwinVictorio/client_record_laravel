@@ -32,7 +32,7 @@
                     {{-- Maian Content Here --}}
                     <div class="container-fluid p-2">
                         <button style="background-color: #004998" data-bs-toggle="modal" data-bs-target="#createModalDepartment" class="btn rounded-0 text-light">
-                            New Department (新部门)
+                            Add Department (新部门)
                         </button>
                     </div>
 

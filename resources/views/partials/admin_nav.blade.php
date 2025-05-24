@@ -20,18 +20,19 @@
 
                     <div class="sb-sidenav-menu-heading">Interface</div>
 
-                    <a class="nav-link" href="/admin/salesman">
-                        <div class="sb-nav-link-icon"><i class="fas fa-user-tie"></i></div>
-                        Manage  sales executive
-                        (管理销售业务员)
-                    </a>
-
                     <a class="nav-link" href="/admin/department">
                         <div class="sb-nav-link-icon"><i class="fas fa-building"></i></div>
                         Manage Department
                         (部门信息管理)
                     </a>
 
+                    <a class="nav-link" href="/admin/salesman">
+                        <div class="sb-nav-link-icon"><i class="fas fa-user-tie"></i></div>
+                        Manage  sales executive
+                        (管理销售业务员)
+                    </a>
+
+            
                     <a class="nav-link" href="/admin/auto-repair-record">
                         <div class="sb-nav-link-icon">
                             <i class="fas fa-wrench"></i> 
@@ -49,7 +50,6 @@
                          Repair & Maintenance Records
                         (维修&保养记录)
                     </a>
-
 
                 </div>
             </div>
