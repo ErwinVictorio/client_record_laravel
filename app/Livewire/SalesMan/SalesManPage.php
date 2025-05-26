@@ -31,7 +31,7 @@ class SalesManPage extends Component
         $user = Auth::user();
         $search  = '%' . $this->searchQuery . '%';
 
-        $clients = $user->clients()->where(function ($query) use ($search){
+        $clients = $user->clients()->where(function($query) use ($search){
             $query->where('company_name','like',$search);
             $query->orwhere('status', 'like', $search);
                $query->orwhere('salesList_no', 'like', $search);
