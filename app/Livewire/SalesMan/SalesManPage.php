@@ -10,7 +10,7 @@ class SalesManPage extends Component
 {
     use WithPagination;
 
-    public $countedPending, $countedSold,$searchQuery= '' ,$clientSearch = '';
+    public $countedPending, $countedSold,$searchQuery= '' ,$clientSearch = '',$totalPending = '';
 
     public function mount()
     {
@@ -18,6 +18,7 @@ class SalesManPage extends Component
 
         $this->countedPending = $user->clients->where('status', 'For Approval')->count();
         $this->countedSold = $user->clients->where('status', 'Sold')->count();
+        $this->totalPending = $user->clients->where('status', 'Pending')->count();
     }
 
     public function applySearch(){

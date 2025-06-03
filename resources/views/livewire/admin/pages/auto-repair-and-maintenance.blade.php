@@ -76,14 +76,18 @@
                                             <button data-bs-target="#EditAtutoRepairMaintence_{{$record->id}}" data-bs-toggle="modal" style="background-color: #0d629b" class="btn text-light">
                                               Edit
                                             </button>
-                                            <button data-bs-target="#DeleteMaintenanceRecord_{{$record->id}}" data-bs-toggle="modal" class="btn btn-danger">
+                                            <button
+                                              data-bs-target="#deleteAutoRecordMintenance"
+                                              data-bs-toggle="modal" class="btn btn-danger"
+                                               wire:click="$dispatch('open-delete-modal', { clientId: {{ $record->id }} })"
+                                              >
                                               Delete
                                             </button>
                                         </td>
                                     </tr>
                                     {{-- For Editing Modal --}}
                                     <livewire:modals.edit-repair-and-maintence wire:key='edit-maintenace{{$record->id}}' :recordId="$record->id" />
-                                    <livewire:modals.delete-record-for-repair-and-maintenance wire:key='delete-maintenance{{$record->id}}' :recordId="$record->id" />
+                                    {{-- <livewire:modals.delete-record-for-repair-and-maintenance wire:key='delete-maintenance{{$record->id}}' :recordId="$record->id" /> --}}
                                     @endforeach
                                 </tbody>
                             </table>
@@ -94,6 +98,8 @@
             </main>
             {{-- modal --}}
            <livewire:modals.create-department/>
+           {{-- modal for delete records --}}
+           <livewire:modals.delete-auto-nand-maintenance-record/>
 
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">

@@ -18,7 +18,7 @@ class ManageSalesMan extends Component
 
         $this->searchQuery = $this->salesManSearch;
         $this->resetPage();
-    }
+    }   
 
 
 

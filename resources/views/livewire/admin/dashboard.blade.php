@@ -1,7 +1,7 @@
   <div class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="/admin/dashboard">Dashaboard</a>
+        <a class="navbar-brand ps-3" href="/admin/dashboard">Dashboard</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
@@ -32,7 +32,7 @@
                     </ol>
                     <div class="row">
                                         <!-- Total Pending Card -->
-                        <div class="col-lg-5 mb-4">
+                        <div class="col-lg-3 mb-4">
                             <div class="card text-white" style="background-color: #1e293b">
                                 <div class="card-body d-flex align-items-center justify-content-between">
                                     <div>
@@ -48,7 +48,7 @@
                         </div>
 
                         <!-- Total Sold Card -->
-                        <div class="col-lg-6 mb-4">
+                        <div class="col-lg-3 mb-4">
                             <div class="card text-white" style="background-color: #334155">
                                 <div class="card-body d-flex align-items-center justify-content-between">
                                     <div>
@@ -65,22 +65,42 @@
                             </div>
                         </div>
 
+                           <!-- Total Approval Card -->
+                        <div class="col-lg-3 mb-4">
+                            <div class="card text-white" style="background-color: #334155">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <h5 class="mb-2">
+                                            <i class="fas fa-user-check me-2"></i>
+                                            Total Approval (总批准)
+                                        </h5>
+                                        <span class="fw-bold fs-4">
+                                           {{$totalApproval}}
+                                        </span>
+                                    </div>
+                                    <i class="fas fa-cash-register fa-2x opacity-25"></i>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="card mb-4">
-                        <div class="card-header">
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" wire:model.live="ClientSearch" placeholder="Search clients...">
-                                <button class="btn btn-primary" type="button" wire:click="applySearch">
-                                    <i class="fas fa-search me-1"></i> Filter
-                                </button>
-                            </div>
-
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+                       <div class="card-header d-flex justify-content-between align-items-center">
+                         <div>
+                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
                                 <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
                               </svg>
-                            client List
-                            (客户列表)
+                              client List
+                             (客户列表)
+                            </div>
+
+                              <div class="d-flex justify-content-center align-items-center">
+                                <input type="text" class="form-control" wire:model.live="ClientSearch" placeholder="Search clients...">
+                                <button class="btn btn-primary" type="button" wire:click="applySearch">
+                                    <i class="fas fa-search me-1"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="card-body">
                             <table class="table">
@@ -100,7 +120,6 @@
                                 <tbody>
 
                                     @foreach ($clientList as $client )
-
                                     <tr>
                                         <td>{{$client->company_name}}</td>
                                         <td>{{$client->salesman->first_name . ' ' .$client->salesman->last_name }}</td>
@@ -111,12 +130,26 @@
                                         <td>
                                             @php
                                                 $Sold = $client->status === 'Sold' ? '卖出' : '待处理';
+
+                                                $color = '';
+
+                                                switch ($client->status) {
+                                                    case 'Sold':
+                                                         $color = 'background-color:  #004998;';
+                                                        break;
+
+                                                        case 'Pending':
+                                                          $color = 'background-color: red;';
+                                                           break;
+                                                           
+                                                     default:
+                                                       $color = 'background-color: #4CAF50;';
+                                                        break;
+                                                }
                                             @endphp
                                             <span
-                                            class="badge rounded-pill text-white px-3 py-2"
-                                            style="{{ $client->status === 'Sold'
-                                                ? 'background-color: #4CAF50;'  /* Modern green for "Sold" */
-                                                : 'background-color: #F44336;'  /* Modern red for other statuses */ }}">
+                                             style="{{$color}}"
+                                            class="badge rounded-pill text-white px-3 py-2">
                                             {{ $client->status .' / '. $Sold}}
                                         </span>
                                         </td>
@@ -135,14 +168,15 @@
                                               </svg>
                                            (编辑)
                                         </button>
+                                            <button
+                                             class="btn btn-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteClientModal"
+                                                wire:click="$dispatch('open-delete-modal', { clientId: {{ $client->id }} })"
+                                            >
+                                                Delete(删除客户端)
+                                            </button>
 
-                                            <button data-bs-target="#deleteClientModal_{{$client->id}}" wire:key="'edit-info-'.$client->id "  data-bs-toggle="modal" class="btn text-light rounded-0"  style="background-color: #004998">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                                            </svg>
-                                           (删除)
-                                        </button>
 
                                     </tr>
                                     {{-- for show details ng mga clients --}}
@@ -150,19 +184,16 @@
 
                                     {{-- for Editing the Client Information --}}
                                     <livewire:modals.edit-client-info-for-admin :clientId="$client->id" :wire:key=" 'edit-client-info-'.$client->id "/>
-                                    
-                                    {{-- for Deleting Client --}}
-                                    <livewire:modals.delete-client :clientId="$client->id" wire:key=" 'delete-client-'.$client->id " />
                                     @endforeach
 
                                 </tbody>
-
                             </table>
                             {{ $clientList->links() }}
                         </div>
                     </div>
                 </div>
-
+                {{-- dynamic modal delete --}}
+                <livewire:modals.client-delete-part2/> 
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">

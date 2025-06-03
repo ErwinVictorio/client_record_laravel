@@ -26,7 +26,7 @@ class AutoRepairRecords extends Component
           $query->where('company_name', 'like',$search);
           $query->orwhere('email', 'like',$search);
           $query->orwhere('stock_out_number','like',$search);
-        })->paginate(10);
+        })->paginate(20);
 
         return view('livewire.admin.pages.auto-repair-records',[
             'records' => $records

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ClientSeeder extends Seeder
 {
@@ -16,14 +17,14 @@ class ClientSeeder extends Seeder
         $totalRecords = 7000;
 
         for ($i = 0; $i < $totalRecords; $i++) {
-            \DB::table('clients')->insert([
+            DB::table('clients')->insert([
                 'company_name' => $faker->company,
                 'contact_number' => $faker->phoneNumber,
                 'email' => $faker->unique()->safeEmail,
                 'address' => $faker->address,
                 'contact_person' => $faker->name,
                 'contact_number_person' => $faker->phoneNumber,
-                'salesman_id' => 3
+                'salesman_id' => 5
             ]);
 
             // Show progress

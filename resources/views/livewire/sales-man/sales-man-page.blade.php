@@ -11,7 +11,7 @@
    </header>
 
    <section class="container-fluid row gap-3 p-5">
-    <div class="col-lg-5 mb-4">
+    <div class="col-lg-3 mb-4">
         <div style="background-color: #f6f6f6; color:#004998" class="card rounded-2 shadow-sm h-100 border-0">
             <div class="card-body d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-center mb-3">
@@ -27,7 +27,23 @@
         </div>
     </div>
 
-    <div class="col-lg-5 mb-4">
+    <div class="col-lg-3 mb-4">
+        <div style="background-color: #f6f6f6; color:#004998" class="card rounded-2 shadow-sm h-100 border-0">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="me-3">
+                        <i class="fas fa-user-clock fa-2x"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-uppercase mb-bold mb-1">Total Approval (未成交客户总计)</h6>
+                        <h3 class="fw-bold mb-0">{{$countedPending}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="col-lg-3  mb-4">
         <div style="background-color: #f6f6f6; color:#004998" class="card rounded-2 shadow-sm h-100 border-0">
             <div class="card-body d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-center mb-3">
@@ -36,7 +52,7 @@
                     </div>
                     <div>
                         <h6 class="text-uppercase mb-bold mb-1">Total Pending (未成交客户总计)</h6>
-                        <h3 class="fw-bold mb-0">{{$countedPending}}</h3>
+                        <h3 class="fw-bold mb-0">{{$totalPending}}</h3>
                     </div>
                 </div>
             </div>

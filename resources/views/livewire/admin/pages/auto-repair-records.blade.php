@@ -74,24 +74,32 @@
                                             <button data-bs-target="#AutoRepair_{{$record->id}}" data-bs-toggle="modal" style="background-color: #0d629b" class="btn text-light">
                                               Edit
                                             </button>
-                                            <button data-bs-target="#DeleteAutoRecord_{{$record->id}}" data-bs-toggle="modal" class="btn btn-danger">
+                                            <button
+                                              data-bs-target="#deleteAutoRecord"
+                                              data-bs-toggle="modal" 
+                                              class="btn btn-danger"
+                                              wire:click="$dispatch('open-delete-modal', { clientId: {{ $record->id }} })"
+                                              >
                                               Delete
                                             </button>
                                      </td>
                                  </tr>
 
-                                <livewire:modals.delete-auto-repair-record :recordId="$record->id"/>
-                                <livewire:modals.edit-auto-repair-record :recordId="$record->id"/>
+                                {{-- <livewire:modals.delete-auto-repair-record :recordId="$record->id"/> --}}
+                                <livewire:modals.edit-auto-repair-record :wire:key=" 'edit-auto-record' .$record->id " :recordId="$record->id"/>
                                 @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-
+                {{$records->links()}}
             </main>
             {{-- modal --}}
            <livewire:modals.create-department/>
+
+           {{-- MODAL FOR DELETE RECORDS --}}
+           <livewire:modals.auto-record-delete2/>
 
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
