@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('client_record_for_maintenance_and_repairs', function (Blueprint $table) {
-            //
-              $table->foreignId('salesmanId')->constrained('users')->onDelete('cascade');
-        });
+       if (!Schema::hasColumn('client_record_for_maintenance_and_repairs', 'salesmanId')) {
+            Schema::table('client_record_for_maintenance_and_repairs', function (Blueprint $table) {
+                $table->foreignId('salesmanId')->constrained('users')->onDelete('cascade');
+            });
+        }
+
+        
     }
 
     /**
@@ -24,7 +27,6 @@ return new class extends Migration
     {
         Schema::table('client_record_for_maintenance_and_repairs', function (Blueprint $table) {
             //
-          
         });
     }
 };

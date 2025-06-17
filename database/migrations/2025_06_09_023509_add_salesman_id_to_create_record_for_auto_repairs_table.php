@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('create_record_for_auto_repairs', function (Blueprint $table) {
-            //
-             $table->foreignId('salesmanId')->constrained('users')->onDelete('cascade');
-        });
+       Schema::table('create_record_for_auto_repairs', function (Blueprint $table) {
+        if (!Schema::hasColumn('create_record_for_auto_repairs', 'salesmanId')) {
+            $table->foreignId('salesmanId')->constrained('users')->onDelete('cascade');
+        }
+});
+
     }
 
     /**

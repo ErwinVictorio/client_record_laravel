@@ -23,17 +23,14 @@ class ClientCreate extends Component
     {
         $this->validate();
 
-        $existingClient = clients::where('email', $this->email)->first();
+        $existingClient = clients::where('company_name', $this->CompanyName)->first();
         $currentSalesman = Auth::id();
 
         if ($existingClient) {
             if ($existingClient->salesman_id !== $currentSalesman) {
                 session()->flash('error', "The client is already taken!");
                 return;
-            } else {
-                session()->flash('error', "You have already added this client.");
-                return;
-            }
+            } 
         }
 
         $this->showConfirmation = true;

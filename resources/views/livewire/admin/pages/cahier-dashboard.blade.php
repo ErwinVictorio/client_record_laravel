@@ -125,7 +125,7 @@
                                 <tbody>
                                     @foreach ($clientList as $client)
                                     <tr>
-                                        <td>{{$client->salesList_no}}</td>
+                                        <td>{{$client->salesList_no ?? 'N/A'}}</td>
                                         <td>{{$client->company_name}}</td>
                                         <td>{{$client->salesman->first_name . ' ' .$client->salesman->last_name}}</td>
                                         <td>{{$client->salesman->department}}</td>
@@ -150,7 +150,8 @@
                                                             $label = '批准';
                                                             break;
                                                     default:
-                                                        # code...
+                                                          $label = '悬而未决';
+                                                          $style = 'background-color: red;';
                                                         break;
                                                 }
                                             @endphp

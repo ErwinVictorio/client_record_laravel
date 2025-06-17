@@ -35,25 +35,22 @@ class CahierDashboard extends Component
         $search  = '%' . $this->searchQuery . '%';
 
         $clientList = clients::with(['salesman'])
-        ->whereIn('status', ['Sold', 'For Approval'])
-        ->where(function($query) use ($search){
-            $query->where('company_name', 'like', $search);
-            $query->orwhere('email', 'like' ,$search);
-            $query->orwhere('address', 'like', $search);
-            $query->orwhere('status', 'like' ,$search);
-        })
-        ->select([
-            'id',
-            'company_name',
-            'address',
-            'contact_number',
-             'contact_person',
-            'email',
-            'status',
-            'salesman_id',
-            'salesList_no'
-        ])
-        ->paginate(5);
+          ->where( function($query) use ($search){
+            $query->where('company_name', 'like',$search)
+             ->orWhere('status','like',$search)
+              ->orWhere('address','like',$search)
+             ->orWhere('contact_number','like',$search)
+             ->orWhere('salesList_no','like',$search)
+             ->orWhere('email','like',$search)
+             ->orWhereHas('salesman',function ($q) use ($search){
+                $q->where('department', 'like', $search)
+                ->orWhere('first_name', 'like',$search)
+                ->orWhere('last_name','like', $search);
+             });
+
+          })->orderBy('created_at','desc')
+            ->paginate(20);
+
 
         return view('livewire.admin.pages.cahier-dashboard',[
             'clientList' => $clientList
