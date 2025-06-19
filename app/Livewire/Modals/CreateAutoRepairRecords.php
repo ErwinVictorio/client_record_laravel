@@ -12,10 +12,10 @@ class CreateAutoRepairRecords extends Component
     #[Validate('required|string')] public $company_name;
     #[Validate('required')] public $address;
     #[Validate('required|email')] public $email;
-    #[Validate('required')] public $contact_number;
+    #[Validate('required|regex:/^09\d{9}$/|digits:11')] public $contact_number;
     #[Validate('required')] public $stock_out_number;
     #[Validate('required')] public $contact_person;
-    #[Validate('required')] public $contact_number_person;
+    #[Validate('required|regex:/^09\d{9}$/|digits:11')] public $contact_number_person;
     #[Validate('nullable')] public $bank_account_number;
 
     public function create_client(){

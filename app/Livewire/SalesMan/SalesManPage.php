@@ -37,7 +37,9 @@ class SalesManPage extends Component
             $query->orwhere('status', 'like', $search);
             $query->orwhere('salesList_no', 'like', $search);
             $query->orwhere('email', 'like', $search);
-        })->paginate(20);
+        })
+         ->orderBy('created_at', 'desc')
+         ->paginate(20);
 
         
         return view('livewire.sales-man.sales-man-page', [

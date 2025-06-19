@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class ClientCreate extends Component
 {
-    #[Rule('required')] public $contact_person_number;
+    #[Rule('required|regex:/^09\d{9}$/|digits:11')] public $contact_person_number;
     #[Rule('required|string')] public $contact_person;
     #[Rule('required|email')] public $email;
     #[Rule('required')] public $address;
     #[Rule('required|string')] public $CompanyName;
     #[Rule('nullable')] public $bank_Account_number;
-    #[Rule('required')] public $contact_number;
+    #[Rule('required|regex:/^09\d{9}$/|digits:11')] public $contact_number;
 
     public bool $showConfirmation = false;
 
