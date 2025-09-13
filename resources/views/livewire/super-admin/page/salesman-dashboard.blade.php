@@ -152,7 +152,6 @@
                                     default:
                                      $style = 'background-color:  #ff0000;';
                                      $label = '(编辑)';
-
                               }
                         @endphp
                         <span 
@@ -171,7 +170,7 @@
                             style="background-color: #004998"  class="btn rounded-0  text-light btn-sm">
                             <i class="fas fa-sync-alt"></i>
                             Change Status
-                            (更改状态) 
+                            (更改状态)
                         </button>
                     </td>
                 </tr>

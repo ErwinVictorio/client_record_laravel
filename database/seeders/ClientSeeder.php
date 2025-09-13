@@ -14,7 +14,7 @@ class ClientSeeder extends Seeder
     public function run(): void
     {
         $faker = \Faker\Factory::create();
-        $totalRecords = 7000;
+        $totalRecords = 1;
 
         for ($i = 0; $i < $totalRecords; $i++) {
             DB::table('clients')->insert([

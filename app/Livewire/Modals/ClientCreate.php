@@ -5,6 +5,7 @@ namespace App\Livewire\Modals;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 use App\Models\clients;
+use Illuminate\Foundation\Http\Middleware\TrimStrings;
 use Illuminate\Support\Facades\Auth;
 
 class ClientCreate extends Component
@@ -23,7 +24,11 @@ class ClientCreate extends Component
     {
         $this->validate();
 
-        $existingClient = clients::where('company_name', $this->CompanyName)->first();
+        $companyName = strtoupper(str_replace(' ','',trim($this->CompanyName)));
+      
+        // check if the client is  already taken using company name
+        $existingClient = Clients::whereRaw("REPLACE(UPPER(company_name), ' ', '') = ?", [$companyName])->first();
+        // kunin yong currenrt user na naka login
         $currentSalesman = Auth::id();
 
         if ($existingClient) {
@@ -53,6 +58,7 @@ class ClientCreate extends Component
 
         session()->flash('success', 'New Client is Successfully Created');
 
+        // to reset the value
         $this->reset([
             'CompanyName',
             'address',

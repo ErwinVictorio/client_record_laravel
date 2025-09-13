@@ -10,15 +10,15 @@
 
               <form wire:submit.prevent='destroyClient'>
                   <div class="modal-body">
-
                       @if (!session()->has('success'))
                           <p class="text-muted">
-                              Are you sure you want to delete <strong>{{ $company_name}}</strong>?<br>
+                              Are you sure you want to delete <strong>{{ $company_name ?? "N"}}</strong>?<br>
                               This action cannot be undone.<br><br>
 
                               您确定要删除 <strong>{{ $company_name }}</strong> 吗？<br>
                               此操作无法撤销。
                           </p>
+                          <h5 class="danger"> {{session('error')}}</h5>
                       @else
                           <x-alert-message :color=" 'alert-success' ">
                               {{session('success')}}

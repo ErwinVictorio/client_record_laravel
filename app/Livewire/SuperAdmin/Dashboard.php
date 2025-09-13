@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Livewire\Admin;
+namespace App\Livewire\SuperAdmin;
 
 use Livewire\Component;
 use App\Models\clients;
 use Livewire\WithPagination;
 
-
 class Dashboard extends Component
 {
-    use WithPagination;
+       use WithPagination;
 
     public $totalClient,$totalPending,$totalSold = '', $totalApproval = '';
 
@@ -19,7 +18,7 @@ class Dashboard extends Component
     public function applySearch()
     {
         $this->searchQuery = $this->ClientSearch;
-            $this->resetPage();
+        $this->resetPage();
     }
     
  
@@ -43,14 +42,13 @@ class Dashboard extends Component
                        ->orWhereHas('salesman', function ($q) use ($search) {
                      $q->where('first_name', 'like', $search)
                     ->orWhere('last_name', 'like', $search)
-                     ->orWhere('created_at', 'like', $search)
                     ->orWhere('department', 'like', $search); // Optional depending on your needs
               });
             })
             ->orderBy('created_at', 'desc')
             ->paginate(20);
     
-        return view('livewire.admin.dashboard', [
+        return view('livewire.super-admin.dashboard', [
             'clientList' => $clientList
         ]);
     }

@@ -4,7 +4,9 @@ namespace App\Livewire\Modals;
 
 use Livewire\Component;
 use App\Models\clients;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Validate;
+
 
 class ClientStatusUpdate extends Component
 {
@@ -19,6 +21,7 @@ class ClientStatusUpdate extends Component
 
     public function change_status()
     {
+
         $this->validate(); // validate selected status
 
         $client = clients::find($this->clientId);// get the client base on Id
@@ -32,8 +35,6 @@ class ClientStatusUpdate extends Component
  
             // Flash success message
             session()->flash('success', 'Client status updated successfully.');
-            $this->dispatch('clientUpdated');
-
         } else {
             // Flash error message if client not found
             session()->flash('error', 'Client not found.');
@@ -43,7 +44,7 @@ class ClientStatusUpdate extends Component
     public function render()
     {
         return view('livewire.modals.client-status-update',[
-            'clientId' => $this->clientId,
+            'clientId' => $this->clientId
         ]);
     }
 }

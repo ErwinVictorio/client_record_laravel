@@ -1,7 +1,7 @@
 <div>
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="{{route('casher.dashboard')}}">Cashier Dashboard</a>
+        <a class="navbar-brand ps-3" href="{{route('superAdminDashboard.view')}}">Dashboard</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
@@ -19,34 +19,13 @@
             </li>
         </ul>
     </nav>
-      {{-- sidebar --}}
-    <div id="layoutSidenav">
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Reports</div>
-                        <a class="nav-link" href="{{route('summary')}}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
-                            Department Summary
-                            (部门摘要)
-                        </a>
-                    
-                    </div>
-                </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Cashier
-                </div>
-            </nav>
-        </div>
+      @include('partials.superAdmin_nav')
         <div id="layoutSidenav_content">
-        
             <main>
                 <div class="container-fluid px-4">
                     <h1 class="mt-4">Department Summary  (部门摘要)</h1>
                     <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item"><a href="{{route('casher.dashboard')}}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('cashier.view')}}">Dashboard</a></li>
                         <li class="breadcrumb-item active">department dummary</li>
                     </ol>
                     {{-- table --}}

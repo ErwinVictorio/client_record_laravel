@@ -4,6 +4,7 @@
           <div class="modal-content">
               <div class="modal-header">
                   <h1 class="modal-title fs-5" id="staticBackdropLabel">Update Status</h1>
+                  {{$userRole ?? 'test'}}
                   <livewire:refresh-page/>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
@@ -31,10 +32,21 @@
                       @enderror
         
 
-                      <div class="form-floating">
+                      <div class="form-floating mb-2">
                         <input wire:model.live='salesList_no' type="text" class="form-control" id="SalesList_no" placeholder="Sales List No">
                         <label for="SalesList_no">SalesList No:</label>
                     </div>
+
+                      <div class="form-floating">
+                        <input wire:model.live='salesList_no' type="text" class="form-control" id="SalesList_no" placeholder="Sales List No">
+                        <label for="SalesList_no">Bank Acoount Number</label>
+                    </div>
+
+                    <div class="form-floating">
+                        <input wire:model.live='salesList_no' type="text" class="form-control" id="SalesList_no" placeholder="Sales List No">
+                        <label for="SalesList_no">Name</label>
+                    </div>
+
                       @error('salesList_no')
                             <span class="text-danger">
                                 {{ $message }}

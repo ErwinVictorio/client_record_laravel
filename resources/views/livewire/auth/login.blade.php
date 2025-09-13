@@ -56,7 +56,8 @@
         <label class="form-label">Select Role (选择岗位)</label>
         <select wire:model='role' class="form-select">
           <option value="">Select role</option>
-          <option value="1">Admin (管理员)</option>
+          <option value="0">Chief Administrator (首席管理员)</option>
+          <option value="1">Administrator (管理员)</option>
           <option value="2">Cashier (出纳)</option>
           <option value="3">Sales Executive (销售业务员)</option>
         </select>

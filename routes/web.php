@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\Pages\CahierDashboard;
@@ -13,6 +12,17 @@ use App\Livewire\Salesman\RepairAndMaintence;
 use App\Livewire\Admin\Pages\AutoRepairAndMaintenance;
 use App\Livewire\Admin\Pages\AutoRepairRecords;
 use App\Livewire\Cashier\DepartmentSummary as SummaryDepartment;
+use App\Livewire\SuperAdmin\Dashboard as SuperAdminDashboard;
+use App\Livewire\SuperAdmin\Page\Cashier;
+use App\Livewire\SuperAdmin\Page\ManageDepartment;
+use App\Livewire\SuperAdmin\Page\ManageSalesExecutive;
+use App\Livewire\SuperAdmin\Page\AutoPartsRecord;
+use App\Livewire\SuperAdmin\Page\AutoRepareAndMaintenanceRecords;
+use App\Livewire\SuperAdmin\Page\DepartmentSummary as depSummary;
+use App\Livewire\SuperAdmin\Page\SalesmanDashboard;
+use App\Livewire\SuperAdmin\ManageClient\CreateFinishVehicle;
+
+
 
 Route::get('/',Login::class)->name('login.view');
 
@@ -42,4 +52,21 @@ Route::middleware(['isCashier'])->prefix('cashier')->group(function(){
     Route::get('/dashboard',CahierDashboard::class)->name('casher.dashboard');
     Route::get('/summary',SummaryDepartment::class)->name('summary');
 
+});           
+
+
+// routes for SuperAdmin
+
+Route::middleware(['isSuperAdmin'])->prefix('superAdmin')->group(function(){
+
+    Route::get('/Dashboard',SuperAdminDashboard::class)->name('superAdminDashboard.view');
+    Route::get('/departments_ad',ManageDepartment::class)->name('superAdmin.departments_list');
+    Route::get('/managesalesexecutive',ManageSalesExecutive::class)->name('manageSalesExecutive.view');
+    Route::get('/autoPartsRecord',AutoPartsRecord::class)->name('AutoPartsRecord.view');
+    Route::get('/autoPartsMaintenence',AutoRepareAndMaintenanceRecords::class)->name('autoPartsMaintenence.view');
+    Route::get('/cashier',Cashier::class)->name('cashier.view');
+    Route::get('/departmentsummary',depSummary::class)->name('depSummary.view');
+    Route::get('/salesmandashboard',SalesmanDashboard::class)->name('salesman.view');
+    Route::get('/createfinishvehicle',CreateFinishVehicle::class)->name('createFinishVhicle.view');
+    
 });

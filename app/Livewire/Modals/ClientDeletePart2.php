@@ -21,9 +21,17 @@ class ClientDeletePart2 extends Component
 
     public function destroyClient()
     {
-        clients::where('id', $this->clientId)->delete();
+        
+       $record =  clients::where('id', $this->clientId);
+
+       if ($record->count() > 0) {
+         $record->delete();
+
         session()->flash('success','Client successfully deleted!');
         $this->dispatch('refresh-page'); // You can listen to this from parent to refresh client list
+       }
+
+        session()->flash('error','No Record Found');
     }
 
     public function render()

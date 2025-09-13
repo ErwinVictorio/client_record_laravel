@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\SalesManMiddleware;
 use App\Http\Middleware\CashierMidllewire;
+use App\Http\Middleware\SuperAdmin;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,7 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
           'isAdmin' => AdminMiddleware::class,
            'isSalesman' => SalesManMiddleware::class,
-           'isCashier' => CashierMidllewire::class
+           'isCashier' => CashierMidllewire::class,
+            'isSuperAdmin' => SuperAdmin::class
         ]);
        
     })
