@@ -34,7 +34,7 @@ class CahierDashboard extends Component
     {
         $search  = '%' . $this->searchQuery . '%';
 
-        $clientList = clients::with(['salesman'])->where('status', 'For Approval')
+        $clientList = clients::with(['salesman'])->whereIn('status', ['For Approval','Sold'])
           ->where( function($query) use ($search){
             $query->where('company_name', 'like',$search)
              ->orWhere('status','like',$search)

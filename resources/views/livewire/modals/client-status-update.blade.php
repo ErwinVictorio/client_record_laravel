@@ -35,24 +35,22 @@
                       <div class="form-floating mb-2">
                         <input wire:model.live='salesList_no' type="text" class="form-control" id="SalesList_no" placeholder="Sales List No">
                         <label for="SalesList_no">SalesList No:</label>
-                    </div>
-
-                      <div class="form-floating">
-                        <input wire:model.live='salesList_no' type="text" class="form-control" id="SalesList_no" placeholder="Sales List No">
-                        <label for="SalesList_no">Bank Acoount Number</label>
-                    </div>
-
-                    <div class="form-floating">
-                        <input wire:model.live='salesList_no' type="text" class="form-control" id="SalesList_no" placeholder="Sales List No">
-                        <label for="SalesList_no">Name</label>
-                    </div>
-
-                      @error('salesList_no')
+                         @error('salesList_no')
                             <span class="text-danger">
                                 {{ $message }}
                             </span>
                         @enderror
-                        
+                    </div>
+
+                      <div class="form-floating mb-2">
+                        <input wire:model.live='salesList_no' type="text" class="form-control" id="SalesList_no" placeholder="Sales List No">
+                        <label for="SalesList_no">Bank Acoount Number</label>
+                           @error('bank_account_number')
+                            <span class="text-danger">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                    </div>
                     </div>
                   <div class="modal-footer">
                       <button type="submit" class="btn text-light" style="background-color: #004998">

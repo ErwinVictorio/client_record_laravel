@@ -7,6 +7,7 @@ use Livewire\Component;
 use App\Models\CreateRecordForAutoRepair;
 use Illuminate\Support\Facades\Auth;
 
+
 class CreateAutoRepairRecords extends Component
 {
     #[Validate('required|string')] public $company_name;
@@ -20,6 +21,25 @@ class CreateAutoRepairRecords extends Component
 
     public function create_client(){
      $this->validate();
+
+
+      // $salesman = User::select('id','first_name','last_name')->where('id', Auth::id())->first();
+
+       $companyName = strtoupper(str_replace(' ','',trim($this->company_name)));
+
+        $existingClient = CreateRecordForAutoRepair::whereRaw("REPLACE(UPPER(company_name), ' ', '') = ?", [$companyName])->first();
+        // kunin yong currenrt user na naka login
+        $currentSalesman = Auth::id();
+
+        if ($existingClient) {
+            if ($existingClient->salesman_id !== $currentSalesman) {
+                session()->flash('error', "The client is already taken!");
+                return;
+            } 
+        }
+      
+
+            
 
       CreateRecordForAutoRepair::create([
         'company_name' => $this->company_name,

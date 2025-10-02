@@ -22,6 +22,7 @@ class CreateFinishVehicle extends Component
               'contact_number',
               'status',
               'created_at',
+               'bank_account_number',
                'id'
             )->orderBy('created_at','desc')->paginate(20);
 

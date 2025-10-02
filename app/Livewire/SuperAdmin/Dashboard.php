@@ -36,7 +36,7 @@ class Dashboard extends Component
         $clientList = clients::with('salesman')             
             ->where(function ($query) use ($search) {
                 $query->where('company_name', 'like', $search)
-                      ->orWhere('email', 'like', $search)
+                    //   ->orWhere('email', 'like', $search)
                       ->orWhere('contact_number', 'like', $search)
                       ->orWhere('status', 'like', $search)
                        ->orWhereHas('salesman', function ($q) use ($search) {

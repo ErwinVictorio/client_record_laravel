@@ -32,6 +32,7 @@
                     <th>Email</th>
                     <th>Contact Number</th>
                     <th>Status</th>
+                    <th>Bank Account</th>
                     <th>Cretaed At</th>
                     <th>Action</th>
                 </tr>
@@ -39,14 +40,14 @@
             <tbody>
 
                 @foreach ( $ClientRecord as $client )
-                 <tr>
+                <tr>
                     <td>
                         {{$client->salesList_no ?? 'N/A'}}
                     </td>
                     <td>
                         {{$client->company_name ?? 'N/A'}}
                     </td>
-                     <td>
+                    <td>
                         {{$client->address ?? 'N/A'}}
                     </td>
                     <td>
@@ -55,56 +56,64 @@
                     <td>
                         {{$client->contact_number ?? 'N/A'}}
                     </td>
-                     <td>
+                    <td>
 
-                  @php
-                    $status =  '';
-                    $label = '';
+                        @php
+                        $status = '';
+                        $label = '';
 
-                    switch ($client->status) {
+                        switch ($client->status) {
                         case 'For Approval':
-                              $style = 'background-color: #47ba9b;';
-                               $label = '(供批准)';
-                            break;
+                        $style = 'background-color: #47ba9b;';
+                        $label = '(供批准)';
+                        break;
 
                         case 'Sold':
-                             $style = 'background-color: #004998;';
-                             $label = '(已售)';
-                            break;
-                        
+                        $style = 'background-color: #004998;';
+                        $label = '(已售)';
+                        break;
+
                         default:
-                            $style = 'background-color:  #ff0000;';
-                             $label = '(编辑)';
-                    }
-                     @endphp
+                        $style = 'background-color: #ff0000;';
+                        $label = '(编辑)';
+                        }
+                        @endphp
 
 
-                        <span class="badge" style="{{$style}}" >
-                          {{$client->status ?? 'N/A'}}
-                          {{$label}}
+                        <span class="badge" style="{{$style}}">
+                            {{$client->status ?? 'N/A'}}
+                            {{$label}}
                         </span>
                     </td>
-                     <td>
+                    <td>
+                          <span class="badge bg-secondary">
+                             {{$client->bank_account_number ?? 'N/A'}}
+                          </span>
+                    </td>
+                    <td>
                         {{$client->created_at ?? 'N/A'}}
                     </td>
 
                     <td>
 
                         @php
-                            $status = $client->status === 'Sold' ? 'disabled' : '';
+                        $status = $client->status === 'Sold' ? 'disabled' : '';
                         @endphp
                         <span class="badge">
-                         <button class="btn btn-outline-light" {{$status}}  style="background-color: #004998;" data-bs-target="#ModalChangeStatus_{{$client->id}}" wire:key="change-status-{{$client->id}}" data-bs-toggle="modal"> 
-                           <i class="fas fa-sync-alt"></i>
-                            Change Status
-                            (更改状态) 
-                          </button>
+                            <button class="btn btn-outline-light" {{$status}} style="background-color: #004998;"
+                                data-bs-target="#ModalChangeStatus_{{$client->id}}"
+                                wire:key="change-status-{{$client->id}}" data-bs-toggle="modal">
+                                <i class="fas fa-sync-alt"></i>
+                                Change Status
+                                (更改状态)
+                            </button>
                         </span>
                     </td>
-                 </tr>
+                </tr>
 
-                  {{-- Modal updating status --}}    
-                 <livewire:modals.client-status-update :clientId="$client->id" :wire:key="'client-status-update-'.$client->id"/>        
+                {{-- Modal updating status --}}
+                <livewire:modals.client-status-update :clientId="$client->id"
+                    :wire:key="'client-status-update-'.$client->id" />
                 @endforeach
 
             </tbody>
