@@ -10,10 +10,11 @@ class Dashboard extends Component
 {
        use WithPagination;
 
-    public $totalClient,$totalPending,$totalSold = '', $totalApproval = '';
+    public $totalClient,$totalPewnding,$totalSold = '', $totalApproval = '';
 
     public $ClientSearch = '';
     public $searchQuery = '';
+    public $totalPending = '';
 
     public function applySearch()
     {

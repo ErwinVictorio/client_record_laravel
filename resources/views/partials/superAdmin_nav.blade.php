@@ -3,14 +3,6 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
-
-                    <div class="sb-sidenav-menu-heading">Core</div>
-                    <a class="nav-link" href="{{route('superAdminDashboard.view')}}">
-                        <div class="sb-nav-link-icon">
-                            <i class="fas fa-tachometer-alt"></i>
-                        </div>
-                        Dashboard
-                    </a>
                     <div class="sb-sidenav-menu-heading">Administrator</div>
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseAdmin"
                         aria-expanded="false" aria-controls="collapseAdmin">
@@ -45,7 +37,7 @@
                             </a>
                         </nav>
                     </div>
-                     <div class="sb-sidenav-menu-heading">Cashier</div>
+                    <div class="sb-sidenav-menu-heading">Cashier</div>
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#cashier"
                         aria-expanded="false" aria-controls="collapseAdmin">
                         <div class="sb-nav-link-icon"><i class="fas fa-user-shield"></i></div>
@@ -56,7 +48,7 @@
                         <nav class="sb-sidenav-menu-nested nav">
                             <a class="nav-link" href="{{route('cashier.view')}}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-building"></i></div>
-                               Cashier Dashboard (收银员仪表板)
+                                Cashier Dashboard (收银员仪表板)
                             </a>
 
                             <a class="nav-link" href="{{route('depSummary.view')}}">
@@ -68,20 +60,13 @@
 
 
                     <div class="sb-sidenav-menu-heading">MANAGE CLIENTS</div>
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#client"
-                        aria-expanded="false" aria-controls="client">
-                        <div class="sb-nav-link-icon"><i class="fas fa-user-shield"></i></div>
-                         Manage Client
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    <a class="nav-link collapsed" href="{{route('createFinishVhicle.view')}}">
+                        <div class="sb-nav-link-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        My Client
+
                     </a>
-                    <div class="collapse" id="client" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="{{route('createFinishVhicle.view')}}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-building"></i></div>
-                                 Finish Vehicle Records
-                            </a>
-                        </nav>
-                    </div>
                 </div>
             </div>
 

@@ -42,7 +42,7 @@
                                         <i class="fas fa-hourglass-half me-2"></i>
                                         Total Pending (未成交客户总计 )
                                     </h5>
-                                    <span class="fw-bold fs-4">{{$totalPending}}</span>
+                                    <span class="fw-bold fs-4">{{$totalPending ?? 0}}</span>
                                 </div>
                                 <i class="fas fa-clock fa-2x opacity-25"></i>
                             </div>
@@ -59,7 +59,7 @@
                                         Total Sold (已成交客户总计)
                                     </h5>
                                     <span class="fw-bold fs-4">
-                                        {{$totalSold}}
+                                        {{$totalSold ?? 0}}
                                     </span>
                                 </div>
                                 <i class="fas fa-cash-register fa-2x opacity-25"></i>
@@ -77,7 +77,7 @@
                                         Total Approval (总批准)
                                     </h5>
                                     <span class="fw-bold fs-4">
-                                        {{$totalApproval}}
+                                        {{$totalApproval ?? 0}}
                                     </span>
                                 </div>
                                 <i class="fas fa-cash-register fa-2x opacity-25"></i>

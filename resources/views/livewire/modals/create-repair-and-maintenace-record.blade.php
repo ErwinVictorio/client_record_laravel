@@ -1,4 +1,4 @@
-<div wire:ignore.self class="modal fade" id="createAtutoRepair" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div wire:ignore.self class="modal fade" id="createAtutoRepairMaintenance" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl">
       <div class="modal-content">
         
