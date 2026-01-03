@@ -4,7 +4,7 @@
             <div class="sb-sidenav-menu">
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">Administrator</div>
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseAdmin"
+                    <a class="nav-link collapsed" href={{route('superAdminDashboard.view')}} data-bs-toggle="collapse" data-bs-target="#collapseAdmin"
                         aria-expanded="false" aria-controls="collapseAdmin">
                         <div class="sb-nav-link-icon"><i class="fas fa-user-shield"></i></div>
                         Administrator
@@ -58,14 +58,20 @@
                         </nav>
                     </div>
 
-
                     <div class="sb-sidenav-menu-heading">MANAGE CLIENTS</div>
                     <a class="nav-link collapsed" href="{{route('createFinishVhicle.view')}}">
                         <div class="sb-nav-link-icon">
                             <i class="fas fa-users"></i>
                         </div>
                         My Client
+                    </a>
 
+                    <div class="sb-sidenav-menu-heading">Account Management</div>
+                    <a class="nav-link" href={{route('accountSetting.view')}}>
+                        <div class="sb-nav-link-icon">
+                            <i class="fas fa-gear"></i>
+                        </div>
+                        Accounts Settings
                     </a>
                 </div>
             </div>
