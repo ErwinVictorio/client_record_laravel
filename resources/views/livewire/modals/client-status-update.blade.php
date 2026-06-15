@@ -22,38 +22,55 @@
 
               <form wire:submit.prevent="change_status">
                   <div class="modal-body">
+                      {{-- Status Dropdown --}}
                       <select wire:model.live="SelectedStatus" class="form-select form-select-lg mb-3">
                           <option value="">Select Status (更改状态)</option>
                           <option value="For Approval">For Approval (供批准)</option>
                           <option value="Pending">Pending (未成交)</option>
                       </select>
                       @error('SelectedStatus') 
-                          <span class="text-danger">{{ $message }}</span> 
+                          <span class="text-danger d-block mb-2 small">{{ $message }}</span> 
                       @enderror
         
+                      {{-- Sales List Number Input --}}
+                      <div class="form-floating mb-3">
+                          <input wire:model.live='salesList_no' type="text" class="form-control" id="SalesList_no" placeholder="Sales List No">
+                          <label for="SalesList_no">SalesList No:</label>
+                          @error('salesList_no')
+                              <span class="text-danger small">{{ $message }}</span>
+                          @enderror
+                      </div>
 
-                      <div class="form-floating mb-2">
-                        <input wire:model.live='salesList_no' type="text" class="form-control" id="SalesList_no" placeholder="Sales List No">
-                        <label for="SalesList_no">SalesList No:</label>
-                         @error('salesList_no')
-                            <span class="text-danger">
-                                {{ $message }}
-                            </span>
-                        @enderror
-                    </div>
+                      {{-- Bank Account Number Input (Corrected model binding) --}}
+                      <div class="form-floating mb-3">
+                          <input wire:model.live='bank_account_number' type="text" class="form-control" id="bank_account_number" placeholder="Bank Account Number">
+                          <label for="bank_account_number">Bank Account Number</label>
+                          @error('bank_account_number')
+                              <span class="text-danger small">{{ $message }}</span>
+                          @enderror
+                      </div>
 
-                      <div class="form-floating mb-2">
-                        <input wire:model.live='salesList_no' type="text" class="form-control" id="SalesList_no" placeholder="Sales List No">
-                        <label for="SalesList_no">Bank Acoount Number</label>
-                           @error('bank_account_number')
-                            <span class="text-danger">
-                                {{ $message }}
-                            </span>
-                        @enderror
-                    </div>
-                    </div>
+                      <hr class="my-3">
+
+                      {{-- SINGLE FILE UPLOAD: SUPPORTING DOCUMENT --}}
+                      <div class="mb-2">
+                          <label class="form-label fw-bold text-secondary mb-1">Supporting Document (PDF Lamang, Max 5MB)</label>
+                          <input wire:model="supporting_doc" type="file" accept="application/pdf" class="form-control">
+                          @error('supporting_doc')
+                              <span class="text-danger small d-block mt-1">{{ $message }}</span>
+                          @enderror
+
+                          {{-- File Uploading State Indicator --}}
+                          <div wire:loading wire:target="supporting_doc" class="text-primary small mt-1">
+                              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading file...
+                          </div>
+                      </div>
+
+                  </div>
+
                   <div class="modal-footer">
-                      <button type="submit" class="btn text-light" style="background-color: #004998">
+                      {{-- Naka-disable ang submit kapag may kasalukuyang file streaming (wire:target="supporting_doc") --}}
+                      <button type="submit" class="btn text-light" style="background-color: #004998" wire:loading.attr="disabled" wire:target="supporting_doc">
                           <span wire:loading wire:target="change_status" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
                               <path d="M11 2H9v3h2z"/>
@@ -67,5 +84,3 @@
       </div>
   </div>
 </div>
-
-
