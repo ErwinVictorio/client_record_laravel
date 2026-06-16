@@ -22,7 +22,7 @@ class AutoRecordDelete2 extends Component
     public function destroyClient(){
         CreateRecordForAutoRepair::findOrFail($this->clientId)->delete();
           session()->flash('success','Successfully Deleted');
-          $this->dispatch('refresh-page');
+          $this->dispatch('auto-repair-records-updated');
     }
 
 

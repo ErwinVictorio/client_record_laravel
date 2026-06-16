@@ -4,6 +4,7 @@ namespace App\Livewire\SuperAdmin;
 
 use Livewire\Component;
 use App\Models\clients;
+use Livewire\Attributes\On;
 use Livewire\WithPagination;
 
 class Dashboard extends Component
@@ -24,10 +25,22 @@ class Dashboard extends Component
     
  
     public function mount(){
+         $this->loadTotals();
+    }
+
+    public function loadTotals()
+    {
          $this->totalClient = clients::count();
          $this->totalPending = clients::where('status', 'Pending')->count();
          $this->totalSold = clients::where('status', 'Sold')->count();
          $this->totalApproval = clients::where('status', 'For Approval')->count();
+    }
+
+    #[On('clients-updated')]
+    public function refreshClients()
+    {
+        $this->loadTotals();
+        $this->resetPage();
     }
 
     public function render()

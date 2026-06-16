@@ -28,7 +28,8 @@ class ClientDeletePart2 extends Component
          $record->delete();
 
         session()->flash('success','Client successfully deleted!');
-        $this->dispatch('refresh-page'); // You can listen to this from parent to refresh client list
+        $this->dispatch('clients-updated');
+        return;
        }
 
         session()->flash('error','No Record Found');

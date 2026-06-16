@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Pages;
 
 use Livewire\Component;
 use App\Models\ClientRecordForMaintenanceAndRepair;
+use Livewire\Attributes\On;
 use Livewire\WithPagination;
 
 class AutoRepairAndMaintenance extends Component
@@ -15,6 +16,12 @@ class AutoRepairAndMaintenance extends Component
 
     public function ApplySearch(){
         $this->searchQuery = $this->clientSearch;
+        $this->resetPage();
+    }
+
+    #[On('maintenance-records-updated')]
+    public function refreshRecords()
+    {
         $this->resetPage();
     }
 

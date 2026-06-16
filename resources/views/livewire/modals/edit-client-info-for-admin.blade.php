@@ -13,7 +13,6 @@
                             Edit Client Info
                         </h1>
 
-                        <livewire:refresh-page/>
                       </div>
 
                       @if (session()->has('success'))
@@ -114,20 +113,4 @@
           </div>
       </div>
   </div>
-
-  <script>
-    document.addEventListener('livewire:initialized', () => {
-      @this.on('clientUpdated', () => {
-        // Close the modal after successful update
-        const modal = document.getElementById('EditClientIfo_{{$clientId}}');
-        const modalInstance = bootstrap.Modal.getInstance(modal);
-        if (modalInstance) {
-          modalInstance.hide();
-        }
-
-        // Refresh the parent component to show updated data
-        Livewire.dispatch('refreshClients');
-      });
-    });
-  </script>
 </div>

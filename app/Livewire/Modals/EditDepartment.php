@@ -29,6 +29,7 @@ class EditDepartment extends Component
         ->update(['department_name' => $this->department_name]);
 
         session()->flash('success',"Department is Successfully Updated");
+        $this->dispatch('departments-updated');
     }
 
     public function render()

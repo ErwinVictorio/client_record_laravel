@@ -23,6 +23,8 @@ use App\Livewire\SuperAdmin\Page\DepartmentSummary as depSummary;
 use App\Livewire\SuperAdmin\Page\SalesmanDashboard;
 use App\Livewire\SuperAdmin\ManageClient\CreateFinishVehicle;
 use App\Livewire\SuperAdmin\Page\AccountSetting;
+use App\Livewire\AfterSales\Dashboard as AfterSalesDashboard;
+use App\Livewire\Warehouse\Dashboard as WarehouseDashboard;
 
 Route::get('/',Login::class)->name('login.view');
 
@@ -53,6 +55,16 @@ Route::middleware(['isCashier'])->prefix('cashier')->group(function(){
     Route::get('/summary',SummaryDepartment::class)->name('summary');
 
 });           
+
+// Route for After Sales
+Route::middleware(['isAfterSales'])->prefix('after-sales')->group(function(){
+    Route::get('/dashboard', AfterSalesDashboard::class)->name('afterSales.dashboard');
+});
+
+// Route for Warehouse
+Route::middleware(['isWarehouse'])->prefix('warehouse')->group(function(){
+    Route::get('/dashboard', WarehouseDashboard::class)->name('warehouse.dashboard');
+});
 
 
 // routes for SuperAdmin

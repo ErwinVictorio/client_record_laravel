@@ -136,35 +136,36 @@
                     
                     <td>
                         @php
-                            $style;
+                            $badgeClass = 'bg-danger';
                             $label = '';
                             switch ($client->status) {
                                 case 'For Approval':
-                                      $style = 'background-color: #47ba9b;';
+                                      $badgeClass = 'bg-success';
                                       $label = '(供批准)';
                                     break;
 
                                   case 'Sold':
-                                    $style = 'background-color: #004998;';
+                                    $badgeClass = 'bg-primary';
                                      $label = '(已售)';
                                     break;
 
                                     default:
-                                     $style = 'background-color:  #ff0000;';
+                                     $badgeClass = 'bg-danger';
                                      $label = '(编辑)';
 
                               }
                         @endphp
-                        <span 
-                        class="badge rounded-pill text-white px-3 py-2"
-                        style="{{$style}}">
-                        {{ $client->status }}
-                         {{$label}}
-                      <spa/>
+                        <span class="badge rounded-pill text-white px-3 py-2 {{ $badgeClass }}">
+                            {{ $client->status }} {{ $label }}
+                        </span>
                     </td>
                     <td>
                         @php
                             $status = $client->status === "Sold" ? "disabled" : '';
+                            $documentCount = count($client->supporting_document_paths ?? []);
+                            if (($client->supporting_document_path ?? null) && $documentCount === 0) {
+                                $documentCount = 1;
+                            }
                         @endphp
                         <button {{$status}} data-bs-target="#ModalChangeStatus_{{$client->id}}" wire:key="change-status-{{$client->id}}" data-bs-toggle="modal" 
                     
@@ -173,13 +174,28 @@
                             Change Status
                             (更改状态) 
                         </button>
+                        <button type="button" data-bs-target="#ClientSupportingDocuments_{{ $client->id }}" data-bs-toggle="modal" class="btn btn-outline-primary btn-sm rounded-0">
+                            <i class="fas fa-file-pdf"></i>
+                            View Files
+                            @if ($documentCount > 0)
+                                <span class="badge bg-primary">{{ $documentCount }}</span>
+                            @endif
+                        </button>
                     </td>
                 </tr>
-                 {{-- Modal updating status --}}    
-                 <livewire:modals.client-status-update :clientId="$client->id" :wire:key="'client-status-update-'.$client->id"/>        
                 @endforeach
             </tbody>
         </table>
+        @foreach ($clients as $client)
+          <livewire:modals.client-status-update
+            :clientId="$client->id"
+            :wire:key="'salesman-client-status-update-'.$client->id"
+          />
+          <livewire:modals.client-supporting-documents
+            :clientId="$client->id"
+            :wire:key="'salesman-client-supporting-documents-'.$client->id"
+          />
+        @endforeach
         {{$clients->links()}}
     </div>
 </div>

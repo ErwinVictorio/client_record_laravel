@@ -53,6 +53,7 @@ class EditRepairAndMaintence extends Component
         ]);
 
         session()->flash('success','Record is Successfully Updated!');
+        $this->dispatch('maintenance-records-updated');
     }
 
     public function render()

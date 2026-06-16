@@ -24,7 +24,7 @@ class ClientSeeder extends Seeder
                 'address' => $faker->address,
                 'contact_person' => $faker->name,
                 'contact_number_person' => $faker->phoneNumber,
-                'salesman_id' => 1
+                'salesman_id' => 3
             ]);
 
             // Show progress

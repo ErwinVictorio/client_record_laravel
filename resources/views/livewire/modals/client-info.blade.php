@@ -14,7 +14,6 @@
                           <div class="alert alert-success">
                               {{ session('success') }}
                           </div>
-                            <livewire:refresh-page/>
                       @endif
 
                       <div class="form-floating mb-3">

@@ -24,6 +24,7 @@ class CreateDepartment extends Component
 
         Department::create($validated);
         session()->flash('success','New Department is Successfully Created');
+        $this->dispatch('departments-updated');
         
         $this->reset('department_name');
     }

@@ -5,12 +5,19 @@ namespace App\Livewire\SalesMan;
 use Livewire\Component;
 use App\Models\CreateRecordForAutoRepair;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 use Livewire\WithPagination;
 
 
 class AutoRepair extends Component
 {
   use WithPagination;
+
+    #[On('auto-repair-records-updated')]
+    public function refreshRecords()
+    {
+      $this->resetPage();
+    }
 
     public function render()
     {

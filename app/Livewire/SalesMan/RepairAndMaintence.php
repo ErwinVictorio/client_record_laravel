@@ -6,11 +6,18 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ClientRecordForMaintenanceAndRepair;
+use Livewire\Attributes\On;
 class RepairAndMaintence extends Component
 {
 
  
     use WithPagination;
+
+    #[On('maintenance-records-updated')]
+    public function refreshRecords()
+    {
+       $this->resetPage();
+    }
     
     public function render()
     {

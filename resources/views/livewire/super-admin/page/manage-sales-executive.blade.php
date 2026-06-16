@@ -96,15 +96,23 @@
                                             </button>
                                         </td>
                                     </tr>
-                                     {{-- Modal for Viewing Salesman Info  --}}
-                                    <livewire:modals.view-salesman-info wire:key='view-salesman-info{{$user->id}}' :salesmanID="$user->id" />
-                                    {{-- Modal for Edit --}}
-                                    <livewire:modals.edit-salesman wire:key='edit-salesman{{$user->id}}' :salesmanID="$user->id" />
-                                    {{--Modal for Delete Confirmation  --}}
-                                    <livewire:modals.delete-salesman wire:key='delete-salesman{{$user->id}}' :salesmanID='$user->id'/>
                                     @endforeach
                                 </tbody>
                             </table>
+                            @foreach ($salesman as $user)
+                                <livewire:modals.view-salesman-info
+                                    :salesmanID="$user->id"
+                                    :wire:key="'super-admin-view-salesman-info-'.$user->id"
+                                />
+                                <livewire:modals.edit-salesman
+                                    :salesmanID="$user->id"
+                                    :wire:key="'super-admin-edit-salesman-'.$user->id"
+                                />
+                                <livewire:modals.delete-salesman
+                                    :salesmanID="$user->id"
+                                    :wire:key="'super-admin-delete-salesman-'.$user->id"
+                                />
+                            @endforeach
                         </div>
                     </div>
                       {{ $salesman->links() }}

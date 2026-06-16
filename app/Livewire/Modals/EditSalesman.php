@@ -44,6 +44,7 @@ class EditSalesman extends Component
        ]);
 
        session()->flash('success','Salesman updated successfully.');
+       $this->dispatch('salesmen-updated');
     }
 
     

@@ -53,6 +53,7 @@ class CreateAutoRepairRecords extends Component
         'salesmanId' => Auth::id() // to get the current salesman na naka login 
       ]);
       session()->flash('success','New Record is Successfully Created');
+      $this->dispatch('auto-repair-records-updated');
       $this->reset();
     }
 

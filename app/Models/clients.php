@@ -22,12 +22,21 @@ class clients extends Model
          'contact_person',
          'contact_number_person',
          'bank_account_number',
+         'supporting_document_path',
+         'supporting_document_paths',
+         'vehicle_specifications',
          'salesman_id',
          'item_name',
          'model_number',
+         'year_model',
          'quantity',
          'specification',
          'status'
+    ];
+
+    protected $casts = [
+        'supporting_document_paths' => 'array',
+        'vehicle_specifications' => 'array',
     ];
 
 

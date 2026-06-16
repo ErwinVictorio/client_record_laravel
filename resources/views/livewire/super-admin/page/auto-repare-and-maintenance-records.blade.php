@@ -86,12 +86,15 @@
                                             </button>
                                         </td>
                                     </tr>
-                                    {{-- For Editing Modal --}}
-                                    <livewire:modals.edit-repair-and-maintence wire:key='edit-maintenace{{$record->id}}' :recordId="$record->id" />
-                                    {{-- <livewire:modals.delete-record-for-repair-and-maintenance wire:key='delete-maintenance{{$record->id}}' :recordId="$record->id" /> --}}
                                     @endforeach
                                 </tbody>
                             </table>
+                            @foreach ($records as $record)
+                                <livewire:modals.edit-repair-and-maintence
+                                    :recordId="$record->id"
+                                    :wire:key="'super-admin-edit-maintenance-'.$record->id"
+                                />
+                            @endforeach
                             {{$records->links()}}
                         </div>
                     </div>
@@ -102,7 +105,7 @@
            {{-- modal for delete records --}}
            <livewire:modals.delete-auto-nand-maintenance-record/>
 
-           <livewire:modals.create-repair-and-maintenace-record>
+           <livewire:modals.create-repair-and-maintenace-record />
 
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
@@ -119,4 +122,3 @@
         </div>
     </div>
 </div>
-

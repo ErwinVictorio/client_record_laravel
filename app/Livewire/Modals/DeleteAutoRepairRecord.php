@@ -21,6 +21,7 @@ class DeleteAutoRepairRecord extends Component
         ->delete();
 
         session()->flash("success",'Record is Successfully Deleted');
+        $this->dispatch('auto-repair-records-updated');
     }
 
     public function render()

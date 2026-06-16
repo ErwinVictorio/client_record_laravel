@@ -105,7 +105,7 @@
                         </div>
            
                         <div class="card-body">
-                            <table class="table"
+                            <table class="table">
                                 <thead>
                                     <tr>
                                         <th>Sales List No</th>
@@ -173,12 +173,16 @@
                                             </button>
                                         </td>
                                     </tr>
-                                     {{-- Modal for Viewing Client Details dapat nasa labas ng tr para hindi mag error --}}
-                                     <livewire:modals.client-info :clientId="$client->id" wire:key='clientInfo-{{$client->id}}'/>
                                     @endforeach
                                 </tbody>
                                
                             </table>
+                            @foreach ($clientList as $client)
+                            <livewire:modals.client-info
+                                :clientId="$client->id"
+                                :wire:key="'admin-cashier-client-info-'.$client->id"
+                            />
+                            @endforeach
                             {{$clientList->links()}}
                         </div>
                     </div>

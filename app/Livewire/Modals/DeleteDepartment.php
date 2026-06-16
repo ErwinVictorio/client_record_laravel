@@ -22,6 +22,7 @@ class DeleteDepartment extends Component
 
         Department::where('id', $this->department_id)->delete();
         session()->flash('success','Successfully Deleted');
+        $this->dispatch('departments-updated');
     }
     public function render()
     {

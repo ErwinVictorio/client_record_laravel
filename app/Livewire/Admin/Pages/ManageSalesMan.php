@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Pages;
 
 use Livewire\Component;
 use App\Models\User;
+use Livewire\Attributes\On;
 use Livewire\WithPagination;
 
 class ManageSalesMan extends Component
@@ -19,6 +20,12 @@ class ManageSalesMan extends Component
         $this->searchQuery = $this->salesManSearch;
         $this->resetPage();
     }   
+
+    #[On('salesmen-updated')]
+    public function refreshSalesmen()
+    {
+        $this->resetPage();
+    }
 
 
 

@@ -49,6 +49,7 @@ class EditAutoRepairRecord extends Component
         ]);
       
      session()->flash('success','Record is Successfully Updated');
+     $this->dispatch('auto-repair-records-updated');
     }
     public function render()
     {

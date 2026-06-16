@@ -84,12 +84,15 @@
                                             </button>
                                      </td>
                                  </tr>
-
-                                {{-- <livewire:modals.delete-auto-repair-record :recordId="$record->id"/> --}}
-                                <livewire:modals.edit-auto-repair-record :wire:key=" 'edit-auto-record' .$record->id " :recordId="$record->id"/>
                                 @endforeach
                                 </tbody>
                             </table>
+                            @foreach ($records as $record)
+                                <livewire:modals.edit-auto-repair-record
+                                    :recordId="$record->id"
+                                    :wire:key="'super-admin-edit-auto-record-'.$record->id"
+                                />
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -119,4 +122,3 @@
         </div>
     </div>
 </div>
-

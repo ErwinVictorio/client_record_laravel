@@ -53,7 +53,15 @@ class Login extends Component
                 case 2:
                     return redirect()->route('casher.dashboard');
                     break;
-                // you can add case 2, 3 here
+
+                case 4:
+                    return redirect()->route('afterSales.dashboard');
+                    break;
+
+                case 5:
+                    return redirect()->route('warehouse.dashboard');
+                    break;
+
                 default:
                     Auth::logout();
                     session()->flash('error', 'Invalid role.');
@@ -72,7 +80,7 @@ class Login extends Component
             $user = Auth::user(); // get the cuurent user na naka login
 
             switch ($user->role) {
-                case 2:
+                case 0:
                     return redirect()->route('superAdminDashboard.view');
                     break;
 
@@ -85,7 +93,15 @@ class Login extends Component
                 case 2:
                     return redirect()->route('casher.dashboard');
                     break;
-                // add other roles if needed
+
+                case 4:
+                    return redirect()->route('afterSales.dashboard');
+                    break;
+
+                case 5:
+                    return redirect()->route('warehouse.dashboard');
+                    break;
+
                 default:
                     Auth::logout(); // logout if invalid role
                     return redirect()->route('login.view');

@@ -60,6 +60,7 @@ class EditClientInfoForAdmin extends Component
       ]);
 
       session()->flash('success', 'Client details have been successfully updated.');
+      $this->dispatch('clients-updated');
 
     }
 

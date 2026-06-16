@@ -7,9 +7,6 @@
                 Create New  Sales Executive
                 (新增销售执行官)
               </h1>
-              
-            {{-- for refresh the page --}}
-            <livewire:refresh-page/>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
              
             </div>

@@ -7,6 +7,7 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 
 class AccountSetting extends Component
 {
@@ -20,10 +21,19 @@ class AccountSetting extends Component
     public $roleMap = [
         0 => ['label' => 'Super Admin', 'class' => 'bg-danger'],
         1 => ['label' => 'Admin',       'class' => 'bg-primary'],
-        2 => ['label' => 'Cashier',     'class' => 'bg-success']
+        2 => ['label' => 'Cashier',     'class' => 'bg-success'],
+        3 => ['label' => 'Sales Executive', 'class' => 'bg-info'],
+        4 => ['label' => 'After Sales', 'class' => 'bg-warning text-dark'],
+        5 => ['label' => 'Warehouse', 'class' => 'bg-dark'],
     ];
 
     public function updatingSearchQuery()
+    {
+        $this->resetPage();
+    }
+
+    #[On('accounts-updated')]
+    public function refreshAccounts()
     {
         $this->resetPage();
     }
@@ -40,6 +50,7 @@ class AccountSetting extends Component
         $user->delete();
 
         session()->flash('message', 'Account deleted successfully.');
+        $this->dispatch('accounts-updated');
     }
 
 
@@ -49,7 +60,7 @@ class AccountSetting extends Component
         $search = '%' . $this->searchQuery . '%';
 
         $usersAccounts = User::select('id', 'first_name', 'last_name', 'middle_name', 'NickName', 'username', 'role', 'department')
-          ->whereIn('role',['0', '1','2'])
+          ->whereIn('role',['0', '1','2', '3', '4', '5'])
             ->where(function($query) use ($search) {
                 $query->where('first_name', 'like', $search)
                       ->orWhere('last_name', 'like', $search)

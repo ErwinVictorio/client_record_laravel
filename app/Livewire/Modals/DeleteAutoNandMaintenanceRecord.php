@@ -19,7 +19,7 @@ class DeleteAutoNandMaintenanceRecord extends Component
     public function destroyClient(){
         ClientRecordForMaintenanceAndRepair::findOrFail($this->clientId)->delete();
         session()->flash('success','Successfully Deleted');
-         $this->dispatch('refresh-page');
+         $this->dispatch('maintenance-records-updated');
     }
     
 

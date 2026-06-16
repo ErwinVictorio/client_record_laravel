@@ -5,6 +5,7 @@ namespace App\Livewire\SuperAdmin\ManageClient;
 use Livewire\Component;
 use App\Models\clients;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 use Livewire\WithPagination;
 
 class CreateFinishVehicle extends Component
@@ -16,11 +17,23 @@ class CreateFinishVehicle extends Component
 
     public function mount()
     {
+        $this->loadTotals();
+    }
+
+    public function loadTotals()
+    {
         $user = Auth::user();
 
         $this->countedPending = $user->clients->where('status', 'For Approval')->count();
         $this->countedSold = $user->clients->where('status', 'Sold')->count();
         $this->totalPending = $user->clients->where('status', 'Pending')->count();
+    }
+
+    #[On('clients-updated')]
+    public function refreshClients()
+    {
+        $this->loadTotals();
+        $this->resetPage();
     }
 
     public function render()

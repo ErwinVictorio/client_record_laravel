@@ -4,7 +4,6 @@
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Department (编辑部门)</h1>
-              <livewire:refresh-page/>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form wire:submit='Update_Department'>

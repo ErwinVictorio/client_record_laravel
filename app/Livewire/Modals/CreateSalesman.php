@@ -29,7 +29,18 @@ class CreateSalesman extends Component
         User::create($validated);
         
         session()->flash('success','Successfully Created New Salesman');
-        $this->reset();
+        $this->dispatch('salesmen-updated');
+        $this->reset([
+            'first_name',
+            'last_name',
+            'middle_name',
+            'NickName',
+            'username',
+            'department',
+            'password',
+            'password_confirmation',
+        ]);
+        $this->role = 3;
     }
 
     public function render()

@@ -19,6 +19,7 @@ class DeleteRecordForRepairAndMaintenance extends Component
         ->delete();
 
         session()->flash('success','Record is Successfully Deleted');
+        $this->dispatch('maintenance-records-updated');
     }
     public function render()
     {

@@ -39,6 +39,7 @@ class CreateAccount extends Component
         ]);
 
         session()->flash('message', 'New account created successfully!');
+        $this->dispatch('accounts-updated');
     }
 
     public function render()

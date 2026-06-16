@@ -73,15 +73,22 @@
                                             
                                         </td>
                                     </tr>
-                                    {{-- Modal Edit Department --}}
-                                    <livewire:modals.edit-department :department_id="$department->id"/>
-                                    {{-- MoDAL Delete Department --}}
-                                    <livewire:modals.delete-department :department_id="$department->id" />
                                     @endforeach
         
 
                                 </tbody>
                             </table>
+
+                            @foreach ($departmentList as $department)
+                                <livewire:modals.edit-department
+                                    :department_id="$department->id"
+                                    :wire:key="'super-admin-edit-department-'.$department->id"
+                                />
+                                <livewire:modals.delete-department
+                                    :department_id="$department->id"
+                                    :wire:key="'super-admin-delete-department-'.$department->id"
+                                />
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -104,4 +111,3 @@
         </div>
     </div>
 </div>
-

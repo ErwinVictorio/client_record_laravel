@@ -187,15 +187,20 @@
 
 
                                   </tr>
-                                  {{-- for show details ng mga clients --}}
-                                  <livewire:modals.view-client-details :clientId="$client->id" :wire:key="'view-client-'.$client->id" />
-
-                                  {{-- for Editing the Client Information --}}
-                                  <livewire:modals.edit-client-info-for-admin :clientId="$client->id" :wire:key=" 'edit-client-info-'.$client->id " />
                                   @endforeach
 
                               </tbody>
                           </table>
+                          @foreach ($clientList as $client)
+                          <livewire:modals.view-client-details
+                              :clientId="$client->id"
+                              :wire:key="'admin-view-client-'.$client->id"
+                          />
+                          <livewire:modals.edit-client-info-for-admin
+                              :clientId="$client->id"
+                              :wire:key="'admin-edit-client-info-'.$client->id"
+                          />
+                          @endforeach
                           {{ $clientList->links() }}
                       </div>
                   </div>

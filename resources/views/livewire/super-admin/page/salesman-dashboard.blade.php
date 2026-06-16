@@ -174,11 +174,15 @@
                         </button>
                     </td>
                 </tr>
-                 {{-- Modal updating status --}}    
-                 <livewire:modals.client-status-update :clientId="$client->id" :wire:key="'client-status-update-'.$client->id"/>        
                 @endforeach
             </tbody>
         </table>
+        @foreach ($clients as $client)
+          <livewire:modals.client-status-update
+            :clientId="$client->id"
+            :wire:key="'super-admin-salesman-client-status-update-'.$client->id"
+          />
+        @endforeach
         {{$clients->links()}}
     </div>
 </div>

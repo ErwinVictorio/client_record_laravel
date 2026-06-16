@@ -200,21 +200,23 @@
                         </span>
                     </td>
                 </tr>
-
-                {{-- Modal updating status --}}
-                <livewire:modals.client-status-update :clientId="$client->id"
-                    :wire:key="'client-status-update-'.$client->id" />
                 @endforeach
 
             </tbody>
         </table>
+        @foreach ($ClientRecord as $client)
+        <livewire:modals.client-status-update
+            :clientId="$client->id"
+            :wire:key="'super-admin-finish-client-status-update-'.$client->id"
+        />
+        @endforeach
     </section>
 
     {{-- modal for creating Record --}}
     <livewire:modals.client-create />
 
     {{-- Modal For Creating Repair and maintenance --}}
-    <livewire:modals.create-repair-and-maintenace-record>
+    <livewire:modals.create-repair-and-maintenace-record />
 
         {{-- Modal for Creathing Auto parts Records --}}
         <livewire:modals.create-auto-repair-records />

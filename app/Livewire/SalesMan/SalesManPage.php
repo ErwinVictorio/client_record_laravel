@@ -4,6 +4,7 @@ namespace App\Livewire\SalesMan;
 
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\Attributes\On;
 use Livewire\WithPagination;
 
 
@@ -15,11 +16,23 @@ class SalesManPage extends Component
 
     public function mount()
     {
+        $this->loadTotals();
+    }
+
+    public function loadTotals()
+    {
         $user = Auth::user();
 
         $this->countedPending = $user->clients->where('status', 'For Approval')->count();
         $this->countedSold = $user->clients->where('status', 'Sold')->count();
         $this->totalPending = $user->clients->where('status', 'Pending')->count();
+    }
+
+    #[On('clients-updated')]
+    public function refreshClients()
+    {
+        $this->loadTotals();
+        $this->resetPage();
     }
 
     public function applySearch(){

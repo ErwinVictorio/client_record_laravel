@@ -14,6 +14,7 @@ class DeleteSalesman extends Component
        $salesman = User::findOrFail($this->salesmanID);
        $salesman->delete();
        session()->flash('success','salesman is successfully deleted!');
+       $this->dispatch('salesmen-updated');
     }
 
     public function render()

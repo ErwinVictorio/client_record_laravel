@@ -41,6 +41,7 @@ class CreateRepairAndMaintenaceRecord extends Component
 
 
        session()->flash('success', 'New Record is Successfully Created');
+       $this->dispatch('maintenance-records-updated');
         $this->reset();
        $this->resetErrorBag();
     }
