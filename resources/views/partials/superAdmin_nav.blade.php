@@ -66,6 +66,20 @@
                         My Client
                     </a>
 
+                    <div class="sb-sidenav-menu-heading">Operations</div>
+                    <a class="nav-link" href="{{ route('afterSales.dashboard') }}">
+                        <div class="sb-nav-link-icon">
+                            <i class="fas fa-screwdriver-wrench"></i>
+                        </div>
+                        After Sales
+                    </a>
+                    <a class="nav-link" href="{{ route('warehouse.dashboard') }}">
+                        <div class="sb-nav-link-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        Warehouse
+                    </a>
+
                     <div class="sb-sidenav-menu-heading">Account Management</div>
                     <a class="nav-link" href={{route('accountSetting.view')}}>
                         <div class="sb-nav-link-icon">

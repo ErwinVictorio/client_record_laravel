@@ -4,6 +4,11 @@
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
             <i class="fas fa-bars"></i>
         </button>
+        @if ((int) auth()->user()?->role === 0)
+        <a class="btn btn-outline-light btn-sm ms-2" href="{{ route('superAdminDashboard.view') }}">
+            <i class="fas fa-arrow-left me-1"></i> SuperAdmin Dashboard
+        </a>
+        @endif
         <div class="ms-auto me-3">
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
@@ -28,11 +33,17 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-screwdriver-wrench"></i></div>
                             Dashboard
                         </a>
+                        @if ((int) auth()->user()?->role === 0)
+                        <a class="nav-link" href="{{ route('superAdminDashboard.view') }}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-arrow-left"></i></div>
+                            Back to SuperAdmin
+                        </a>
+                        @endif
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
                     <div class="small">Logged in as:</div>
-                    After Sales
+                    {{ (int) auth()->user()?->role === 0 ? 'SuperAdmin' : 'After Sales' }}
                 </div>
             </nav>
         </div>

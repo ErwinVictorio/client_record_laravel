@@ -4,6 +4,11 @@
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
             <i class="fas fa-bars"></i>
         </button>
+        @if ((int) auth()->user()?->role === 0)
+        <a class="btn btn-outline-light btn-sm ms-2" href="{{ route('superAdminDashboard.view') }}">
+            <i class="fas fa-arrow-left me-1"></i> SuperAdmin Dashboard
+        </a>
+        @endif
         <ul class="navbar-nav ms-auto me-3">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -34,11 +39,17 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tools"></i></div>
                             Repair & Maintenance
                         </button>
+                        @if ((int) auth()->user()?->role === 0)
+                        <a class="nav-link" href="{{ route('superAdminDashboard.view') }}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-arrow-left"></i></div>
+                            Back to SuperAdmin
+                        </a>
+                        @endif
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
                     <div class="small">Logged in as:</div>
-                    Warehouse
+                    {{ (int) auth()->user()?->role === 0 ? 'SuperAdmin' : 'Warehouse' }}
                 </div>
             </nav>
         </div>
@@ -103,6 +114,7 @@
                                         <th>Status</th>
                                         <th>Vehicle/Unit</th>
                                         <th>Model</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -115,15 +127,23 @@
                                         <td><span class="badge bg-primary">{{ $client->status }}</span></td>
                                         <td>{{ $client->item_name ?? 'N/A' }}</td>
                                         <td>{{ $client->model_number ?? 'N/A' }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#warehouseClientDetails_{{ $client->id }}">
+                                                View
+                                            </button>
+                                        </td>
                                     </tr>
                                     @empty
-                                    <tr><td colspan="7" class="text-center text-muted py-4">No client records found.</td></tr>
+                                    <tr><td colspan="8" class="text-center text-muted py-4">No client records found.</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>
                             {{ $clients->links() }}
                         </div>
                     </div>
+                    @foreach ($clients as $client)
+                        @include('livewire.warehouse.partials.client-details-modal', ['client' => $client])
+                    @endforeach
                     @endif
 
                     @if ($activeTab === 'auto-repair')

@@ -16,7 +16,7 @@ class WarehouseMiddleware
             return redirect()->route('login.view');
         }
 
-        if (Auth::user()->role != 5) {
+        if (!in_array((int) Auth::user()->role, [0, 5], true)) {
             session()->flash('error', 'Access Denied!');
             return redirect()->route('login.view');
         }

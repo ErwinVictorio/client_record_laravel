@@ -163,7 +163,7 @@
                                     </td>
                                     <td>
                                         <span class="badge text-success">
-                                            {{ $client->created_at->timezone('Asia/Manila')->format('F d, Y h:i A') }}
+                                            {{ $client->created_at?->timezone('Asia/Manila')->format('F d, Y h:i A') ?? 'N/A' }}
                                         </span>
 
                                     </td>

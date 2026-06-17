@@ -21,7 +21,9 @@ class ViewClientDetails extends Component
                    'specification',
                     'quantity',
                     'model_number',
-                    'address'
+                    'address',
+                    'supporting_document_path',
+                    'supporting_document_paths'
             ])
          ->where('id', $this->clientId)->get();;
     }

@@ -16,7 +16,7 @@ class AfterSalesMiddleware
             return redirect()->route('login.view');
         }
 
-        if (Auth::user()->role != 4) {
+        if (!in_array((int) Auth::user()->role, [0, 4], true)) {
             session()->flash('error', 'Access Denied!');
             return redirect()->route('login.view');
         }
