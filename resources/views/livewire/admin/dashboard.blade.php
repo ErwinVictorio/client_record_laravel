@@ -121,7 +121,7 @@
                               <tbody>
 
                                   @foreach ($clientList as $client )
-                                  <tr>
+                                  <tr wire:key="admin-client-row-{{ $client->id }}">
                                       <td>{{$client->salesList_no ?? 'N/A'}}</td>
                                       <td>{{$client->company_name}}</td>
                                       <td>{{$client->salesman->first_name . ' ' .$client->salesman->last_name }}</td>
@@ -177,8 +177,7 @@
                                           <button
                                               class="btn btn-danger"
                                               data-bs-toggle="modal"
-                                              data-bs-target="#deleteClientModal"
-                                              wire:click="$dispatch('open-delete-modal', { clientId: {{ $client->id }} })">
+                                              data-bs-target="#deleteClientModal_{{ $client->id }}">
                                               Delete(删除客户端)
                                           </button>
 
@@ -198,15 +197,17 @@
                           />
                           <livewire:modals.edit-client-info-for-admin
                               :clientId="$client->id"
-                              :wire:key="'admin-edit-client-info-'.$client->id"
+                              :wire:key="'admin-edit-client-info-'.$client->id.'-'.$clientList->currentPage()"
+                          />
+                          <livewire:modals.delete-client
+                              :clientId="$client->id"
+                              :wire:key="'admin-delete-client-'.$client->id.'-'.$clientList->currentPage()"
                           />
                           @endforeach
                           {{ $clientList->links() }}
                       </div>
                   </div>
               </div>
-              {{-- dynamic modal delete --}}
-              <livewire:modals.client-delete-part2 />
           </main>
           <footer class="py-4 bg-light mt-auto">
               <div class="container-fluid px-4">

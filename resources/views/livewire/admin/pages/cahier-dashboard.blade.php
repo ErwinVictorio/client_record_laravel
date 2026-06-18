@@ -165,6 +165,12 @@
                                         </td>
                                         <td>
                                             <button
+                                             type="button"
+                                             class="btn btn-secondary mb-1"
+                                             data-bs-toggle="modal" data-bs-target="#cashierClientDetails_{{$client->id}}">
+                                                 View
+                                            </button>
+                                            <button
                                              style="background-color: #004998 "
                                              {{$client->status === 'Sold' ? 'disabled' : ''}} 
                                              data-bs-toggle="modal" data-bs-target="#clientModal_{{$client->id}}" wire:key='record-transaction-{{$client->id}}' class="btn text-light">
@@ -178,6 +184,7 @@
                                
                             </table>
                             @foreach ($clientList as $client)
+                            @include('livewire.admin.pages.partials.cashier-client-details-modal', ['client' => $client])
                             <livewire:modals.client-info
                                 :clientId="$client->id"
                                 :wire:key="'admin-cashier-client-info-'.$client->id"

@@ -51,9 +51,33 @@ class CahierDashboard extends Component
           })->orderBy('created_at','desc')
             ->paginate(20);
 
+        $clientList->getCollection()->transform(function ($client) {
+            $client->supporting_documents = $this->normalizeDocumentPaths(
+                $client->supporting_document_paths,
+                $client->supporting_document_path
+            );
+
+            return $client;
+        });
+
 
         return view('livewire.admin.pages.cahier-dashboard',[
             'clientList' => $clientList
         ]);
+    }
+
+    private function normalizeDocumentPaths($documentPaths, $legacyDocumentPath = null): array
+    {
+        if (is_string($documentPaths)) {
+            $documentPaths = json_decode($documentPaths, true);
+        }
+
+        $paths = is_array($documentPaths) ? $documentPaths : [];
+
+        if ($legacyDocumentPath && ! in_array($legacyDocumentPath, $paths, true)) {
+            array_unshift($paths, $legacyDocumentPath);
+        }
+
+        return array_values(array_filter($paths));
     }
 }

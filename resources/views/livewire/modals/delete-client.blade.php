@@ -18,6 +18,11 @@
                               您确定要删除 <strong>{{ $company_name }}</strong> 吗？<br>
                               此操作无法撤销。
                           </p>
+                          @if (session()->has('error'))
+                              <div class="alert alert-danger">
+                                  {{ session('error') }}
+                              </div>
+                          @endif
                       @else
                           <x-alert-message :color=" 'alert-success' ">
                               {{session('success')}}

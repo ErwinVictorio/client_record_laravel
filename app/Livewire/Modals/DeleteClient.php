@@ -20,9 +20,17 @@ class DeleteClient extends Component
         $this->company_name = $company_name;
     }
 
-    public function destroyClient(){
-        clients::where('id', $this->clientId)->delete();
-        session()->flash('success','Client Is Successfully Deleted!');
+    public function destroyClient()
+    {
+        $deleted = clients::where('id', $this->clientId)->delete();
+
+        if ($deleted) {
+            session()->flash('success','Client Is Successfully Deleted!');
+            $this->dispatch('clients-updated');
+            return;
+        }
+
+        session()->flash('error','No Record Found');
     }
 
 
