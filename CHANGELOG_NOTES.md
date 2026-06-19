@@ -2,39 +2,6 @@
 
 This file tracks the system changes, fixes, and implementation notes we make during development.
 
-## 2026-06-18
-
-### Cashier Dashboard Client Details
-
-- Updated Cashier dashboard client records to normalize supporting documents from both:
-  - `supporting_document_path`
-  - `supporting_document_paths`
-- Added a Cashier client details `View` modal.
-- Cashier `View` modal now displays:
-  - Client information
-  - Contact person and bank details
-  - Sales agent who added the client
-  - Sales agent department
-  - Vehicle specifications
-  - Supporting document links
-- Removed supporting document buttons from the main Cashier table because documents are now available inside the `View` modal.
-- Verified `app/Livewire/Admin/Pages/CahierDashboard.php` with `php -l`.
-
-### Client Seeder Test Data
-
-- Updated `ClientSeeder` to generate 1000 random client records using a loop.
-- Seeder now inserts records in batches of 100 to avoid bloated manual seed data.
-- Random client data now includes statuses, sales list numbers when applicable, bank account numbers, product details, and vehicle specifications.
-- Seeder now picks a random Salesman user when available, with fallback to any user if no Salesman accounts exist.
-
-### Administrator Dashboard Actions
-
-- Fixed administrator client delete action after pagination/search by replacing the shared dynamic delete modal with per-client keyed delete modals.
-- Added stable row keys for administrator client table rows.
-- Updated administrator edit modal keys to include the current pagination page, reducing stale modal state after page changes.
-- Delete modal now dispatches `clients-updated` after successful deletion so totals and records refresh.
-- Delete modal now shows a clear error when a record is already missing.
-
 ## 2026-06-16
 
 ### After Sales Account and Dashboard
