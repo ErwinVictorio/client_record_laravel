@@ -16,14 +16,38 @@ class Dashboard extends Component
 
     public $saleControlNo = '';
     public $jobOrderSearch = '';
+    public $section = 'asap';
     public $selectedClientId = null;
     public $service_type = 'PMS';
+    public $otherType = 'Other';
     public $pms_number = '';
     public $job_order_number = '';
     public $job_order_date = '';
     public $description = '';
+    public $editingRecordId = null;
+    public $editingDescription = '';
     public $noticeType = '';
     public $noticeMessage = '';
+
+    public function setSection(string $section)
+    {
+        if (!in_array($section, ['asap', 'other'], true)) {
+            return;
+        }
+
+        $this->section = $section;
+        $this->service_type = $section === 'asap' ? 'PMS' : 'Other';
+        $this->otherType = 'Other';
+        $this->clearNotice();
+        $this->resetErrorBag();
+        $this->resetPage();
+
+        if ($section === 'other') {
+            $this->selectedClientId = null;
+            $this->saleControlNo = '';
+            $this->pms_number = '';
+        }
+    }
 
     public function searchSaleControl()
     {
@@ -62,8 +86,10 @@ class Dashboard extends Component
         $this->clearNotice();
         $this->resetErrorBag();
 
+        $this->service_type = $this->section === 'asap' ? 'PMS' : $this->otherType;
+
         $rules = [
-            'service_type' => 'required|in:PMS,Other',
+            'service_type' => 'required|in:PMS,Other,UNDER WARRANTY,OUT OF WARRANTY',
             'job_order_number' => 'required|min:2',
             'job_order_date' => 'nullable|date',
             'description' => 'nullable|string',
@@ -72,17 +98,20 @@ class Dashboard extends Component
         if ($this->service_type === 'PMS') {
             $rules['selectedClientId'] = 'required|exists:clients,id';
             $rules['pms_number'] = 'required|min:1';
+        } else {
+            $rules['otherType'] = 'required|in:Other,UNDER WARRANTY,OUT OF WARRANTY';
         }
 
         $this->validate($rules, [
             'selectedClientId.required' => 'Please search and select a sold unit before saving a PMS record.',
             'selectedClientId.exists' => 'The selected sold unit no longer exists.',
             'pms_number.required' => 'Please enter the Number of PMS.',
+            'otherType.required' => 'Please select a warranty type.',
             'job_order_number.required' => 'Please enter the JO Number.',
         ]);
 
         AfterSalesRecord::create([
-            'client_id' => $this->selectedClientId,
+            'client_id' => $this->section === 'asap' ? $this->selectedClientId : null,
             'user_id' => Auth::id(),
             'service_type' => $this->service_type,
             'pms_number' => $this->service_type === 'PMS' ? $this->pms_number : null,
@@ -92,7 +121,41 @@ class Dashboard extends Component
         ]);
 
         $this->reset(['pms_number', 'job_order_number', 'job_order_date', 'description']);
-        $this->showNotice('success', 'After Sales record saved successfully.');
+        $this->showNotice('success', 'MSD record saved successfully.');
+    }
+
+    public function editDescription(int $recordId)
+    {
+        $this->clearNotice();
+        $this->resetErrorBag();
+
+        $record = AfterSalesRecord::findOrFail($recordId);
+        $this->editingRecordId = $record->id;
+        $this->editingDescription = $record->description ?? '';
+    }
+
+    public function updateDescription()
+    {
+        $this->clearNotice();
+        $this->resetErrorBag();
+
+        $this->validate([
+            'editingRecordId' => 'required|exists:after_sales_records,id',
+            'editingDescription' => 'nullable|string',
+        ]);
+
+        AfterSalesRecord::whereKey($this->editingRecordId)->update([
+            'description' => $this->editingDescription,
+        ]);
+
+        $this->cancelEditDescription();
+        $this->showNotice('success', 'Remarks updated successfully.');
+    }
+
+    public function cancelEditDescription()
+    {
+        $this->editingRecordId = null;
+        $this->editingDescription = '';
     }
 
     private function showNotice($type, $message)
@@ -114,6 +177,12 @@ class Dashboard extends Component
             : null;
 
         $records = AfterSalesRecord::with(['client.salesman', 'user'])
+            ->when($this->section === 'asap', function ($query) {
+                $query->where('service_type', 'PMS');
+            })
+            ->when($this->section === 'other', function ($query) {
+                $query->whereIn('service_type', ['Other', 'UNDER WARRANTY', 'OUT OF WARRANTY']);
+            })
             ->when($this->jobOrderSearch, function ($query) {
                 $query->where('job_order_number', 'like', '%' . $this->jobOrderSearch . '%');
             })

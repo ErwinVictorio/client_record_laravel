@@ -1,6 +1,6 @@
 <div class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="{{ route('afterSales.dashboard') }}">After Sales</a>
+        <a class="navbar-brand ps-3" href="{{ route('afterSales.dashboard') }}">MSD Admin</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
             <i class="fas fa-bars"></i>
         </button>
@@ -31,8 +31,16 @@
                         <div class="sb-sidenav-menu-heading">Core</div>
                         <a class="nav-link active" href="{{ route('afterSales.dashboard') }}">
                             <div class="sb-nav-link-icon"><i class="fas fa-screwdriver-wrench"></i></div>
-                            Dashboard
+                            MSD Admin Dashboard
                         </a>
+                        <button type="button" class="nav-link border-0 text-start w-100 {{ $section === 'asap' ? 'active' : '' }}" wire:click="setSection('asap')">
+                            <div class="sb-nav-link-icon"><i class="fas fa-truck-fast"></i></div>
+                            Units sold from ASAP
+                        </button>
+                        <button type="button" class="nav-link border-0 text-start w-100 {{ $section === 'other' ? 'active' : '' }}" wire:click="setSection('other')">
+                            <div class="sb-nav-link-icon"><i class="fas fa-clipboard-list"></i></div>
+                            Other
+                        </button>
                         @if ((int) auth()->user()?->role === 0)
                         <a class="nav-link" href="{{ route('superAdminDashboard.view') }}">
                             <div class="sb-nav-link-icon"><i class="fas fa-arrow-left"></i></div>
@@ -43,7 +51,7 @@
                 </div>
                 <div class="sb-sidenav-footer">
                     <div class="small">Logged in as:</div>
-                    {{ (int) auth()->user()?->role === 0 ? 'SuperAdmin' : 'After Sales' }}
+                    {{ (int) auth()->user()?->role === 0 ? 'SuperAdmin' : 'MSD Admin' }}
                 </div>
             </nav>
         </div>
@@ -51,9 +59,11 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">After Sales Dashboard</h1>
+                    <h1 class="mt-4">MSD Admin Dashboard</h1>
                     <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">PMS and Other JO Records</li>
+                        <li class="breadcrumb-item active">
+                            {{ $section === 'asap' ? 'Units sold from ASAP' : 'Other JO Records' }}
+                        </li>
                     </ol>
 
                     @if ($noticeMessage)
@@ -79,10 +89,11 @@
                     @endif
 
                     <div class="row g-4">
+                        @if ($section === 'asap')
                         <div class="col-lg-5">
                             <div class="card border-0 shadow-sm">
                                 <div class="card-header bg-white fw-bold">
-                                    <i class="fas fa-magnifying-glass me-2"></i>Search Sold Unit
+                                    <i class="fas fa-magnifying-glass me-2"></i>Units sold from ASAP
                                 </div>
                                 <div class="card-body">
                                     <label class="form-label">Sale Control No.</label>
@@ -102,30 +113,37 @@
                                         <div class="small text-muted">Year Model: {{ $selectedClient->year_model ?? 'N/A' }}</div>
                                     </div>
                                     @else
-                                    <div class="text-muted small">Search a sold unit before creating a PMS record.</div>
+                                    <div class="text-muted small">Search a sold unit before creating an MSD record.</div>
                                     @endif
                                     @error('selectedClientId') <div class="text-danger small mt-2">{{ $message }}</div> @enderror
                                 </div>
                             </div>
                         </div>
+                        @endif
 
-                        <div class="col-lg-7">
+                        <div class="{{ $section === 'asap' ? 'col-lg-7' : 'col-lg-12' }}">
                             <div class="card border-0 shadow-sm">
                                 <div class="card-header bg-white fw-bold">
-                                    <i class="fas fa-file-circle-plus me-2"></i>Add After Sales Record
+                                    <i class="fas fa-file-circle-plus me-2"></i>Add MSD Record
                                 </div>
                                 <div class="card-body">
                                     <form wire:submit.prevent="save">
                                         <div class="row g-3">
                                             <div class="col-md-4">
                                                 <label class="form-label">Type</label>
-                                                <select class="form-select @error('service_type') is-invalid @enderror" wire:model.live="service_type">
-                                                    <option value="PMS">PMS</option>
+                                                @if ($section === 'other')
+                                                <select class="form-select @error('otherType') is-invalid @enderror" wire:model="otherType">
                                                     <option value="Other">Other</option>
+                                                    <option value="UNDER WARRANTY">UNDER WARRANTY</option>
+                                                    <option value="OUT OF WARRANTY">OUT OF WARRANTY</option>
                                                 </select>
+                                                @error('otherType') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                @else
+                                                <input type="text" class="form-control" value="{{ $section === 'asap' ? 'Units sold from ASAP' : 'Other' }}" readonly>
                                                 @error('service_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                @endif
                                             </div>
-                                            @if ($service_type === 'PMS')
+                                            @if ($section === 'asap')
                                             <div class="col-md-4">
                                                 <label class="form-label">Number of PMS</label>
                                                 <input type="text" class="form-control @error('pms_number') is-invalid @enderror" wire:model="pms_number">
@@ -177,16 +195,34 @@
                                 <tbody>
                                     @forelse ($records as $record)
                                     <tr>
-                                        <td><span class="badge bg-primary">{{ $record->service_type }}</span></td>
+                                        <td><span class="badge bg-primary">{{ $record->service_type === 'PMS' ? 'Units sold from ASAP' : $record->service_type }}</span></td>
                                         <td>{{ $record->job_order_number }}</td>
                                         <td>{{ $record->job_order_date?->format('F d, Y') ?? 'N/A' }}</td>
                                         <td>{{ $record->client->company_name ?? 'N/A' }}</td>
                                         <td>{{ $record->client->item_name ?? 'N/A' }}</td>
-                                        <td>{{ $record->description ?? 'N/A' }}</td>
+                                        <td style="min-width: 260px;">
+                                            @if ($editingRecordId === $record->id)
+                                            <textarea rows="2" class="form-control @error('editingDescription') is-invalid @enderror" wire:model="editingDescription"></textarea>
+                                            @error('editingDescription') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            <div class="d-flex gap-2 mt-2">
+                                                <button type="button" class="btn btn-sm btn-primary" wire:click="updateDescription">
+                                                    Save
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" wire:click="cancelEditDescription">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                            @else
+                                            <div>{{ $record->description ?? 'N/A' }}</div>
+                                            <button type="button" class="btn btn-sm btn-outline-primary mt-2" wire:click="editDescription({{ $record->id }})">
+                                                Edit Remarks
+                                            </button>
+                                            @endif
+                                        </td>
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="6" class="text-center text-muted py-4">No After Sales records found.</td>
+                                        <td colspan="6" class="text-center text-muted py-4">No MSD records found.</td>
                                     </tr>
                                     @endforelse
                                 </tbody>
