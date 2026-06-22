@@ -16,6 +16,8 @@ class CreateRepairAndMaintenaceRecord extends Component
     #[Validate('required|email')] public $email;
     #[Validate('required|numeric')] public $contact_number;
     #[Validate('required')] public $job_order_number;
+    #[Validate('nullable|string')] public $serial_number;
+    #[Validate('nullable|date')] public $date_sold;
     #[Validate('required')] public $contact_person;
     #[Validate('required|numeric')] public $contact_number_person;
     #[Validate('nullable')] public $bank_account_number;
@@ -33,6 +35,8 @@ class CreateRepairAndMaintenaceRecord extends Component
           'email' => $this->email,
           'contact_number' => $this->contact_number,
           'job_order_number' => $this->job_order_number,
+          'serial_number' => $this->serial_number,
+          'date_sold' => $this->date_sold ?: null,
           'contact_person' => $this->contact_person,
           'contact_number_person' => $this->contact_number_person,
           'bank_account_number' => $this->bank_account_number,

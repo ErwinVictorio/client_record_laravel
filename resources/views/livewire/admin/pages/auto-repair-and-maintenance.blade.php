@@ -36,7 +36,7 @@
                              Repair And Maintenance Record List
                               (记录列表)
                             <div class="d-flex justify-content-center align-items-center">
-                                <input type="text" class="form-control" wire:model.live="clientSearch" placeholder="Search clients...">
+                                <input type="text" class="form-control" wire:model.live="clientSearch" placeholder="Search JO Number or client...">
                             <div>
                                 <button class="btn btn-primary rounded-0" type="button" wire:click="ApplySearch">
                                     <i class="fas fa-search me-1"></i>
@@ -50,6 +50,8 @@
                                 <thead>
                                     <tr>
                                         <th>Job Order Number</th>
+                                        <th>Serial Number</th>
+                                        <th>Date Sold</th>
                                         <th>Company Name</th>
                                         <th>Contact Number</th>
                                         <th>Email</th>
@@ -65,6 +67,8 @@
                                 @foreach ($records as $record )
                                     <tr>
                                         <td>{{$record->job_order_number}}</td>
+                                        <td>{{$record->serial_number ?? 'N/A'}}</td>
+                                        <td>{{$record->date_sold?->format('F d, Y') ?? 'N/A'}}</td>
                                         <td>{{$record->company_name}}</td>
                                         <td>{{$record->contact_number}}</td>
                                         <td>{{$record->email}}</td>
@@ -73,6 +77,9 @@
                                         <td>{{$record->contact_number_person}}</td>
                                         <td>{{$record->bank_account_number ?? 'N/A' }}</td>
                                         <td>
+                                            <button data-bs-target="#MaintenanceRecordInfo_{{$record->id}}" data-bs-toggle="modal" class="btn btn-outline-primary">
+                                              View
+                                            </button>
                                             <button data-bs-target="#EditAtutoRepairMaintence_{{$record->id}}" data-bs-toggle="modal" style="background-color: #0d629b" class="btn text-light">
                                               Edit
                                             </button>
@@ -93,6 +100,7 @@
                                     :recordId="$record->id"
                                     :wire:key="'admin-edit-maintenance-'.$record->id"
                                 />
+                                @include('livewire.modals.maintenance-record-info', ['record' => $record])
                             @endforeach
                             {{$records->links()}}
                         </div>

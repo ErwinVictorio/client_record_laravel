@@ -13,6 +13,13 @@ class RepairAndMaintence extends Component
  
     use WithPagination;
 
+    public $jobOrderSearch = '';
+
+    public function ApplySearch()
+    {
+       $this->resetPage();
+    }
+
     #[On('maintenance-records-updated')]
     public function refreshRecords()
     {
@@ -21,7 +28,12 @@ class RepairAndMaintence extends Component
     
     public function render()
     {
+       $search = '%' . $this->jobOrderSearch . '%';
+
        $records = ClientRecordForMaintenanceAndRepair::where('salesmanId', Auth::id())
+       ->when($this->jobOrderSearch, function ($query) use ($search) {
+          $query->where('job_order_number', 'like', $search);
+       })
        ->orderBy('created_at','desc')
        ->paginate(10);
 

@@ -16,6 +16,8 @@ class EditRepairAndMaintence extends Component
     #[Validate('required|email')] public $email;
     #[Validate('required')] public $contact_number;
     #[Validate('required')] public $job_order_number;
+    #[Validate('nullable|string')] public $serial_number;
+    #[Validate('nullable|date')] public $date_sold;
     #[Validate('required')] public $contact_person;
     #[Validate('required')] public $contact_number_person;
     #[Validate('nullable')] public $bank_account_number;
@@ -31,6 +33,8 @@ class EditRepairAndMaintence extends Component
         $this->address = $record->address;
         $this->contact_number = $record->contact_number;
         $this->job_order_number = $record->job_order_number;
+        $this->serial_number = $record->serial_number;
+        $this->date_sold = $record->date_sold?->format('Y-m-d');
         $this->contact_number_person = $record->contact_number_person;
         $this->bank_account_number = $record->bank_account_number;
     }
@@ -47,6 +51,8 @@ class EditRepairAndMaintence extends Component
              'contact_number' => $this->contact_number,
              'email' => $this->email,
              'job_order_number' => $this->job_order_number,
+             'serial_number' => $this->serial_number,
+             'date_sold' => $this->date_sold ?: null,
               'bank_account_number' => $this->bank_account_number,
               'contact_number_person' => $this->contact_number_person,
               'contact_person' => $this->contact_person

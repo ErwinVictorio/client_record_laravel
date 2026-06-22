@@ -21,6 +21,12 @@ class ClientRecordForMaintenanceAndRepair extends Model
         'contact_person',
         'contact_number_person',
         'job_order_number',
+        'serial_number',
+        'date_sold',
         'salesmanId'
+    ];
+
+    protected $casts = [
+        'date_sold' => 'date',
     ];
 }

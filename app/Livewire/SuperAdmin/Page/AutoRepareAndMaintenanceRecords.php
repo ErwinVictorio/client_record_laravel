@@ -32,6 +32,7 @@ class AutoRepareAndMaintenanceRecords extends Component
           $query->where('company_name', 'like',$search);
           $query->orwhere('email', 'like',$search);
           $query->orwhere('job_order_number','like',$search);
+          $query->orwhere('serial_number','like',$search);
         })->paginate(20);
 
         return view('livewire.super-admin.page.auto-repare-and-maintenance-records',[

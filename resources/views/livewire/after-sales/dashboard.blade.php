@@ -152,14 +152,39 @@
                                             @endif
                                             <div class="col-md-4">
                                                 <label class="form-label">JO Number</label>
+                                                @if ($section === 'other')
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control @error('job_order_number') is-invalid @enderror" wire:model="job_order_number">
+                                                    <button class="btn btn-outline-primary" type="button" wire:click="searchMaintenanceJobOrder">Search JO</button>
+                                                </div>
+                                                @else
                                                 <input type="text" class="form-control @error('job_order_number') is-invalid @enderror" wire:model="job_order_number">
-                                                @error('job_order_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                @endif
+                                                @error('job_order_number') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label">Date JO</label>
                                                 <input type="date" class="form-control @error('job_order_date') is-invalid @enderror" wire:model="job_order_date">
                                                 @error('job_order_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
+                                            @if ($section === 'other')
+                                            <div class="col-12">
+                                                @if ($selectedMaintenanceRecord)
+                                                <div class="border rounded p-3 bg-light">
+                                                    <div class="fw-bold mb-2">{{ $selectedMaintenanceRecord->company_name }}</div>
+                                                    <div class="row g-2 small text-muted">
+                                                        <div class="col-md-3">JO Number: {{ $selectedMaintenanceRecord->job_order_number }}</div>
+                                                        <div class="col-md-3">Contact: {{ $selectedMaintenanceRecord->contact_number }}</div>
+                                                        <div class="col-md-3">Contact Person: {{ $selectedMaintenanceRecord->contact_person }}</div>
+                                                        <div class="col-md-3">Email: {{ $selectedMaintenanceRecord->email }}</div>
+                                                    </div>
+                                                </div>
+                                                @else
+                                                <div class="text-muted small">Search an existing Repair & Maintenance JO Number before saving an Other record.</div>
+                                                @endif
+                                                @error('selectedMaintenanceRecordId') <div class="text-danger small mt-2">{{ $message }}</div> @enderror
+                                            </div>
+                                            @endif
                                             <div class="col-12">
                                                 <label class="form-label">Description</label>
                                                 <textarea rows="3" class="form-control @error('description') is-invalid @enderror" wire:model="description"></textarea>
@@ -190,39 +215,32 @@
                                         <th>Client</th>
                                         <th>Vehicle/Unit</th>
                                         <th>Description</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse ($records as $record)
+                                    @php
+                                        $maintenanceRecord = $maintenanceRecordsByJobOrder->get($record->job_order_number);
+                                    @endphp
                                     <tr>
                                         <td><span class="badge bg-primary">{{ $record->service_type === 'PMS' ? 'Units sold from ASAP' : $record->service_type }}</span></td>
                                         <td>{{ $record->job_order_number }}</td>
                                         <td>{{ $record->job_order_date?->format('F d, Y') ?? 'N/A' }}</td>
-                                        <td>{{ $record->client->company_name ?? 'N/A' }}</td>
+                                        <td>{{ $record->client->company_name ?? $maintenanceRecord?->company_name ?? 'N/A' }}</td>
                                         <td>{{ $record->client->item_name ?? 'N/A' }}</td>
                                         <td style="min-width: 260px;">
-                                            @if ($editingRecordId === $record->id)
-                                            <textarea rows="2" class="form-control @error('editingDescription') is-invalid @enderror" wire:model="editingDescription"></textarea>
-                                            @error('editingDescription') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                            <div class="d-flex gap-2 mt-2">
-                                                <button type="button" class="btn btn-sm btn-primary" wire:click="updateDescription">
-                                                    Save
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary" wire:click="cancelEditDescription">
-                                                    Cancel
-                                                </button>
-                                            </div>
-                                            @else
                                             <div>{{ $record->description ?? 'N/A' }}</div>
-                                            <button type="button" class="btn btn-sm btn-outline-primary mt-2" wire:click="editDescription({{ $record->id }})">
-                                                Edit Remarks
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" wire:click="deleteRecord({{ $record->id }})" wire:confirm="Delete this MSD record?">
+                                                Delete
                                             </button>
-                                            @endif
                                         </td>
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="6" class="text-center text-muted py-4">No MSD records found.</td>
+                                        <td colspan="7" class="text-center text-muted py-4">No MSD records found.</td>
                                     </tr>
                                     @endforelse
                                 </tbody>

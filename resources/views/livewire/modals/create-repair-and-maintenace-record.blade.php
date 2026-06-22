@@ -90,6 +90,22 @@
                 </div>
               </div>
   
+              <div class="col-lg-3">
+                <div class="form-floating">
+                  <input wire:model='serial_number' type="text" class="form-control" id="serial_number" placeholder="Serial Number">
+                  <label for="serial_number">Serial Number</label>
+                  @error('serial_number') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+              </div>
+
+              <div class="col-lg-3">
+                <div class="form-floating">
+                  <input wire:model='date_sold' type="date" class="form-control" id="date_sold" placeholder="Date Sold">
+                  <label for="date_sold">Date Sold</label>
+                  @error('date_sold') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+              </div>
+
                             {{-- Bank Account Number (Optional) --}}
               <div class="col-lg-3">
                 <div class="form-floating">

@@ -3,6 +3,7 @@
 namespace App\Livewire\AfterSales;
 
 use App\Models\AfterSalesRecord;
+use App\Models\ClientRecordForMaintenanceAndRepair;
 use App\Models\clients;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -20,12 +21,11 @@ class Dashboard extends Component
     public $selectedClientId = null;
     public $service_type = 'PMS';
     public $otherType = 'Other';
+    public $selectedMaintenanceRecordId = null;
     public $pms_number = '';
     public $job_order_number = '';
     public $job_order_date = '';
     public $description = '';
-    public $editingRecordId = null;
-    public $editingDescription = '';
     public $noticeType = '';
     public $noticeMessage = '';
 
@@ -44,8 +44,16 @@ class Dashboard extends Component
 
         if ($section === 'other') {
             $this->selectedClientId = null;
+            $this->selectedMaintenanceRecordId = null;
             $this->saleControlNo = '';
             $this->pms_number = '';
+        }
+    }
+
+    public function updatedJobOrderNumber()
+    {
+        if ($this->section === 'other') {
+            $this->selectedMaintenanceRecordId = null;
         }
     }
 
@@ -81,6 +89,30 @@ class Dashboard extends Component
         $this->showNotice('success', 'Sold unit found. You can now add PMS or Other job information.');
     }
 
+    public function searchMaintenanceJobOrder()
+    {
+        $this->clearNotice();
+        $this->resetErrorBag();
+
+        $this->validate([
+            'job_order_number' => 'required|min:2',
+        ], [
+            'job_order_number.required' => 'Please enter the JO Number.',
+        ]);
+
+        $record = ClientRecordForMaintenanceAndRepair::where('job_order_number', trim($this->job_order_number))->first();
+
+        if (!$record) {
+            $this->selectedMaintenanceRecordId = null;
+            $this->addError('job_order_number', 'JO Number not found in Repair & Maintenance records.');
+            $this->showNotice('danger', 'No Repair & Maintenance record found for this JO Number.');
+            return;
+        }
+
+        $this->selectedMaintenanceRecordId = $record->id;
+        $this->showNotice('success', 'Repair & Maintenance JO found. You can now save this MSD record.');
+    }
+
     public function save()
     {
         $this->clearNotice();
@@ -100,15 +132,31 @@ class Dashboard extends Component
             $rules['pms_number'] = 'required|min:1';
         } else {
             $rules['otherType'] = 'required|in:Other,UNDER WARRANTY,OUT OF WARRANTY';
+            $rules['selectedMaintenanceRecordId'] = 'required|exists:client_record_for_maintenance_and_repairs,id';
         }
 
         $this->validate($rules, [
             'selectedClientId.required' => 'Please search and select a sold unit before saving a PMS record.',
             'selectedClientId.exists' => 'The selected sold unit no longer exists.',
+            'selectedMaintenanceRecordId.required' => 'Please search an existing Repair & Maintenance JO Number before saving.',
+            'selectedMaintenanceRecordId.exists' => 'The selected Repair & Maintenance JO record no longer exists.',
             'pms_number.required' => 'Please enter the Number of PMS.',
             'otherType.required' => 'Please select a warranty type.',
             'job_order_number.required' => 'Please enter the JO Number.',
         ]);
+
+        if ($this->section === 'other') {
+            $maintenanceRecordExists = ClientRecordForMaintenanceAndRepair::whereKey($this->selectedMaintenanceRecordId)
+                ->where('job_order_number', trim($this->job_order_number))
+                ->exists();
+
+            if (!$maintenanceRecordExists) {
+                $this->selectedMaintenanceRecordId = null;
+                $this->addError('job_order_number', 'Please search this JO Number again before saving.');
+                $this->showNotice('danger', 'The searched JO Number does not match the current JO Number.');
+                return;
+            }
+        }
 
         AfterSalesRecord::create([
             'client_id' => $this->section === 'asap' ? $this->selectedClientId : null,
@@ -120,42 +168,18 @@ class Dashboard extends Component
             'description' => $this->description,
         ]);
 
-        $this->reset(['pms_number', 'job_order_number', 'job_order_date', 'description']);
+        $this->reset(['pms_number', 'job_order_number', 'job_order_date', 'description', 'selectedMaintenanceRecordId']);
         $this->showNotice('success', 'MSD record saved successfully.');
     }
 
-    public function editDescription(int $recordId)
+    public function deleteRecord(int $recordId)
     {
         $this->clearNotice();
         $this->resetErrorBag();
 
-        $record = AfterSalesRecord::findOrFail($recordId);
-        $this->editingRecordId = $record->id;
-        $this->editingDescription = $record->description ?? '';
-    }
+        AfterSalesRecord::findOrFail($recordId)->delete();
 
-    public function updateDescription()
-    {
-        $this->clearNotice();
-        $this->resetErrorBag();
-
-        $this->validate([
-            'editingRecordId' => 'required|exists:after_sales_records,id',
-            'editingDescription' => 'nullable|string',
-        ]);
-
-        AfterSalesRecord::whereKey($this->editingRecordId)->update([
-            'description' => $this->editingDescription,
-        ]);
-
-        $this->cancelEditDescription();
-        $this->showNotice('success', 'Remarks updated successfully.');
-    }
-
-    public function cancelEditDescription()
-    {
-        $this->editingRecordId = null;
-        $this->editingDescription = '';
+        $this->showNotice('success', 'MSD record deleted successfully.');
     }
 
     private function showNotice($type, $message)
@@ -176,6 +200,10 @@ class Dashboard extends Component
             ? clients::with('salesman')->find($this->selectedClientId)
             : null;
 
+        $selectedMaintenanceRecord = $this->selectedMaintenanceRecordId
+            ? ClientRecordForMaintenanceAndRepair::find($this->selectedMaintenanceRecordId)
+            : null;
+
         $records = AfterSalesRecord::with(['client.salesman', 'user'])
             ->when($this->section === 'asap', function ($query) {
                 $query->where('service_type', 'PMS');
@@ -189,8 +217,19 @@ class Dashboard extends Component
             ->latest()
             ->paginate(10);
 
+        $maintenanceRecordsByJobOrder = collect();
+
+        if ($this->section === 'other') {
+            $maintenanceRecordsByJobOrder = ClientRecordForMaintenanceAndRepair::whereIn(
+                'job_order_number',
+                $records->getCollection()->pluck('job_order_number')->filter()->unique()
+            )->get()->keyBy('job_order_number');
+        }
+
         return view('livewire.after-sales.dashboard', [
             'selectedClient' => $selectedClient,
+            'selectedMaintenanceRecord' => $selectedMaintenanceRecord,
+            'maintenanceRecordsByJobOrder' => $maintenanceRecordsByJobOrder,
             'records' => $records,
         ]);
     }
