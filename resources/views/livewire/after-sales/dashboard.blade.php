@@ -131,19 +131,19 @@
                                         <div class="row g-3">
                                             <div class="col-md-4">
                                                 <label class="form-label">Type</label>
-                                                @if ($section === 'other')
-                                                <select class="form-select @error('otherType') is-invalid @enderror" wire:model="otherType">
-                                                    <option value="Other">Other</option>
+                                                <input type="text" class="form-control" value="{{ $section === 'asap' ? 'Units sold from ASAP' : 'Other' }}" readonly>
+                                                @error('service_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            </div>
+                                            @if ($section === 'asap')
+                                            <div class="col-md-4">
+                                                <label class="form-label">Warranty Type</label>
+                                                <select class="form-select @error('warranty_type') is-invalid @enderror" wire:model="warranty_type">
+                                                    <option value="">Select Warranty</option>
                                                     <option value="UNDER WARRANTY">UNDER WARRANTY</option>
                                                     <option value="OUT OF WARRANTY">OUT OF WARRANTY</option>
                                                 </select>
-                                                @error('otherType') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                @else
-                                                <input type="text" class="form-control" value="{{ $section === 'asap' ? 'Units sold from ASAP' : 'Other' }}" readonly>
-                                                @error('service_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                @endif
+                                                @error('warranty_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
-                                            @if ($section === 'asap')
                                             <div class="col-md-4">
                                                 <label class="form-label">Number of PMS</label>
                                                 <input type="text" class="form-control @error('pms_number') is-invalid @enderror" wire:model="pms_number">
@@ -190,6 +190,11 @@
                                                 <textarea rows="3" class="form-control @error('description') is-invalid @enderror" wire:model="description"></textarea>
                                                 @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Remarks</label>
+                                                <textarea rows="2" class="form-control @error('remarks') is-invalid @enderror" wire:model="remarks"></textarea>
+                                                @error('remarks') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            </div>
                                         </div>
                                         <div class="text-end mt-3">
                                             <button type="submit" class="btn btn-primary">Save Record</button>
@@ -210,11 +215,13 @@
                                 <thead>
                                     <tr>
                                         <th>Type</th>
+                                        <th>Warranty</th>
                                         <th>JO Number</th>
                                         <th>Date</th>
                                         <th>Client</th>
                                         <th>Vehicle/Unit</th>
                                         <th>Description</th>
+                                        <th>Remarks</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -225,12 +232,16 @@
                                     @endphp
                                     <tr>
                                         <td><span class="badge bg-primary">{{ $record->service_type === 'PMS' ? 'Units sold from ASAP' : $record->service_type }}</span></td>
+                                        <td>{{ $record->warranty_type ?? 'N/A' }}</td>
                                         <td>{{ $record->job_order_number }}</td>
                                         <td>{{ $record->job_order_date?->format('F d, Y') ?? 'N/A' }}</td>
                                         <td>{{ $record->client->company_name ?? $maintenanceRecord?->company_name ?? 'N/A' }}</td>
                                         <td>{{ $record->client->item_name ?? 'N/A' }}</td>
                                         <td style="min-width: 260px;">
                                             <div>{{ $record->description ?? 'N/A' }}</div>
+                                        </td>
+                                        <td style="min-width: 220px;">
+                                            <div>{{ $record->remarks ?? 'N/A' }}</div>
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-outline-danger" wire:click="deleteRecord({{ $record->id }})" wire:confirm="Delete this MSD record?">
@@ -240,7 +251,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="7" class="text-center text-muted py-4">No MSD records found.</td>
+                                        <td colspan="9" class="text-center text-muted py-4">No MSD records found.</td>
                                     </tr>
                                     @endforelse
                                 </tbody>

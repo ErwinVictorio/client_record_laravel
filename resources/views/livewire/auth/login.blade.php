@@ -60,7 +60,7 @@
           <option value="1">Administrator (管理员)</option>
           <option value="2">Cashier (出纳)</option>
           <option value="3">Sales Executive (销售业务员)</option>
-          <option value="4">After Sales</option>
+          <option value="4">MSD</option>
           <option value="5">Warehouse</option>
         </select>
         @error('role')

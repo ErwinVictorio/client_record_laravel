@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Warehouse;
 
+use App\Models\AfterSalesRecord;
 use App\Models\ClientRecordForMaintenanceAndRepair;
 use App\Models\clients;
 use App\Models\CreateRecordForAutoRepair;
@@ -18,10 +19,17 @@ class Dashboard extends Component
     public $clientSearch = '';
     public $autoRepairSearch = '';
     public $maintenanceSearch = '';
+    public $pmsRecordSearch = '';
+    public $otherRecordSearch = '';
+    public $editingRemarksRecordId = null;
+    public $editingRemarks = '';
+    public $noticeType = '';
+    public $noticeMessage = '';
 
     public function setTab($tab)
     {
         $this->activeTab = $tab;
+        $this->clearNotice();
         $this->resetPage();
     }
 
@@ -40,11 +48,66 @@ class Dashboard extends Component
         $this->resetPage();
     }
 
+    public function updatingPmsRecordSearch()
+    {
+        $this->resetPage('pmsRecordsPage');
+    }
+
+    public function updatingOtherRecordSearch()
+    {
+        $this->resetPage('otherRecordsPage');
+    }
+
+    public function editRemarks(int $recordId)
+    {
+        $this->clearNotice();
+
+        $record = AfterSalesRecord::findOrFail($recordId);
+
+        $this->editingRemarksRecordId = $record->id;
+        $this->editingRemarks = $record->remarks ?? '';
+
+        $this->dispatch('show-warehouse-remarks-modal', remarks: $this->editingRemarks);
+    }
+
+    public function saveRemarks()
+    {
+        $this->clearNotice();
+
+        $this->validate([
+            'editingRemarksRecordId' => 'required|exists:after_sales_records,id',
+            'editingRemarks' => 'nullable|string',
+        ]);
+
+        AfterSalesRecord::whereKey($this->editingRemarksRecordId)->update([
+            'remarks' => $this->editingRemarks ?: null,
+        ]);
+
+        $this->editingRemarksRecordId = null;
+        $this->editingRemarks = '';
+        $this->showNotice('success', 'Remarks updated successfully.');
+        $this->dispatch('hide-warehouse-remarks-modal');
+    }
+
+    private function showNotice($type, $message)
+    {
+        $this->noticeType = $type;
+        $this->noticeMessage = $message;
+    }
+
+    private function clearNotice()
+    {
+        $this->noticeType = '';
+        $this->noticeMessage = '';
+    }
+
     public function render()
     {
         $clientSearch = '%' . $this->clientSearch . '%';
         $autoRepairSearch = '%' . $this->autoRepairSearch . '%';
         $maintenanceSearch = '%' . $this->maintenanceSearch . '%';
+        $pmsRecordSearch = '%' . $this->pmsRecordSearch . '%';
+        $otherRecordSearch = '%' . $this->otherRecordSearch . '%';
 
         $clients = clients::with('salesman')
             ->where(function ($query) use ($clientSearch) {
@@ -72,14 +135,47 @@ class Dashboard extends Component
             ->latest()
             ->paginate(10, ['*'], 'maintenancePage');
 
+        $pmsRecords = AfterSalesRecord::with('client')
+            ->where('service_type', 'PMS')
+            ->where(function ($query) use ($pmsRecordSearch) {
+                $query->where('job_order_number', 'like', $pmsRecordSearch)
+                    ->orWhere('description', 'like', $pmsRecordSearch)
+                    ->orWhere('remarks', 'like', $pmsRecordSearch)
+                    ->orWhereHas('client', function ($clientQuery) use ($pmsRecordSearch) {
+                        $clientQuery->where('company_name', 'like', $pmsRecordSearch)
+                            ->orWhere('salesList_no', 'like', $pmsRecordSearch)
+                            ->orWhere('item_name', 'like', $pmsRecordSearch);
+                    });
+            })
+            ->latest()
+            ->paginate(10, ['*'], 'pmsRecordsPage');
+
+        $otherRecords = AfterSalesRecord::where('service_type', 'Other')
+            ->where(function ($query) use ($otherRecordSearch) {
+                $query->where('job_order_number', 'like', $otherRecordSearch)
+                    ->orWhere('description', 'like', $otherRecordSearch)
+                    ->orWhere('remarks', 'like', $otherRecordSearch);
+            })
+            ->latest()
+            ->paginate(10, ['*'], 'otherRecordsPage');
+
+        $otherMaintenanceRecordsByJobOrder = ClientRecordForMaintenanceAndRepair::whereIn(
+            'job_order_number',
+            $otherRecords->getCollection()->pluck('job_order_number')->filter()->unique()
+        )->get()->keyBy('job_order_number');
+
         return view('livewire.warehouse.dashboard', [
-            'totalClients' => clients::count(),
             'totalSoldClients' => clients::where('status', 'Sold')->count(),
             'totalAutoRepairRecords' => CreateRecordForAutoRepair::count(),
             'totalMaintenanceRecords' => ClientRecordForMaintenanceAndRepair::count(),
+            'totalPmsRecords' => AfterSalesRecord::where('service_type', 'PMS')->count(),
+            'totalOtherRecords' => AfterSalesRecord::where('service_type', 'Other')->count(),
             'clients' => $clients,
             'autoRepairRecords' => $autoRepairRecords,
             'maintenanceRecords' => $maintenanceRecords,
+            'pmsRecords' => $pmsRecords,
+            'otherRecords' => $otherRecords,
+            'otherMaintenanceRecordsByJobOrder' => $otherMaintenanceRecordsByJobOrder,
         ]);
     }
 }

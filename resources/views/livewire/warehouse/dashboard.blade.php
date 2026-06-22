@@ -39,6 +39,14 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tools"></i></div>
                             Repair & Maintenance
                         </button>
+                        <button type="button" wire:click="setTab('pms-records')" class="nav-link border-0 text-start {{ $activeTab === 'pms-records' ? 'active' : '' }}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-clipboard-check"></i></div>
+                            PMS Record
+                        </button>
+                        <button type="button" wire:click="setTab('other-records')" class="nav-link border-0 text-start {{ $activeTab === 'other-records' ? 'active' : '' }}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-list-check"></i></div>
+                            Other Record
+                        </button>
                         @if ((int) auth()->user()?->role === 0)
                         <a class="nav-link" href="{{ route('superAdminDashboard.view') }}">
                             <div class="sb-nav-link-icon"><i class="fas fa-arrow-left"></i></div>
@@ -62,15 +70,12 @@
                         <li class="breadcrumb-item active">Records Overview</li>
                     </ol>
 
+                    @if ($noticeMessage)
+                    <div class="alert alert-{{ $noticeType }}">{{ $noticeMessage }}</div>
+                    @endif
+
                     <div class="row">
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card text-white bg-primary h-100">
-                                <div class="card-body">
-                                    <div class="small text-uppercase">Total Clients</div>
-                                    <div class="fs-3 fw-bold">{{ $totalClients }}</div>
-                                </div>
-                            </div>
-                        </div>
+     
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card text-white bg-success h-100">
                                 <div class="card-body">
@@ -92,6 +97,22 @@
                                 <div class="card-body">
                                     <div class="small text-uppercase">Repair & Maintenance</div>
                                     <div class="fs-3 fw-bold">{{ $totalMaintenanceRecords }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card text-white bg-primary h-100">
+                                <div class="card-body">
+                                    <div class="small text-uppercase">PMS Records</div>
+                                    <div class="fs-3 fw-bold">{{ $totalPmsRecords }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card text-white bg-info h-100">
+                                <div class="card-body">
+                                    <div class="small text-uppercase">Other Records</div>
+                                    <div class="fs-3 fw-bold">{{ $totalOtherRecords }}</div>
                                 </div>
                             </div>
                         </div>
@@ -217,6 +238,152 @@
                         </div>
                     </div>
                     @endif
+
+                    @if ($activeTab === 'pms-records')
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div class="fw-bold"><i class="fas fa-clipboard-check me-2"></i>PMS Records</div>
+                            <input type="text" class="form-control w-auto" wire:model.live.debounce.300ms="pmsRecordSearch" placeholder="Search PMS records">
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Warranty</th>
+                                        <th>JO Number</th>
+                                        <th>Date</th>
+                                        <th>Client</th>
+                                        <th>Vehicle/Unit</th>
+                                        <th>Description</th>
+                                        <th>Remarks</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($pmsRecords as $record)
+                                    <tr wire:key="warehouse-pms-record-{{ $record->id }}">
+                                        <td><span class="badge bg-primary">Units sold from ASAP</span></td>
+                                        <td>{{ $record->warranty_type ?? 'N/A' }}</td>
+                                        <td>{{ $record->job_order_number }}</td>
+                                        <td>{{ $record->job_order_date?->format('F d, Y') ?? 'N/A' }}</td>
+                                        <td>{{ $record->client?->company_name ?? 'N/A' }}</td>
+                                        <td>{{ $record->client?->item_name ?? 'N/A' }}</td>
+                                        <td style="min-width: 240px;">{{ $record->description ?? 'N/A' }}</td>
+                                        <td style="min-width: 260px;">
+                                            {{ $record->remarks ?? 'N/A' }}
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-outline-primary" wire:click="editRemarks({{ $record->id }})">
+                                                Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr><td colspan="9" class="text-center text-muted py-4">No PMS records found.</td></tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                            {{ $pmsRecords->links() }}
+                        </div>
+                    </div>
+                    @endif
+
+                    @if ($activeTab === 'other-records')
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div class="fw-bold"><i class="fas fa-list-check me-2"></i>Other Records</div>
+                            <input type="text" class="form-control w-auto" wire:model.live.debounce.300ms="otherRecordSearch" placeholder="Search other records">
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>JO Number</th>
+                                        <th>Date</th>
+                                        <th>Client</th>
+                                        <th>Description</th>
+                                        <th>Remarks</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($otherRecords as $record)
+                                    @php
+                                        $maintenanceRecord = $otherMaintenanceRecordsByJobOrder->get($record->job_order_number);
+                                    @endphp
+                                    <tr wire:key="warehouse-other-record-{{ $record->id }}">
+                                        <td><span class="badge bg-secondary">Other</span></td>
+                                        <td>{{ $record->job_order_number }}</td>
+                                        <td>{{ $record->job_order_date?->format('F d, Y') ?? 'N/A' }}</td>
+                                        <td>{{ $maintenanceRecord?->company_name ?? 'N/A' }}</td>
+                                        <td style="min-width: 260px;">{{ $record->description ?? 'N/A' }}</td>
+                                        <td style="min-width: 260px;">
+                                            {{ $record->remarks ?? 'N/A' }}
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-outline-primary" wire:click="editRemarks({{ $record->id }})">
+                                                Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr><td colspan="7" class="text-center text-muted py-4">No other records found.</td></tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                            {{ $otherRecords->links() }}
+                        </div>
+                    </div>
+                    @endif
+
+                    <div class="modal fade" id="warehouseRemarksModal" tabindex="-1" aria-labelledby="warehouseRemarksModalLabel" aria-hidden="true" wire:ignore.self>
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="warehouseRemarksModalLabel">Edit Remarks</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <label class="form-label">Remarks</label>
+                                    <textarea
+                                        id="warehouseRemarksTextarea"
+                                        rows="6"
+                                        class="form-control @error('editingRemarks') is-invalid @enderror"
+                                        wire:model="editingRemarks"
+                                        wire:key="warehouse-remarks-textarea-{{ $editingRemarksRecordId ?? 'empty' }}"
+                                    ></textarea>
+                                    @error('editingRemarks') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary" wire:click="saveRemarks">Save Remarks</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @script
+                    <script>
+                        $wire.on('show-warehouse-remarks-modal', (event) => {
+                            const modalElement = document.getElementById('warehouseRemarksModal');
+                            const remarksTextarea = document.getElementById('warehouseRemarksTextarea');
+
+                            if (remarksTextarea && event?.remarks !== undefined) {
+                                remarksTextarea.value = event.remarks ?? '';
+                                remarksTextarea.dispatchEvent(new Event('input', { bubbles: true }));
+                            }
+
+                            window.bootstrap.Modal.getOrCreateInstance(modalElement).show();
+                        });
+
+                        $wire.on('hide-warehouse-remarks-modal', () => {
+                            const modalElement = document.getElementById('warehouseRemarksModal');
+                            window.bootstrap.Modal.getOrCreateInstance(modalElement).hide();
+                        });
+                    </script>
+                    @endscript
                 </div>
             </main>
         </div>

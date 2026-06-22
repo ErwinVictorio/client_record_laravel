@@ -20,12 +20,13 @@ class Dashboard extends Component
     public $section = 'asap';
     public $selectedClientId = null;
     public $service_type = 'PMS';
-    public $otherType = 'Other';
+    public $warranty_type = '';
     public $selectedMaintenanceRecordId = null;
     public $pms_number = '';
     public $job_order_number = '';
     public $job_order_date = '';
     public $description = '';
+    public $remarks = '';
     public $noticeType = '';
     public $noticeMessage = '';
 
@@ -37,7 +38,7 @@ class Dashboard extends Component
 
         $this->section = $section;
         $this->service_type = $section === 'asap' ? 'PMS' : 'Other';
-        $this->otherType = 'Other';
+        $this->warranty_type = '';
         $this->clearNotice();
         $this->resetErrorBag();
         $this->resetPage();
@@ -86,7 +87,7 @@ class Dashboard extends Component
         }
 
         $this->selectedClientId = $client->id;
-        $this->showNotice('success', 'Sold unit found. You can now add PMS or Other job information.');
+        $this->showNotice('success', 'Sold unit found. You can now add MSD job information.');
     }
 
     public function searchMaintenanceJobOrder()
@@ -118,20 +119,21 @@ class Dashboard extends Component
         $this->clearNotice();
         $this->resetErrorBag();
 
-        $this->service_type = $this->section === 'asap' ? 'PMS' : $this->otherType;
+        $this->service_type = $this->section === 'asap' ? 'PMS' : 'Other';
 
         $rules = [
-            'service_type' => 'required|in:PMS,Other,UNDER WARRANTY,OUT OF WARRANTY',
+            'service_type' => 'required|in:PMS,Other',
+            'warranty_type' => 'nullable|in:UNDER WARRANTY,OUT OF WARRANTY',
             'job_order_number' => 'required|min:2',
             'job_order_date' => 'nullable|date',
             'description' => 'nullable|string',
+            'remarks' => 'nullable|string',
         ];
 
         if ($this->service_type === 'PMS') {
             $rules['selectedClientId'] = 'required|exists:clients,id';
             $rules['pms_number'] = 'required|min:1';
         } else {
-            $rules['otherType'] = 'required|in:Other,UNDER WARRANTY,OUT OF WARRANTY';
             $rules['selectedMaintenanceRecordId'] = 'required|exists:client_record_for_maintenance_and_repairs,id';
         }
 
@@ -141,7 +143,7 @@ class Dashboard extends Component
             'selectedMaintenanceRecordId.required' => 'Please search an existing Repair & Maintenance JO Number before saving.',
             'selectedMaintenanceRecordId.exists' => 'The selected Repair & Maintenance JO record no longer exists.',
             'pms_number.required' => 'Please enter the Number of PMS.',
-            'otherType.required' => 'Please select a warranty type.',
+            'warranty_type.in' => 'Please select a valid warranty type.',
             'job_order_number.required' => 'Please enter the JO Number.',
         ]);
 
@@ -162,13 +164,15 @@ class Dashboard extends Component
             'client_id' => $this->section === 'asap' ? $this->selectedClientId : null,
             'user_id' => Auth::id(),
             'service_type' => $this->service_type,
+            'warranty_type' => $this->section === 'asap' ? ($this->warranty_type ?: null) : null,
             'pms_number' => $this->service_type === 'PMS' ? $this->pms_number : null,
             'job_order_number' => $this->job_order_number,
             'job_order_date' => $this->job_order_date ?: null,
             'description' => $this->description,
+            'remarks' => $this->remarks,
         ]);
 
-        $this->reset(['pms_number', 'job_order_number', 'job_order_date', 'description', 'selectedMaintenanceRecordId']);
+        $this->reset(['pms_number', 'warranty_type', 'job_order_number', 'job_order_date', 'description', 'remarks', 'selectedMaintenanceRecordId']);
         $this->showNotice('success', 'MSD record saved successfully.');
     }
 
@@ -209,7 +213,7 @@ class Dashboard extends Component
                 $query->where('service_type', 'PMS');
             })
             ->when($this->section === 'other', function ($query) {
-                $query->whereIn('service_type', ['Other', 'UNDER WARRANTY', 'OUT OF WARRANTY']);
+                $query->where('service_type', 'Other');
             })
             ->when($this->jobOrderSearch, function ($query) {
                 $query->where('job_order_number', 'like', '%' . $this->jobOrderSearch . '%');
