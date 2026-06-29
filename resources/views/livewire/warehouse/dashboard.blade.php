@@ -74,50 +74,6 @@
                     <div class="alert alert-{{ $noticeType }}">{{ $noticeMessage }}</div>
                     @endif
 
-                    <div class="row">
-     
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card text-white bg-success h-100">
-                                <div class="card-body">
-                                    <div class="small text-uppercase">Sold Clients</div>
-                                    <div class="fs-3 fw-bold">{{ $totalSoldClients }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card text-white bg-dark h-100">
-                                <div class="card-body">
-                                    <div class="small text-uppercase">Auto Parts Records</div>
-                                    <div class="fs-3 fw-bold">{{ $totalAutoRepairRecords }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card text-white bg-secondary h-100">
-                                <div class="card-body">
-                                    <div class="small text-uppercase">Repair & Maintenance</div>
-                                    <div class="fs-3 fw-bold">{{ $totalMaintenanceRecords }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card text-white bg-primary h-100">
-                                <div class="card-body">
-                                    <div class="small text-uppercase">PMS Records</div>
-                                    <div class="fs-3 fw-bold">{{ $totalPmsRecords }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card text-white bg-info h-100">
-                                <div class="card-body">
-                                    <div class="small text-uppercase">Other Records</div>
-                                    <div class="fs-3 fw-bold">{{ $totalOtherRecords }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     @if ($activeTab === 'clients')
                     <div class="card mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">

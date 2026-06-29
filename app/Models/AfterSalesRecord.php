@@ -10,6 +10,7 @@ class AfterSalesRecord extends Model
         'client_id',
         'user_id',
         'service_type',
+        'change_type',
         'warranty_type',
         'pms_number',
         'job_order_number',

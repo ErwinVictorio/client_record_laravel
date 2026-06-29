@@ -20,6 +20,7 @@ class Dashboard extends Component
     public $section = 'asap';
     public $selectedClientId = null;
     public $service_type = 'PMS';
+    public $change_type = '';
     public $warranty_type = '';
     public $selectedMaintenanceRecordId = null;
     public $pms_number = '';
@@ -27,6 +28,7 @@ class Dashboard extends Component
     public $job_order_date = '';
     public $description = '';
     public $remarks = '';
+    public $editingRecordId = null;
     public $noticeType = '';
     public $noticeMessage = '';
 
@@ -36,6 +38,7 @@ class Dashboard extends Component
             return;
         }
 
+        $this->cancelEdit();
         $this->section = $section;
         $this->service_type = $section === 'asap' ? 'PMS' : 'Other';
         $this->warranty_type = '';
@@ -56,6 +59,11 @@ class Dashboard extends Component
         if ($this->section === 'other') {
             $this->selectedMaintenanceRecordId = null;
         }
+    }
+
+    public function updatedJobOrderSearch()
+    {
+        $this->resetPage();
     }
 
     public function searchSaleControl()
@@ -123,6 +131,7 @@ class Dashboard extends Component
 
         $rules = [
             'service_type' => 'required|in:PMS,Other',
+            'change_type' => 'required|in:WITH CHANGE,WITHOUT CHANGE',
             'warranty_type' => 'nullable|in:UNDER WARRANTY,OUT OF WARRANTY',
             'job_order_number' => 'required|min:2',
             'job_order_date' => 'nullable|date',
@@ -143,6 +152,8 @@ class Dashboard extends Component
             'selectedMaintenanceRecordId.required' => 'Please search an existing Repair & Maintenance JO Number before saving.',
             'selectedMaintenanceRecordId.exists' => 'The selected Repair & Maintenance JO record no longer exists.',
             'pms_number.required' => 'Please enter the Number of PMS.',
+            'change_type.required' => 'Please select a type.',
+            'change_type.in' => 'Please select a valid type.',
             'warranty_type.in' => 'Please select a valid warranty type.',
             'job_order_number.required' => 'Please enter the JO Number.',
         ]);
@@ -160,30 +171,83 @@ class Dashboard extends Component
             }
         }
 
-        AfterSalesRecord::create([
+        $values = [
             'client_id' => $this->section === 'asap' ? $this->selectedClientId : null,
-            'user_id' => Auth::id(),
             'service_type' => $this->service_type,
+            'change_type' => $this->change_type,
             'warranty_type' => $this->section === 'asap' ? ($this->warranty_type ?: null) : null,
             'pms_number' => $this->service_type === 'PMS' ? $this->pms_number : null,
             'job_order_number' => $this->job_order_number,
             'job_order_date' => $this->job_order_date ?: null,
             'description' => $this->description,
             'remarks' => $this->remarks,
-        ]);
+        ];
 
-        $this->reset(['pms_number', 'warranty_type', 'job_order_number', 'job_order_date', 'description', 'remarks', 'selectedMaintenanceRecordId']);
-        $this->showNotice('success', 'MSD record saved successfully.');
+        if ($this->editingRecordId) {
+            AfterSalesRecord::findOrFail($this->editingRecordId)->update($values);
+            $message = 'MSD record updated successfully.';
+        } else {
+            AfterSalesRecord::create([
+                ...$values,
+                'user_id' => Auth::id(),
+            ]);
+            $message = 'MSD record saved successfully.';
+        }
+
+        $this->resetForm();
+        $this->showNotice('success', $message);
     }
 
-    public function deleteRecord(int $recordId)
+    public function editRecord(int $recordId)
     {
         $this->clearNotice();
         $this->resetErrorBag();
 
-        AfterSalesRecord::findOrFail($recordId)->delete();
+        $record = AfterSalesRecord::findOrFail($recordId);
+        $recordSection = $record->service_type === 'PMS' ? 'asap' : 'other';
 
-        $this->showNotice('success', 'MSD record deleted successfully.');
+        if ($recordSection !== $this->section) {
+            return;
+        }
+
+        $this->editingRecordId = $record->id;
+        $this->selectedClientId = $record->client_id;
+        $this->service_type = $record->service_type;
+        $this->change_type = $record->change_type ?? '';
+        $this->warranty_type = $record->warranty_type ?? '';
+        $this->pms_number = $record->pms_number ?? '';
+        $this->job_order_number = $record->job_order_number;
+        $this->job_order_date = $record->job_order_date?->format('Y-m-d') ?? '';
+        $this->description = $record->description ?? '';
+        $this->remarks = $record->remarks ?? '';
+        $this->saleControlNo = $record->client?->salesList_no ?? '';
+        $this->selectedMaintenanceRecordId = $recordSection === 'other'
+            ? ClientRecordForMaintenanceAndRepair::where('job_order_number', $record->job_order_number)->value('id')
+            : null;
+
+        $this->dispatch('msd-record-editing');
+    }
+
+    public function cancelEdit()
+    {
+        $this->resetForm();
+        $this->clearNotice();
+        $this->resetErrorBag();
+    }
+
+    private function resetForm()
+    {
+        $this->reset([
+            'change_type',
+            'warranty_type',
+            'pms_number',
+            'job_order_number',
+            'job_order_date',
+            'description',
+            'remarks',
+            'editingRecordId',
+            'selectedMaintenanceRecordId',
+        ]);
     }
 
     private function showNotice($type, $message)
@@ -216,7 +280,24 @@ class Dashboard extends Component
                 $query->where('service_type', 'Other');
             })
             ->when($this->jobOrderSearch, function ($query) {
-                $query->where('job_order_number', 'like', '%' . $this->jobOrderSearch . '%');
+                $search = trim($this->jobOrderSearch);
+
+                $query->where(function ($searchQuery) use ($search) {
+                    $searchQuery->where('job_order_number', 'like', '%' . $search . '%');
+
+                    if ($this->section === 'asap') {
+                        $searchQuery->orWhereHas('client', function ($clientQuery) use ($search) {
+                            $clientQuery->where('company_name', 'like', '%' . $search . '%');
+                        });
+                    } else {
+                        $searchQuery->orWhereIn(
+                            'job_order_number',
+                            ClientRecordForMaintenanceAndRepair::query()
+                                ->select('job_order_number')
+                                ->where('company_name', 'like', '%' . $search . '%')
+                        );
+                    }
+                });
             })
             ->latest()
             ->paginate(10);

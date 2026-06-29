@@ -122,17 +122,25 @@
                         @endif
 
                         <div class="{{ $section === 'asap' ? 'col-lg-7' : 'col-lg-12' }}">
-                            <div class="card border-0 shadow-sm">
+                            <div
+                                class="card shadow-sm {{ $editingRecordId ? 'border-warning' : 'border-0' }}"
+                                x-on:msd-record-editing.window="$el.scrollIntoView({ behavior: 'smooth', block: 'start' })"
+                            >
                                 <div class="card-header bg-white fw-bold">
-                                    <i class="fas fa-file-circle-plus me-2"></i>Add MSD Record
+                                    <i class="fas {{ $editingRecordId ? 'fa-pen-to-square' : 'fa-file-circle-plus' }} me-2"></i>
+                                    {{ $editingRecordId ? 'Edit MSD Record' : 'Add MSD Record' }}
                                 </div>
                                 <div class="card-body">
                                     <form wire:submit.prevent="save">
                                         <div class="row g-3">
                                             <div class="col-md-4">
                                                 <label class="form-label">Type</label>
-                                                <input type="text" class="form-control" value="{{ $section === 'asap' ? 'Units sold from ASAP' : 'Other' }}" readonly>
-                                                @error('service_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                <select class="form-select @error('change_type') is-invalid @enderror" wire:model="change_type">
+                                                    <option value="">Select Type</option>
+                                                    <option value="WITH CHANGE">With Change</option>
+                                                    <option value="WITHOUT CHANGE">Without Change</option>
+                                                </select>
+                                                @error('change_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
                                             @if ($section === 'asap')
                                             <div class="col-md-4">
@@ -196,8 +204,13 @@
                                                 @error('remarks') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
                                         </div>
-                                        <div class="text-end mt-3">
-                                            <button type="submit" class="btn btn-primary">Save Record</button>
+                                        <div class="text-end mt-3 d-flex gap-2 justify-content-end">
+                                            @if ($editingRecordId)
+                                            <button type="button" class="btn btn-outline-secondary" wire:click="cancelEdit">Cancel</button>
+                                            @endif
+                                            <button type="submit" class="btn btn-primary">
+                                                {{ $editingRecordId ? 'Update Record' : 'Save Record' }}
+                                            </button>
                                         </div>
                                     </form>
                                 </div>
@@ -208,7 +221,7 @@
                     <div class="card border-0 shadow-sm mt-4 mb-4">
                         <div class="card-header bg-white d-flex flex-wrap gap-3 justify-content-between align-items-center">
                             <div class="fw-bold"><i class="fas fa-list-check me-2"></i>JO Information</div>
-                            <input type="text" class="form-control w-auto" wire:model.live.debounce.300ms="jobOrderSearch" placeholder="Search JO Number">
+                            <input type="text" class="form-control w-auto" wire:model.live.debounce.300ms="jobOrderSearch" placeholder="Search Client Name or JO Number" aria-label="Search Client Name or JO Number">
                         </div>
                         <div class="card-body table-responsive">
                             <table class="table table-hover align-middle">
@@ -231,7 +244,11 @@
                                         $maintenanceRecord = $maintenanceRecordsByJobOrder->get($record->job_order_number);
                                     @endphp
                                     <tr>
-                                        <td><span class="badge bg-primary">{{ $record->service_type === 'PMS' ? 'Units sold from ASAP' : $record->service_type }}</span></td>
+                                        <td>
+                                            <span class="badge bg-primary">
+                                                {{ $record->change_type ? ucwords(strtolower($record->change_type)) : 'N/A' }}
+                                            </span>
+                                        </td>
                                         <td>{{ $record->warranty_type ?? 'N/A' }}</td>
                                         <td>{{ $record->job_order_number }}</td>
                                         <td>{{ $record->job_order_date?->format('F d, Y') ?? 'N/A' }}</td>
@@ -244,8 +261,8 @@
                                             <div>{{ $record->remarks ?? 'N/A' }}</div>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" wire:click="deleteRecord({{ $record->id }})" wire:confirm="Delete this MSD record?">
-                                                Delete
+                                            <button type="button" class="btn btn-sm btn-outline-primary" wire:click="editRecord({{ $record->id }})">
+                                                <i class="fas fa-pen-to-square me-1"></i>Edit
                                             </button>
                                         </td>
                                     </tr>

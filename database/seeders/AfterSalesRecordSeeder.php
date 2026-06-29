@@ -26,6 +26,7 @@ class AfterSalesRecordSeeder extends Seeder
                 [
                     'client_id' => $faker->randomElement($soldClientIds),
                     'user_id' => $userId,
+                    'change_type' => $faker->randomElement(['WITH CHANGE', 'WITHOUT CHANGE']),
                     'warranty_type' => $faker->randomElement(['UNDER WARRANTY', 'OUT OF WARRANTY']),
                     'pms_number' => 'PMS-' . str_pad((string) $i, 4, '0', STR_PAD_LEFT),
                     'job_order_date' => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
@@ -52,6 +53,7 @@ class AfterSalesRecordSeeder extends Seeder
                 [
                     'client_id' => null,
                     'user_id' => $userId,
+                    'change_type' => $faker->randomElement(['WITH CHANGE', 'WITHOUT CHANGE']),
                     'warranty_type' => null,
                     'pms_number' => null,
                     'job_order_date' => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
