@@ -21,19 +21,25 @@
       </nav>
     </div>
     <section class="container-fluid mt-3">
-      <div class="d-flex justify-content-end align-items-center gap-2 mb-3">
-        <input type="text" class="form-control w-auto" wire:model.live="jobOrderSearch" placeholder="Search JO Number">
-        <button class="btn btn-primary" type="button" wire:click="ApplySearch">
-          Search
-        </button>
+      <div class="row justify-content-end mb-3">
+        <div class="col-12 col-md-5 col-lg-4">
+          <label for="maintenance-record-search" class="form-label">Search Records</label>
+          <input
+            id="maintenance-record-search"
+            type="search"
+            class="form-control"
+            wire:model.live.debounce.300ms="search"
+            placeholder="Search by company name or serial number"
+          >
+        </div>
       </div>
-      <table class="table">        
+      <div class="table-responsive">
+      <table class="table">
        <thead>
          <tr>
              <th>#</th>
              <th>Company Name</th>
-             <th>Job Order Number</th>
-             <th>Serial Number</th>
+             <th>Serial / Plate Number</th>
              <th>Date Sold</th>
              <th>Address</th>
              <th>Email</th>
@@ -46,12 +52,16 @@
      </thead>
      <tbody>
 
-     @foreach ($records as $record )
+     @forelse ($records as $record )
+     @php
+       $maintenanceVehicles = $record->vehicle_specifications ?? [];
+       $primaryVehicle = $maintenanceVehicles[0] ?? [];
+       $serialOrPlateNumber = $primaryVehicle['serial_or_plate_number'] ?? $record->serial_number;
+     @endphp
      <tr>
       <td>{{$record->id}}</td>
       <td>{{$record->company_name}}</td>
-      <td>{{$record->job_order_number ?? 'N/A'}}</td>
-      <td>{{$record->serial_number ?? 'N/A'}}</td>
+      <td>{{$serialOrPlateNumber ?? 'N/A'}}</td>
       <td>{{$record->date_sold?->format('F d, Y') ?? 'N/A'}}</td>
       <td>{{$record->address}}</td>
       <td>{{$record->email}}</td>
@@ -68,19 +78,28 @@
         </button>
       </td>
      </tr>
-     @endforeach
+     @empty
+     <tr>
+       <td colspan="11" class="text-center text-muted py-4">No matching maintenance records found.</td>
+     </tr>
+     @endforelse
      </tbody>
       </table>
+      </div>
       @foreach ($records as $record)
         <livewire:modals.edit-repair-and-maintence
           :recordId="$record->id"
+          :managesJobOrderNumber="false"
           :wire:key="'salesman-edit-maintenance-'.$record->id"
         />
-        @include('livewire.modals.maintenance-record-info', ['record' => $record])
+        @include('livewire.modals.maintenance-record-info', [
+          'record' => $record,
+          'showJobOrderNumber' => false,
+        ])
       @endforeach
       {{$records->links()}}
     </section>
 
     {{-- modal for creating Record --}}
-    <livewire:modals.create-repair-and-maintenace-record/>
+    <livewire:modals.create-repair-and-maintenace-record :managesJobOrderNumber="false" />
  </div>

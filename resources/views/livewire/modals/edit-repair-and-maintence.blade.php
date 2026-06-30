@@ -61,13 +61,15 @@
                 </div>
               </div>
 
-              <div class="col-lg-3">
-                <div class="form-floating">
-                  <input wire:model.live='job_order_number' type="text" class="form-control" id="JobOrderNumber" placeholder="Job Order Number.">
-                  <label for="job_order_number">Job Order Number.(工单编号)</label>
-                  @error('job_order_number') <span class="text-danger">{{ $message }}</span> @enderror
+              @if ($managesJobOrderNumber)
+                <div class="col-lg-3">
+                  <div class="form-floating">
+                    <input wire:model.live='job_order_number' type="text" class="form-control" id="JobOrderNumber_{{$recordId}}" placeholder="Job Order Number.">
+                    <label for="JobOrderNumber_{{$recordId}}">Job Order Number.(工单编号)</label>
+                    @error('job_order_number') <span class="text-danger">{{ $message }}</span> @enderror
+                  </div>
                 </div>
-              </div>
+              @endif
   
               <div class="col-lg-3">
                 <div class="form-floating">

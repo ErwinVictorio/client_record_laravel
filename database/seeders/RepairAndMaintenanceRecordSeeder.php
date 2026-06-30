@@ -45,7 +45,6 @@ class RepairAndMaintenanceRecordSeeder extends Seeder
                 'contact_number' => $faker->numerify('09#########'),
                 'contact_person' => $faker->name(),
                 'contact_number_person' => $faker->numerify('09#########'),
-                'job_order_number' => 'JO-' . now()->format('Ymd') . '-' . str_pad((string) $i, 4, '0', STR_PAD_LEFT),
                 'serial_number' => strtoupper($faker->bothify('SN-####-????')),
                 'date_sold' => $faker->dateTimeBetween('-3 years', 'now')->format('Y-m-d'),
                 'salesmanId' => $faker->randomElement($salesmanIds),

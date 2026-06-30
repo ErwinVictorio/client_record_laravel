@@ -135,7 +135,7 @@
                                         <div class="row g-3">
                                             <div class="col-md-4">
                                                 <label class="form-label">Type</label>
-                                                <select class="form-select @error('change_type') is-invalid @enderror" wire:model="change_type">
+                                                <select class="form-select @error('change_type') is-invalid @enderror" wire:model.live="change_type">
                                                     <option value="">Select Type</option>
                                                     <option value="WITH CHANGE">With Change</option>
                                                     <option value="WITHOUT CHANGE">Without Change</option>
@@ -145,7 +145,11 @@
                                             @if ($section === 'asap')
                                             <div class="col-md-4">
                                                 <label class="form-label">Warranty Type</label>
-                                                <select class="form-select @error('warranty_type') is-invalid @enderror" wire:model="warranty_type">
+                                                <select
+                                                    class="form-select @error('warranty_type') is-invalid @enderror"
+                                                    wire:model="warranty_type"
+                                                    @disabled($change_type === 'WITH CHANGE')
+                                                >
                                                     <option value="">Select Warranty</option>
                                                     <option value="UNDER WARRANTY">UNDER WARRANTY</option>
                                                     <option value="OUT OF WARRANTY">OUT OF WARRANTY</option>
@@ -158,16 +162,60 @@
                                                 @error('pms_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
                                             @endif
+                                            @if ($section === 'other' && !$editingRecordId)
+                                            <div class="col-12">
+                                                <label class="form-label">Search Pending Repair & Maintenance by Company Name</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control @error('maintenanceCompanySearch') is-invalid @enderror" wire:model="maintenanceCompanySearch" placeholder="Enter company name">
+                                                    <button class="btn btn-outline-primary" type="button" wire:click="searchMaintenanceCompany">Search Company</button>
+                                                </div>
+                                                @error('maintenanceCompanySearch') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                                <div class="form-text">Only Repair & Maintenance records without a JO Number are shown.</div>
+                                            </div>
+
+                                            @if ($maintenanceSearchPerformed)
+                                            <div class="col-12">
+                                                <div class="fw-semibold mb-2">Pending Records</div>
+                                                @forelse ($maintenanceSearchResults as $maintenanceSearchRecord)
+                                                @php
+                                                    $searchResultVehicles = $maintenanceSearchRecord->vehicle_specifications ?? [];
+                                                @endphp
+                                                <div class="border rounded p-3 mb-2 {{ (int) $selectedMaintenanceRecordId === $maintenanceSearchRecord->id ? 'border-primary bg-light' : '' }}">
+                                                    <div class="d-flex justify-content-between align-items-start gap-3">
+                                                        <div>
+                                                            <div class="fw-bold">{{ $maintenanceSearchRecord->company_name }}</div>
+                                                            <div class="small text-muted">
+                                                                Contact: {{ $maintenanceSearchRecord->contact_number }} ·
+                                                                Contact Person: {{ $maintenanceSearchRecord->contact_person }} ·
+                                                                Created: {{ $maintenanceSearchRecord->created_at?->format('F d, Y') ?? 'N/A' }}
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-sm {{ (int) $selectedMaintenanceRecordId === $maintenanceSearchRecord->id ? 'btn-primary' : 'btn-outline-primary' }}" wire:click="selectMaintenanceRecord({{ $maintenanceSearchRecord->id }})">
+                                                            {{ (int) $selectedMaintenanceRecordId === $maintenanceSearchRecord->id ? 'Selected' : 'Select Record' }}
+                                                        </button>
+                                                    </div>
+                                                    <div class="mt-2 small">
+                                                        <span class="fw-semibold">Vehicles:</span>
+                                                        @if (count($searchResultVehicles) > 0)
+                                                            @foreach ($searchResultVehicles as $vehicle)
+                                                                <span class="badge text-bg-secondary me-1 mb-1">
+                                                                    {{ $vehicle['brand'] ?? 'N/A' }} {{ $vehicle['model'] ?? '' }} · {{ $vehicle['serial_or_plate_number'] ?? 'N/A' }}
+                                                                </span>
+                                                            @endforeach
+                                                        @else
+                                                            <span class="text-muted">{{ $maintenanceSearchRecord->serial_number ?? 'N/A' }}</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                @empty
+                                                <div class="alert alert-light border text-muted mb-0">No pending Repair & Maintenance records found for this company.</div>
+                                                @endforelse
+                                            </div>
+                                            @endif
+                                            @endif
                                             <div class="col-md-4">
                                                 <label class="form-label">JO Number</label>
-                                                @if ($section === 'other')
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control @error('job_order_number') is-invalid @enderror" wire:model="job_order_number">
-                                                    <button class="btn btn-outline-primary" type="button" wire:click="searchMaintenanceJobOrder">Search JO</button>
-                                                </div>
-                                                @else
                                                 <input type="text" class="form-control @error('job_order_number') is-invalid @enderror" wire:model="job_order_number">
-                                                @endif
                                                 @error('job_order_number') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                             </div>
                                             <div class="col-md-4">
@@ -181,14 +229,29 @@
                                                 <div class="border rounded p-3 bg-light">
                                                     <div class="fw-bold mb-2">{{ $selectedMaintenanceRecord->company_name }}</div>
                                                     <div class="row g-2 small text-muted">
-                                                        <div class="col-md-3">JO Number: {{ $selectedMaintenanceRecord->job_order_number }}</div>
+                                                        <div class="col-md-3">JO Status: {{ $editingRecordId ? $selectedMaintenanceRecord->job_order_number : 'Pending assignment' }}</div>
                                                         <div class="col-md-3">Contact: {{ $selectedMaintenanceRecord->contact_number }}</div>
                                                         <div class="col-md-3">Contact Person: {{ $selectedMaintenanceRecord->contact_person }}</div>
                                                         <div class="col-md-3">Email: {{ $selectedMaintenanceRecord->email }}</div>
                                                     </div>
+                                                    @php
+                                                        $selectedMaintenanceVehicles = $selectedMaintenanceRecord->vehicle_specifications ?? [];
+                                                    @endphp
+                                                    <div class="mt-2 small">
+                                                        <span class="fw-semibold">Vehicles under this JO:</span>
+                                                        @if (count($selectedMaintenanceVehicles) > 0)
+                                                            @foreach ($selectedMaintenanceVehicles as $vehicle)
+                                                                <span class="badge text-bg-secondary me-1 mb-1">
+                                                                    {{ $vehicle['brand'] ?? 'N/A' }} {{ $vehicle['model'] ?? '' }} · {{ $vehicle['serial_or_plate_number'] ?? 'N/A' }}
+                                                                </span>
+                                                            @endforeach
+                                                        @else
+                                                            <span class="text-muted">{{ $selectedMaintenanceRecord->serial_number ?? 'N/A' }}</span>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                                 @else
-                                                <div class="text-muted small">Search an existing Repair & Maintenance JO Number before saving an Other record.</div>
+                                                <div class="text-muted small">Search by company and select a pending Repair & Maintenance record before saving.</div>
                                                 @endif
                                                 @error('selectedMaintenanceRecordId') <div class="text-danger small mt-2">{{ $message }}</div> @enderror
                                             </div>
@@ -241,7 +304,8 @@
                                 <tbody>
                                     @forelse ($records as $record)
                                     @php
-                                        $maintenanceRecord = $maintenanceRecordsByJobOrder->get($record->job_order_number);
+                                        $maintenanceRecord = $record->maintenanceRecord ?? $maintenanceRecordsByJobOrder->get($record->job_order_number);
+                                        $recordVehicles = $maintenanceRecord?->vehicle_specifications ?? [];
                                     @endphp
                                     <tr>
                                         <td>
@@ -253,7 +317,20 @@
                                         <td>{{ $record->job_order_number }}</td>
                                         <td>{{ $record->job_order_date?->format('F d, Y') ?? 'N/A' }}</td>
                                         <td>{{ $record->client->company_name ?? $maintenanceRecord?->company_name ?? 'N/A' }}</td>
-                                        <td>{{ $record->client->item_name ?? 'N/A' }}</td>
+                                        <td style="min-width: 220px;">
+                                            @if ($record->client?->item_name)
+                                                {{ $record->client->item_name }}
+                                            @elseif (count($recordVehicles) > 0)
+                                                @foreach ($recordVehicles as $vehicle)
+                                                    <div class="small mb-1">
+                                                        <span class="fw-semibold">{{ $vehicle['brand'] ?? 'N/A' }} {{ $vehicle['model'] ?? '' }}</span>
+                                                        <span class="text-muted">· {{ $vehicle['serial_or_plate_number'] ?? 'N/A' }}</span>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                {{ $maintenanceRecord?->serial_number ?? 'N/A' }}
+                                            @endif
+                                        </td>
                                         <td style="min-width: 260px;">
                                             <div>{{ $record->description ?? 'N/A' }}</div>
                                         </td>

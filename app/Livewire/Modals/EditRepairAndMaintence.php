@@ -2,29 +2,58 @@
 
 namespace App\Livewire\Modals;
 
-use Livewire\Component;
 use App\Models\ClientRecordForMaintenanceAndRepair;
-use Livewire\Attributes\Validate;
+use Livewire\Attributes\Locked;
+use Livewire\Component;
 
 class EditRepairAndMaintence extends Component
 {
     public $recordId;
 
+    #[Locked]
+    public bool $managesJobOrderNumber = true;
 
-    #[Validate('required|string')] public $company_name;
-    #[Validate('required')] public $address;
-    #[Validate('required|email')] public $email;
-    #[Validate('required')] public $contact_number;
-    #[Validate('required')] public $job_order_number;
-    #[Validate('nullable|string')] public $serial_number;
-    #[Validate('nullable|date')] public $date_sold;
-    #[Validate('required')] public $contact_person;
-    #[Validate('required')] public $contact_number_person;
-    #[Validate('nullable')] public $bank_account_number;
+    public $company_name;
 
-    public function mount($recordId){
+    public $address;
+
+    public $email;
+
+    public $contact_number;
+
+    public $job_order_number;
+
+    public $serial_number;
+
+    public $date_sold;
+
+    public $contact_person;
+
+    public $contact_number_person;
+
+    public $bank_account_number;
+
+    protected function rules(): array
+    {
+        return [
+            'company_name' => 'required|string',
+            'address' => 'required',
+            'email' => 'required|email',
+            'contact_number' => 'required',
+            'job_order_number' => $this->managesJobOrderNumber ? 'required' : 'nullable',
+            'serial_number' => 'nullable|string',
+            'date_sold' => 'nullable|date',
+            'contact_person' => 'required',
+            'contact_number_person' => 'required',
+            'bank_account_number' => 'nullable',
+        ];
+    }
+
+    public function mount($recordId, bool $managesJobOrderNumber = true)
+    {
 
         $this->recordId = $recordId;
+        $this->managesJobOrderNumber = $managesJobOrderNumber;
         $record = ClientRecordForMaintenanceAndRepair::findOrFail($recordId);
 
         $this->company_name = $record->company_name;
@@ -39,26 +68,31 @@ class EditRepairAndMaintence extends Component
         $this->bank_account_number = $record->bank_account_number;
     }
 
-
-    public function updateRecord(){
+    public function updateRecord()
+    {
         $this->validate();
 
         // update the record
-        ClientRecordForMaintenanceAndRepair::where('id', $this->recordId)
-        ->update([
-           'company_name' => $this->company_name,
+        $updatedValues = [
+            'company_name' => $this->company_name,
             'address' => $this->address,
-             'contact_number' => $this->contact_number,
-             'email' => $this->email,
-             'job_order_number' => $this->job_order_number,
-             'serial_number' => $this->serial_number,
-             'date_sold' => $this->date_sold ?: null,
-              'bank_account_number' => $this->bank_account_number,
-              'contact_number_person' => $this->contact_number_person,
-              'contact_person' => $this->contact_person
-        ]);
+            'contact_number' => $this->contact_number,
+            'email' => $this->email,
+            'serial_number' => $this->serial_number,
+            'date_sold' => $this->date_sold ?: null,
+            'bank_account_number' => $this->bank_account_number,
+            'contact_number_person' => $this->contact_number_person,
+            'contact_person' => $this->contact_person,
+        ];
 
-        session()->flash('success','Record is Successfully Updated!');
+        if ($this->managesJobOrderNumber) {
+            $updatedValues['job_order_number'] = $this->job_order_number;
+        }
+
+        ClientRecordForMaintenanceAndRepair::where('id', $this->recordId)
+            ->update($updatedValues);
+
+        session()->flash('success', 'Record is Successfully Updated!');
         $this->dispatch('maintenance-records-updated');
     }
 

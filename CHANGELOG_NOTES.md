@@ -2,6 +2,85 @@
 
 This file tracks the system changes, fixes, and implementation notes we make during development.
 
+## 2026-06-30
+
+### Salesman Repair & Maintenance JO Removal
+
+- Removed the JO Number search input and Search button from the Salesman Repair & Maintenance page.
+- Removed the Job Order Number column and values from the Salesman records table.
+- Hid Job Order Number from the Salesman create, edit, and record information modals.
+- Added a shared modal context flag so the current Admin and Super Admin pages keep their existing JO fields and required validation.
+- Locked the context flag after component initialization to prevent it from being changed through a Livewire request.
+- New Salesman Repair & Maintenance records are now saved with `job_order_number = NULL`.
+- Existing JO Numbers are preserved when a Salesman edits an older record.
+- Removed the unused `jobOrderSearch` property, search action, and JO query filter from the Salesman Livewire component.
+- Added migration `2026_06_30_000001_make_job_order_number_nullable_on_maintenance_records_table.php`.
+
+### Dynamic Repair & Maintenance Vehicle Specifications
+
+- Added a dynamic Vehicle Specifications section to the Repair & Maintenance create-record modal.
+- Salesmen can add or remove vehicle entries while the form always keeps at least one vehicle.
+- Each vehicle stores:
+  - Brand;
+  - Model;
+  - Serial Number / Plate Number;
+  - Loading Capacity;
+  - Lifting Height;
+  - Mast Type;
+  - Power Type;
+  - Tire;
+  - Fork Length;
+  - Attachment.
+- Brand, Model, and Serial Number / Plate Number are required for every vehicle.
+- Removed the standalone Serial Number input from the create-record form.
+- Added nullable JSON column `vehicle_specifications` through migration `2026_06_30_000002_add_vehicle_specifications_to_maintenance_records_table.php`.
+- Added an array cast for `vehicle_specifications` on the maintenance record model.
+- The first vehicle's Serial Number / Plate Number is synchronized to the legacy `serial_number` column for backward-compatible tables and existing integrations.
+- Updated the Salesman table heading to `Serial / Plate Number` and added a first-vehicle identifier summary with legacy fallback.
+- Updated the record information modal to show every saved vehicle and its complete specifications.
+- The Repair & Maintenance Edit modal remains unchanged in this phase.
+
+### After Sales Pending Company Search and JO Assignment
+
+- Replaced the Other-form `Search JO` workflow with a pending Repair & Maintenance company-name search.
+- Company search supports partial names and only returns records whose `job_order_number` is null or blank.
+- Added selectable pending-record results containing company/contact details and all saved vehicles with Brand, Model, and Serial/Plate Number.
+- After Sales now enters the JO Number only after selecting a pending Repair & Maintenance record.
+- One selected Repair & Maintenance record can contain multiple vehicles under the same JO Number.
+- Added nullable `maintenance_record_id` to `after_sales_records` through migration `2026_06_30_000003_link_after_sales_records_to_maintenance_records.php`.
+- The migration backfills existing Other records by matching their current JO Number when a corresponding maintenance record exists.
+- Added direct Eloquent relationships between After Sales and Repair & Maintenance records.
+- New Other saves use a database transaction to:
+  - verify and lock the selected pending record;
+  - assign its JO Number;
+  - create the linked After Sales record.
+- A stale or concurrently assigned maintenance record is rejected instead of overwriting its JO.
+- Editing an Other JO updates both the After Sales record and its linked Repair & Maintenance record in one transaction.
+- Updated the JO Information table to display every vehicle included under an Other JO.
+- PMS behavior and the JO Information client/JO list search remain unchanged.
+
+### Test Coverage and Test Isolation
+
+- Added `SalesmanRepairAndMaintenanceTest` with coverage for:
+  - hidden Salesman JO controls;
+  - record creation without a JO Number;
+  - preservation of an existing JO Number during Salesman edits;
+  - required JO validation in shared modal contexts that still manage JO Numbers;
+  - dynamic vehicle add/remove behavior;
+  - required vehicle identifiers;
+  - multi-vehicle JSON persistence;
+  - first-vehicle legacy serial synchronization.
+- Extended `AfterSalesDashboardTest` with coverage for:
+  - partial company-name pending search;
+  - exclusion of records that already have a JO;
+  - one JO assignment for a record with multiple vehicles;
+  - direct maintenance-record linking;
+  - stale assignment rejection;
+  - synchronized Other JO edits.
+- Configured PHPUnit to use in-memory SQLite and a valid test `APP_URL`, isolating automated tests from the local MySQL application database.
+- Verification result: 15 tests passed with 56 assertions.
+- PHP syntax checks and Blade view compilation passed.
+
 ## 2026-06-16
 
 ### After Sales Account and Dashboard

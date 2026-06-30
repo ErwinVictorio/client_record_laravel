@@ -82,22 +82,16 @@
               </div>
   
   
-               <div class="col-lg-10">
-                <div class="form-floating">
-                  <input wire:model='job_order_number' type="text" class="form-control" id="JobOrderNumber" placeholder="Job Order Number.">
-                  <label for="job_order_number">Job Order No.(工单编号)</label>
-                  @error('job_order_number') <span class="text-danger">{{ $message }}</span> @enderror
+              @if ($managesJobOrderNumber)
+                <div class="col-lg-10">
+                  <div class="form-floating">
+                    <input wire:model='job_order_number' type="text" class="form-control" id="JobOrderNumber" placeholder="Job Order Number.">
+                    <label for="JobOrderNumber">Job Order No.(工单编号)</label>
+                    @error('job_order_number') <span class="text-danger">{{ $message }}</span> @enderror
+                  </div>
                 </div>
-              </div>
+              @endif
   
-              <div class="col-lg-3">
-                <div class="form-floating">
-                  <input wire:model='serial_number' type="text" class="form-control" id="serial_number" placeholder="Serial Number">
-                  <label for="serial_number">Serial Number</label>
-                  @error('serial_number') <span class="text-danger">{{ $message }}</span> @enderror
-                </div>
-              </div>
-
               <div class="col-lg-3">
                 <div class="form-floating">
                   <input wire:model='date_sold' type="date" class="form-control" id="date_sold" placeholder="Date Sold">
@@ -112,6 +106,64 @@
                   <input wire:model='bank_account_number' type="text" class="form-control" id="bank_Account_number" placeholder="Bank Account Number">
                   <label for="bank_account_number">Bank Account Number (optional) 银行账号</label>
                 </div>
+              </div>
+
+              <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <label class="form-label fw-bold text-success mb-0">Vehicle Specifications (车辆规格)</label>
+                  <button type="button" wire:click="addVehicle" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                    + Add More Vehicle
+                  </button>
+                </div>
+
+                @foreach ($vehicles as $index => $vehicle)
+                  <div class="border rounded p-2 mb-2" wire:key="maintenance-create-vehicle-{{ $index }}">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="small fw-bold text-secondary">Vehicle #{{ $index + 1 }}</span>
+                      @if (count($vehicles) > 1)
+                        <button type="button" wire:click="removeVehicle({{ $index }})" class="btn btn-sm btn-outline-danger py-0">
+                          Remove
+                        </button>
+                      @endif
+                    </div>
+
+                    <div class="row g-2">
+                      <div class="col-md-4">
+                        <input wire:model="vehicles.{{ $index }}.brand" type="text" class="form-control form-control-sm" placeholder="Brand">
+                        @error("vehicles.$index.brand") <span class="text-danger small">{{ $message }}</span> @enderror
+                      </div>
+                      <div class="col-md-4">
+                        <input wire:model="vehicles.{{ $index }}.model" type="text" class="form-control form-control-sm" placeholder="Model">
+                        @error("vehicles.$index.model") <span class="text-danger small">{{ $message }}</span> @enderror
+                      </div>
+                      <div class="col-md-4">
+                        <input wire:model="vehicles.{{ $index }}.serial_or_plate_number" type="text" class="form-control form-control-sm" placeholder="Serial Number / Plate Number">
+                        @error("vehicles.$index.serial_or_plate_number") <span class="text-danger small">{{ $message }}</span> @enderror
+                      </div>
+                      <div class="col-md-4">
+                        <input wire:model="vehicles.{{ $index }}.loading_capacity" type="text" class="form-control form-control-sm" placeholder="Loading Capacity">
+                      </div>
+                      <div class="col-md-3">
+                        <input wire:model="vehicles.{{ $index }}.lifting_height" type="text" class="form-control form-control-sm" placeholder="Lifting Height">
+                      </div>
+                      <div class="col-md-3">
+                        <input wire:model="vehicles.{{ $index }}.mast_type" type="text" class="form-control form-control-sm" placeholder="Mast Type">
+                      </div>
+                      <div class="col-md-3">
+                        <input wire:model="vehicles.{{ $index }}.power_type" type="text" class="form-control form-control-sm" placeholder="Power Type">
+                      </div>
+                      <div class="col-md-3">
+                        <input wire:model="vehicles.{{ $index }}.tire" type="text" class="form-control form-control-sm" placeholder="Tire">
+                      </div>
+                      <div class="col-md-6">
+                        <input wire:model="vehicles.{{ $index }}.fork_length" type="text" class="form-control form-control-sm" placeholder="Fork Length">
+                      </div>
+                      <div class="col-md-6">
+                        <input wire:model="vehicles.{{ $index }}.attachment" type="text" class="form-control form-control-sm" placeholder="Attachment">
+                      </div>
+                    </div>
+                  </div>
+                @endforeach
               </div>
             </section>
   
