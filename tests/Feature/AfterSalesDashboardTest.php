@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\AfterSales\Dashboard;
+use App\Livewire\Modals\AfterSalesEditRecord;
 use App\Models\AfterSalesRecord;
 use App\Models\ClientRecordForMaintenanceAndRepair;
 use App\Models\User;
@@ -97,22 +98,24 @@ it('updates every editable MSD field instead of deleting the record', function (
         'remarks' => 'Old remarks',
     ]);
 
-    $component = app(Dashboard::class);
-    $component->editRecord($record->id);
+    $modal = app(AfterSalesEditRecord::class);
+    $modal->mount($record->id);
 
-    expect($component->editingRecordId)->toBe($record->id)
-        ->and($component->change_type)->toBe('WITHOUT CHANGE');
+    expect($modal->recordId)->toBe($record->id)
+        ->and($modal->changeType)->toBe('WITHOUT CHANGE')
+        ->and($modal->description)->toBe('Old description')
+        ->and($modal->remarks)->toBe('Old remarks');
 
-    $component->change_type = 'WITH CHANGE';
-    $component->warranty_type = 'UNDER WARRANTY';
-    $component->pms_number = '2';
-    $component->job_order_number = 'JO-002';
-    $component->job_order_date = '2026-06-29';
-    $component->description = 'Updated description';
-    $component->remarks = 'Updated remarks';
-    $component->save();
+    $modal->changeType = 'WITH CHANGE';
+    $modal->warrantyType = 'UNDER WARRANTY';
+    $modal->pmsNumber = '2';
+    $modal->jobOrderNumber = 'JO-002';
+    $modal->jobOrderDate = '2026-06-29';
+    $modal->description = 'Updated description';
+    $modal->remarks = 'Updated remarks';
+    $modal->updateRecord();
 
-    expect($component->editingRecordId)->toBeNull();
+    expect($modal->recordId)->toBe($record->id);
 
     expect($record->fresh())
         ->change_type->toBe('WITH CHANGE')
@@ -153,6 +156,78 @@ it('requires the new change type when saving an MSD record', function () {
 
     expect(fn () => $component->save())
         ->toThrow(ValidationException::class);
+});
+
+it('saves PMS and Other service types for both ASAP and maintenance sources', function () {
+    $afterSalesUser = createAfterSalesTestUser('service_type_combinations');
+    $this->actingAs($afterSalesUser);
+
+    $clientId = DB::table('clients')->insertGetId([
+        'company_name' => 'ASAP Combination Client',
+        'contact_number' => '09123456789',
+        'email' => 'asap-combination@example.test',
+        'address' => 'ASAP Address',
+        'salesList_no' => 'SC-COMBINATION',
+        'contact_person' => 'ASAP Contact',
+        'contact_number_person' => '09123456780',
+        'salesman_id' => $afterSalesUser->id,
+        'status' => 'Sold',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    foreach (['PMS', 'Other'] as $index => $serviceType) {
+        $component = app(Dashboard::class);
+        $component->section = 'asap';
+        $component->selectedClientId = $clientId;
+        $component->service_type = $serviceType;
+        $component->change_type = 'WITHOUT CHANGE';
+        $component->pms_number = $serviceType === 'PMS' ? '1' : 'must be cleared';
+        $component->job_order_number = 'ASAP-COMBO-'.($index + 1);
+        $component->save();
+    }
+
+    foreach (['PMS', 'Other'] as $index => $serviceType) {
+        $maintenanceRecord = createPendingMaintenanceRecord(
+            'Maintenance Combination '.($index + 1),
+            $afterSalesUser
+        );
+
+        $component = app(Dashboard::class);
+        $component->section = 'other';
+        $component->selectedMaintenanceRecordId = $maintenanceRecord->id;
+        $component->service_type = $serviceType;
+        $component->change_type = 'WITHOUT CHANGE';
+        $component->pms_number = $serviceType === 'PMS' ? '2' : 'must be cleared';
+        $component->job_order_number = 'MAINTENANCE-COMBO-'.($index + 1);
+        $component->save();
+    }
+
+    expect(AfterSalesRecord::where('job_order_number', 'ASAP-COMBO-1')->firstOrFail())
+        ->client_id->toBe($clientId)
+        ->service_type->toBe('PMS')
+        ->pms_number->toBe('1')
+        ->and(AfterSalesRecord::where('job_order_number', 'ASAP-COMBO-2')->firstOrFail())
+        ->client_id->toBe($clientId)
+        ->service_type->toBe('Other')
+        ->pms_number->toBeNull()
+        ->and(AfterSalesRecord::where('job_order_number', 'MAINTENANCE-COMBO-1')->firstOrFail())
+        ->client_id->toBeNull()
+        ->service_type->toBe('PMS')
+        ->pms_number->toBe('2')
+        ->and(AfterSalesRecord::where('job_order_number', 'MAINTENANCE-COMBO-2')->firstOrFail())
+        ->client_id->toBeNull()
+        ->service_type->toBe('Other')
+        ->pms_number->toBeNull();
+});
+
+it('clears the PMS number when the service type changes to Other', function () {
+    $component = app(Dashboard::class);
+    $component->pms_number = '3';
+
+    $component->updatedServiceType('Other');
+
+    expect($component->pms_number)->toBe('');
 });
 
 it('searches ASAP and Other records by client name or JO number', function () {
@@ -229,6 +304,53 @@ it('searches ASAP and Other records by client name or JO number', function () {
         ->and($otherByClient)->toContain($otherRecord->id);
 });
 
+it('paginates ASAP and Other records independently', function () {
+    $afterSalesUser = createAfterSalesTestUser('independent_pagination');
+    $clientId = DB::table('clients')->insertGetId([
+        'company_name' => 'Paginated ASAP Client',
+        'contact_number' => '09123456789',
+        'email' => 'paginated-asap@example.test',
+        'address' => 'Pagination Address',
+        'salesList_no' => 'SC-PAGINATION',
+        'contact_person' => 'Pagination Contact',
+        'contact_number_person' => '09123456780',
+        'salesman_id' => $afterSalesUser->id,
+        'status' => 'Sold',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    foreach (range(1, 12) as $number) {
+        AfterSalesRecord::create([
+            'client_id' => $clientId,
+            'user_id' => $afterSalesUser->id,
+            'service_type' => 'Other',
+            'change_type' => 'WITHOUT CHANGE',
+            'job_order_number' => 'ASAP-PAGE-'.$number,
+        ]);
+
+        AfterSalesRecord::create([
+            'user_id' => $afterSalesUser->id,
+            'service_type' => 'Other',
+            'change_type' => 'WITHOUT CHANGE',
+            'job_order_number' => 'OTHER-PAGE-'.$number,
+        ]);
+    }
+
+    $component = app(Dashboard::class);
+    $asapRecords = $component->render()->getData()['records'];
+
+    $component->section = 'other';
+    $otherRecords = $component->render()->getData()['records'];
+
+    expect($asapRecords->getPageName())->toBe('asapPage')
+        ->and($asapRecords->count())->toBe(10)
+        ->and($asapRecords->total())->toBe(12)
+        ->and($otherRecords->getPageName())->toBe('otherPage')
+        ->and($otherRecords->count())->toBe(10)
+        ->and($otherRecords->total())->toBe(12);
+});
+
 it('searches pending maintenance records by company and excludes records with a JO', function () {
     $afterSalesUser = createAfterSalesTestUser('pending_company_search');
     $pendingRecord = createPendingMaintenanceRecord('Alpha Logistics Corporation', $afterSalesUser);
@@ -300,12 +422,10 @@ it('keeps an edited Other JO synchronized with its maintenance record', function
     ]);
     $this->actingAs($afterSalesUser);
 
-    $component = app(Dashboard::class);
-    $component->section = 'other';
-    $component->service_type = 'Other';
-    $component->editRecord($afterSalesRecord->id);
-    $component->job_order_number = 'JO-UPDATED';
-    $component->save();
+    $modal = app(AfterSalesEditRecord::class);
+    $modal->mount($afterSalesRecord->id);
+    $modal->jobOrderNumber = 'JO-UPDATED';
+    $modal->updateRecord();
 
     expect($afterSalesRecord->fresh()->job_order_number)->toBe('JO-UPDATED')
         ->and($maintenanceRecord->fresh()->job_order_number)->toBe('JO-UPDATED');

@@ -7,6 +7,7 @@ use App\Models\ClientRecordForMaintenanceAndRepair;
 use App\Models\clients;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -24,7 +25,7 @@ class Dashboard extends Component
 
     public $selectedClientId = null;
 
-    public $service_type = 'PMS';
+    public $service_type = '';
 
     public $change_type = '';
 
@@ -46,8 +47,6 @@ class Dashboard extends Component
 
     public $remarks = '';
 
-    public $editingRecordId = null;
-
     public $noticeType = '';
 
     public $noticeMessage = '';
@@ -58,13 +57,13 @@ class Dashboard extends Component
             return;
         }
 
-        $this->cancelEdit();
         $this->section = $section;
-        $this->service_type = $section === 'asap' ? 'PMS' : 'Other';
+        $this->service_type = '';
         $this->warranty_type = '';
         $this->clearNotice();
         $this->resetErrorBag();
-        $this->resetPage();
+        $this->resetPage('asapPage');
+        $this->resetPage('otherPage');
 
         if ($section === 'other') {
             $this->selectedClientId = null;
@@ -78,7 +77,7 @@ class Dashboard extends Component
 
     public function updatedMaintenanceCompanySearch()
     {
-        if ($this->section === 'other' && ! $this->editingRecordId) {
+        if ($this->section === 'other') {
             $this->selectedMaintenanceRecordId = null;
             $this->maintenanceSearchPerformed = false;
         }
@@ -86,7 +85,7 @@ class Dashboard extends Component
 
     public function updatedJobOrderSearch()
     {
-        $this->resetPage();
+        $this->resetPage($this->section === 'asap' ? 'asapPage' : 'otherPage');
     }
 
     public function updatedChangeType($value)
@@ -94,6 +93,14 @@ class Dashboard extends Component
         if ($this->section === 'asap' && $value === 'WITH CHANGE') {
             $this->warranty_type = 'OUT OF WARRANTY';
             $this->resetValidation('warranty_type');
+        }
+    }
+
+    public function updatedServiceType($value)
+    {
+        if ($value !== 'PMS') {
+            $this->pms_number = '';
+            $this->resetValidation('pms_number');
         }
     }
 
@@ -171,9 +178,6 @@ class Dashboard extends Component
     {
         $this->clearNotice();
         $this->resetErrorBag();
-
-        $this->service_type = $this->section === 'asap' ? 'PMS' : 'Other';
-
         if ($this->section === 'asap' && $this->change_type === 'WITH CHANGE') {
             $this->warranty_type = 'OUT OF WARRANTY';
         }
@@ -188,11 +192,14 @@ class Dashboard extends Component
             'remarks' => 'nullable|string',
         ];
 
-        if ($this->service_type === 'PMS') {
+        if ($this->section === 'asap') {
             $rules['selectedClientId'] = 'required|exists:clients,id';
-            $rules['pms_number'] = 'required|min:1';
         } else {
             $rules['selectedMaintenanceRecordId'] = 'required|exists:client_record_for_maintenance_and_repairs,id';
+        }
+
+        if ($this->service_type === 'PMS') {
+            $rules['pms_number'] = 'required|min:1';
         }
 
         $this->validate($rules, [
@@ -225,9 +232,6 @@ class Dashboard extends Component
             if (! $message) {
                 return;
             }
-        } elseif ($this->editingRecordId) {
-            AfterSalesRecord::findOrFail($this->editingRecordId)->update($values);
-            $message = 'MSD record updated successfully.';
         } else {
             AfterSalesRecord::create([
                 ...$values,
@@ -238,47 +242,22 @@ class Dashboard extends Component
 
         $this->resetForm();
         $this->showNotice('success', $message);
+
     }
 
     private function saveOtherRecord(array $values): ?string
     {
         $saved = DB::transaction(function () use ($values): bool {
-            $afterSalesRecord = $this->editingRecordId
-                ? AfterSalesRecord::lockForUpdate()->findOrFail($this->editingRecordId)
-                : null;
-
-            if ($afterSalesRecord && $afterSalesRecord->service_type !== 'Other') {
-                return false;
-            }
-
-            if (
-                $afterSalesRecord?->maintenance_record_id
-                && (int) $afterSalesRecord->maintenance_record_id !== (int) $this->selectedMaintenanceRecordId
-            ) {
-                return false;
-            }
-
             $maintenanceRecordQuery = ClientRecordForMaintenanceAndRepair::whereKey($this->selectedMaintenanceRecordId)
-                ->lockForUpdate();
-
-            if (! $afterSalesRecord) {
-                $maintenanceRecordQuery->where(function ($query) {
+                ->where(function ($query) {
                     $query->whereNull('job_order_number')
                         ->orWhere('job_order_number', '');
-                });
-            }
+                })
+                ->lockForUpdate();
 
             $maintenanceRecord = $maintenanceRecordQuery->first();
 
             if (! $maintenanceRecord) {
-                return false;
-            }
-
-            if (
-                $afterSalesRecord
-                && filled($maintenanceRecord->job_order_number)
-                && $maintenanceRecord->job_order_number !== $afterSalesRecord->job_order_number
-            ) {
                 return false;
             }
 
@@ -288,14 +267,10 @@ class Dashboard extends Component
 
             $values['maintenance_record_id'] = $maintenanceRecord->id;
 
-            if ($afterSalesRecord) {
-                $afterSalesRecord->update($values);
-            } else {
-                AfterSalesRecord::create([
-                    ...$values,
-                    'user_id' => Auth::id(),
-                ]);
-            }
+            AfterSalesRecord::create([
+                ...$values,
+                'user_id' => Auth::id(),
+            ]);
 
             return true;
         });
@@ -308,69 +283,26 @@ class Dashboard extends Component
             return null;
         }
 
-        return $this->editingRecordId
-            ? 'MSD record and Repair & Maintenance JO updated successfully.'
-            : 'MSD record saved and JO Number assigned successfully.';
+        return 'MSD record saved and JO Number assigned successfully.';
     }
 
-    public function editRecord(int $recordId)
+    #[On('msd-record-updated')]
+    public function recordUpdated(string $message): void
     {
-        $this->clearNotice();
-        $this->resetErrorBag();
-
-        $record = AfterSalesRecord::findOrFail($recordId);
-        $recordSection = $record->service_type === 'PMS' ? 'asap' : 'other';
-
-        if ($recordSection !== $this->section) {
-            return;
-        }
-
-        $this->editingRecordId = $record->id;
-        $this->selectedClientId = $record->client_id;
-        $this->service_type = $record->service_type;
-        $this->change_type = $record->change_type ?? '';
-        $this->warranty_type = $record->warranty_type ?? '';
-
-        if ($recordSection === 'asap' && $this->change_type === 'WITH CHANGE') {
-            $this->warranty_type = 'OUT OF WARRANTY';
-        }
-
-        $this->pms_number = $record->pms_number ?? '';
-        $this->job_order_number = $record->job_order_number;
-        $this->job_order_date = $record->job_order_date?->format('Y-m-d') ?? '';
-        $this->description = $record->description ?? '';
-        $this->remarks = $record->remarks ?? '';
-        $this->saleControlNo = $record->client?->salesList_no ?? '';
-        $this->selectedMaintenanceRecordId = $recordSection === 'other'
-            ? ($record->maintenance_record_id
-                ?: ClientRecordForMaintenanceAndRepair::where('job_order_number', $record->job_order_number)->value('id'))
-            : null;
-        $this->maintenanceCompanySearch = $recordSection === 'other'
-            ? ClientRecordForMaintenanceAndRepair::whereKey($this->selectedMaintenanceRecordId)->value('company_name') ?? ''
-            : '';
-        $this->maintenanceSearchPerformed = false;
-
-        $this->dispatch('msd-record-editing');
-    }
-
-    public function cancelEdit()
-    {
-        $this->resetForm();
-        $this->clearNotice();
-        $this->resetErrorBag();
+        $this->showNotice('success', $message);
     }
 
     private function resetForm()
     {
         $this->reset([
             'change_type',
+            'service_type',
             'warranty_type',
             'pms_number',
             'job_order_number',
             'job_order_date',
             'description',
             'remarks',
-            'editingRecordId',
             'selectedMaintenanceRecordId',
             'maintenanceCompanySearch',
             'maintenanceSearchPerformed',
@@ -412,7 +344,6 @@ class Dashboard extends Component
 
         if (
             $this->section === 'other'
-            && ! $this->editingRecordId
             && $this->maintenanceSearchPerformed
             && filled($this->maintenanceCompanySearch)
         ) {
@@ -425,10 +356,10 @@ class Dashboard extends Component
 
         $records = AfterSalesRecord::with(['client.salesman', 'user', 'maintenanceRecord'])
             ->when($this->section === 'asap', function ($query) {
-                $query->where('service_type', 'PMS');
+                $query->whereNotNull('client_id');
             })
             ->when($this->section === 'other', function ($query) {
-                $query->where('service_type', 'Other');
+                $query->whereNull('client_id');
             })
             ->when($this->jobOrderSearch, function ($query) {
                 $search = trim($this->jobOrderSearch);
@@ -453,7 +384,7 @@ class Dashboard extends Component
                 });
             })
             ->latest()
-            ->paginate(10);
+            ->paginate(10, ['*'], $this->section === 'asap' ? 'asapPage' : 'otherPage');
 
         $maintenanceRecordsByJobOrder = collect();
 

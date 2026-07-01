@@ -122,13 +122,10 @@
                         @endif
 
                         <div class="{{ $section === 'asap' ? 'col-lg-7' : 'col-lg-12' }}">
-                            <div
-                                class="card shadow-sm {{ $editingRecordId ? 'border-warning' : 'border-0' }}"
-                                x-on:msd-record-editing.window="$el.scrollIntoView({ behavior: 'smooth', block: 'start' })"
-                            >
+                            <div class="card shadow-sm border-0">
                                 <div class="card-header bg-white fw-bold">
-                                    <i class="fas {{ $editingRecordId ? 'fa-pen-to-square' : 'fa-file-circle-plus' }} me-2"></i>
-                                    {{ $editingRecordId ? 'Edit MSD Record' : 'Add MSD Record' }}
+                                    <i class="fas fa-file-circle-plus me-2"></i>
+                                    Add MSD Record
                                 </div>
                                 <div class="card-body">
                                     <form wire:submit.prevent="save">
@@ -156,13 +153,24 @@
                                                 </select>
                                                 @error('warranty_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
+                                            @endif
+                                            <div class="col-md-4">
+                                                <label class="form-label">Service Type</label>
+                                                <select class="form-select @error('service_type') is-invalid @enderror" wire:model.live="service_type">
+                                                    <option value="">Select Service Type</option>
+                                                    <option value="PMS">PMS</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                                @error('service_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            </div>
+                                            @if ($service_type === 'PMS')
                                             <div class="col-md-4">
                                                 <label class="form-label">Number of PMS</label>
                                                 <input type="text" class="form-control @error('pms_number') is-invalid @enderror" wire:model="pms_number">
                                                 @error('pms_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
                                             @endif
-                                            @if ($section === 'other' && !$editingRecordId)
+                                            @if ($section === 'other')
                                             <div class="col-12">
                                                 <label class="form-label">Search Pending Repair & Maintenance by Company Name</label>
                                                 <div class="input-group">
@@ -229,7 +237,7 @@
                                                 <div class="border rounded p-3 bg-light">
                                                     <div class="fw-bold mb-2">{{ $selectedMaintenanceRecord->company_name }}</div>
                                                     <div class="row g-2 small text-muted">
-                                                        <div class="col-md-3">JO Status: {{ $editingRecordId ? $selectedMaintenanceRecord->job_order_number : 'Pending assignment' }}</div>
+                                                        <div class="col-md-3">JO Status: Pending assignment</div>
                                                         <div class="col-md-3">Contact: {{ $selectedMaintenanceRecord->contact_number }}</div>
                                                         <div class="col-md-3">Contact Person: {{ $selectedMaintenanceRecord->contact_person }}</div>
                                                         <div class="col-md-3">Email: {{ $selectedMaintenanceRecord->email }}</div>
@@ -268,11 +276,8 @@
                                             </div>
                                         </div>
                                         <div class="text-end mt-3 d-flex gap-2 justify-content-end">
-                                            @if ($editingRecordId)
-                                            <button type="button" class="btn btn-outline-secondary" wire:click="cancelEdit">Cancel</button>
-                                            @endif
                                             <button type="submit" class="btn btn-primary">
-                                                {{ $editingRecordId ? 'Update Record' : 'Save Record' }}
+                                                Save Record
                                             </button>
                                         </div>
                                     </form>
@@ -290,6 +295,7 @@
                             <table class="table table-hover align-middle">
                                 <thead>
                                     <tr>
+                                        <th>Service</th>
                                         <th>Type</th>
                                         <th>Warranty</th>
                                         <th>JO Number</th>
@@ -308,6 +314,7 @@
                                         $recordVehicles = $maintenanceRecord?->vehicle_specifications ?? [];
                                     @endphp
                                     <tr>
+                                        <td>{{ $record->service_type }}</td>
                                         <td>
                                             <span class="badge bg-primary">
                                                 {{ $record->change_type ? ucwords(strtolower($record->change_type)) : 'N/A' }}
@@ -338,14 +345,14 @@
                                             <div>{{ $record->remarks ?? 'N/A' }}</div>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-outline-primary" wire:click="editRecord({{ $record->id }})">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#msdEditModal_{{ $record->id }}">
                                                 <i class="fas fa-pen-to-square me-1"></i>Edit
                                             </button>
                                         </td>
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="9" class="text-center text-muted py-4">No MSD records found.</td>
+                                        <td colspan="10" class="text-center text-muted py-4">No MSD records found.</td>
                                     </tr>
                                     @endforelse
                                 </tbody>
@@ -353,6 +360,144 @@
                             {{ $records->links() }}
                         </div>
                     </div>
+
+                    @if (false)
+                    <div
+                        class="modal fade"
+                        id="msdEditModal"
+                        tabindex="-1"
+                        aria-labelledby="msdEditModalLabel"
+                        aria-hidden="true"
+                        wire:ignore.self
+                        wire:key="msd-edit-modal-{{ $editingRecordId ?? 'empty' }}"
+                    >
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <form wire:submit.prevent="updateRecord">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="msdEditModalLabel">
+                                            <i class="fas fa-pen-to-square me-2"></i>Edit MSD Record
+                                        </h5>
+                                        <button type="button" class="btn-close" wire:click="cancelEdit" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        @if ($editClientId && $selectedEditClient)
+                                        <div class="alert alert-light border mb-3">
+                                            <div class="fw-bold">{{ $selectedEditClient->company_name }}</div>
+                                            <div class="small text-muted">
+                                                Sale Control No.: {{ $selectedEditClient->salesList_no ?? 'N/A' }} ·
+                                                Vehicle/Unit: {{ $selectedEditClient->item_name ?? 'N/A' }}
+                                            </div>
+                                        </div>
+                                        @elseif ($editMaintenanceRecordId && $selectedEditMaintenanceRecord)
+                                        <div class="alert alert-light border mb-3">
+                                            <div class="fw-bold">{{ $selectedEditMaintenanceRecord->company_name }}</div>
+                                            <div class="small text-muted">
+                                                Contact: {{ $selectedEditMaintenanceRecord->contact_number ?? 'N/A' }} ·
+                                                Contact Person: {{ $selectedEditMaintenanceRecord->contact_person ?? 'N/A' }}
+                                            </div>
+                                        </div>
+                                        @endif
+
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <label class="form-label">Type</label>
+                                                <select class="form-select @error('editChangeType') is-invalid @enderror" wire:model.live="editChangeType">
+                                                    <option value="">Select Type</option>
+                                                    <option value="WITH CHANGE">With Change</option>
+                                                    <option value="WITHOUT CHANGE">Without Change</option>
+                                                </select>
+                                                @error('editChangeType') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            </div>
+
+                                            @if ($editClientId)
+                                            <div class="col-md-4">
+                                                <label class="form-label">Warranty Type</label>
+                                                <select class="form-select @error('editWarrantyType') is-invalid @enderror" wire:model="editWarrantyType" @disabled($editChangeType === 'WITH CHANGE')>
+                                                    <option value="">Select Warranty</option>
+                                                    <option value="UNDER WARRANTY">UNDER WARRANTY</option>
+                                                    <option value="OUT OF WARRANTY">OUT OF WARRANTY</option>
+                                                </select>
+                                                @error('editWarrantyType') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            </div>
+                                            @endif
+
+                                            <div class="col-md-4">
+                                                <label class="form-label">Service Type</label>
+                                                <select class="form-select @error('editServiceType') is-invalid @enderror" wire:model.live="editServiceType">
+                                                    <option value="">Select Service Type</option>
+                                                    <option value="PMS">PMS</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                                @error('editServiceType') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            </div>
+
+                                            @if ($editServiceType === 'PMS')
+                                            <div class="col-md-4">
+                                                <label class="form-label">Number of PMS</label>
+                                                <input type="text" class="form-control @error('editPmsNumber') is-invalid @enderror" wire:model="editPmsNumber">
+                                                @error('editPmsNumber') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            </div>
+                                            @endif
+
+                                            <div class="col-md-4">
+                                                <label class="form-label">JO Number</label>
+                                                <input type="text" class="form-control @error('editJobOrderNumber') is-invalid @enderror" wire:model="editJobOrderNumber">
+                                                @error('editJobOrderNumber') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label">Date JO</label>
+                                                <input type="date" class="form-control @error('editJobOrderDate') is-invalid @enderror" wire:model="editJobOrderDate">
+                                                @error('editJobOrderDate') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Description</label>
+                                                <textarea rows="3" class="form-control @error('editDescription') is-invalid @enderror" wire:model="editDescription"></textarea>
+                                                @error('editDescription') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Remarks</label>
+                                                <textarea rows="2" class="form-control @error('editRemarks') is-invalid @enderror" wire:model="editRemarks"></textarea>
+                                                @error('editRemarks') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-secondary" wire:click="cancelEdit">Cancel</button>
+                                        <button type="submit" class="btn btn-primary">Update Record</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    @script
+                    <script>
+                        $wire.on('show-msd-edit-modal', () => {
+                            const msdEditModalElement = document.getElementById('msdEditModal');
+                            window.bootstrap.Modal.getOrCreateInstance(msdEditModalElement).show();
+                        });
+
+                        $wire.on('hide-msd-edit-modal', () => {
+                            const msdEditModalElement = document.getElementById('msdEditModal');
+                            window.bootstrap.Modal.getOrCreateInstance(msdEditModalElement).hide();
+                        });
+
+                        document.addEventListener('hidden.bs.modal', (event) => {
+                            if (event.target.id === 'msdEditModal') {
+                                $wire.editModalClosed();
+                            }
+                        });
+                    </script>
+                    @endscript
+                    @endif
+
+                    @foreach ($records as $record)
+                        <livewire:modals.after-sales-edit-record
+                            :record-id="$record->id"
+                            :key="'msd-edit-'.$section.'-'.$record->id"
+                        />
+                    @endforeach
                 </div>
             </main>
         </div>
