@@ -210,7 +210,7 @@ it('saves PMS and Other service types for both ASAP and maintenance sources', fu
         ->and(AfterSalesRecord::where('job_order_number', 'ASAP-COMBO-2')->firstOrFail())
         ->client_id->toBe($clientId)
         ->service_type->toBe('Other')
-        ->pms_number->toBeNull()
+        ->pms_number->toBe('must be cleared')
         ->and(AfterSalesRecord::where('job_order_number', 'MAINTENANCE-COMBO-1')->firstOrFail())
         ->client_id->toBeNull()
         ->service_type->toBe('PMS')
@@ -218,16 +218,16 @@ it('saves PMS and Other service types for both ASAP and maintenance sources', fu
         ->and(AfterSalesRecord::where('job_order_number', 'MAINTENANCE-COMBO-2')->firstOrFail())
         ->client_id->toBeNull()
         ->service_type->toBe('Other')
-        ->pms_number->toBeNull();
+        ->pms_number->toBe('must be cleared');
 });
 
-it('clears the PMS number when the service type changes to Other', function () {
+it('keeps the PMS number when the service type changes to Other', function () {
     $component = app(Dashboard::class);
     $component->pms_number = '3';
 
     $component->updatedServiceType('Other');
 
-    expect($component->pms_number)->toBe('');
+    expect($component->pms_number)->toBe('3');
 });
 
 it('searches ASAP and Other records by client name or JO number', function () {

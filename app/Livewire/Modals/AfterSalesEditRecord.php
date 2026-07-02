@@ -69,7 +69,7 @@ class AfterSalesEditRecord extends Component
 
     public function updatedServiceType($value): void
     {
-        if ($value !== 'PMS') {
+        if (! in_array($value, ['PMS', 'Other'], true)) {
             $this->pmsNumber = '';
             $this->resetValidation('pmsNumber');
         }
@@ -110,7 +110,9 @@ class AfterSalesEditRecord extends Component
             'service_type' => $this->serviceType,
             'change_type' => $this->changeType,
             'warranty_type' => $isAsapRecord ? ($this->warrantyType ?: null) : null,
-            'pms_number' => $this->serviceType === 'PMS' ? $this->pmsNumber : null,
+            'pms_number' => in_array($this->serviceType, ['PMS', 'Other'], true)
+                ? ($this->pmsNumber !== '' ? $this->pmsNumber : null)
+                : null,
             'job_order_number' => trim($this->jobOrderNumber),
             'job_order_date' => $this->jobOrderDate ?: null,
             'description' => $this->description,

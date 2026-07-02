@@ -33,8 +33,8 @@
                                 <label class="form-label">Type</label>
                                 <select class="form-select @error('changeType') is-invalid @enderror" wire:model.live="changeType">
                                     <option value="">Select Type</option>
-                                    <option value="WITH CHANGE">With Change</option>
-                                    <option value="WITHOUT CHANGE">Without Change</option>
+                                    <option value="WITH CHANGE">With Charge</option>
+                                    <option value="WITHOUT CHANGE">Without Charge</option>
                                 </select>
                                 @error('changeType') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
@@ -61,7 +61,7 @@
                                 @error('serviceType') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
 
-                            @if ($serviceType === 'PMS')
+                            @if (in_array($serviceType, ['PMS', 'Other'], true))
                             <div class="col-md-4">
                                 <label class="form-label">Number of PMS</label>
                                 <input type="text" class="form-control @error('pmsNumber') is-invalid @enderror" wire:model="pmsNumber">

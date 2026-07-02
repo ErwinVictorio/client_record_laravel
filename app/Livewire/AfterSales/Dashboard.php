@@ -98,7 +98,7 @@ class Dashboard extends Component
 
     public function updatedServiceType($value)
     {
-        if ($value !== 'PMS') {
+        if (! in_array($value, ['PMS', 'Other'], true)) {
             $this->pms_number = '';
             $this->resetValidation('pms_number');
         }
@@ -219,7 +219,9 @@ class Dashboard extends Component
             'service_type' => $this->service_type,
             'change_type' => $this->change_type,
             'warranty_type' => $this->section === 'asap' ? ($this->warranty_type ?: null) : null,
-            'pms_number' => $this->service_type === 'PMS' ? $this->pms_number : null,
+            'pms_number' => in_array($this->service_type, ['PMS', 'Other'], true)
+                ? ($this->pms_number !== '' ? $this->pms_number : null)
+                : null,
             'job_order_number' => trim($this->job_order_number),
             'job_order_date' => $this->job_order_date ?: null,
             'description' => $this->description,

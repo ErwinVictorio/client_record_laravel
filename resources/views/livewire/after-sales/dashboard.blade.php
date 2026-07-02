@@ -134,8 +134,8 @@
                                                 <label class="form-label">Type</label>
                                                 <select class="form-select @error('change_type') is-invalid @enderror" wire:model.live="change_type">
                                                     <option value="">Select Type</option>
-                                                    <option value="WITH CHANGE">With Change</option>
-                                                    <option value="WITHOUT CHANGE">Without Change</option>
+                                                    <option value="WITH CHANGE">With Charge</option>
+                                                    <option value="WITHOUT CHANGE">Without Charge</option>
                                                 </select>
                                                 @error('change_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
@@ -163,7 +163,7 @@
                                                 </select>
                                                 @error('service_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
-                                            @if ($service_type === 'PMS')
+                                            @if (in_array($service_type, ['PMS', 'Other'], true))
                                             <div class="col-md-4">
                                                 <label class="form-label">Number of PMS</label>
                                                 <input type="text" class="form-control @error('pms_number') is-invalid @enderror" wire:model="pms_number">
@@ -317,7 +317,7 @@
                                         <td>{{ $record->service_type }}</td>
                                         <td>
                                             <span class="badge bg-primary">
-                                                {{ $record->change_type ? ucwords(strtolower($record->change_type)) : 'N/A' }}
+                                                {{ $record->change_type ? ucwords(strtolower(str_replace('CHANGE', 'CHARGE', $record->change_type))) : 'N/A' }}
                                             </span>
                                         </td>
                                         <td>{{ $record->warranty_type ?? 'N/A' }}</td>
@@ -404,8 +404,8 @@
                                                 <label class="form-label">Type</label>
                                                 <select class="form-select @error('editChangeType') is-invalid @enderror" wire:model.live="editChangeType">
                                                     <option value="">Select Type</option>
-                                                    <option value="WITH CHANGE">With Change</option>
-                                                    <option value="WITHOUT CHANGE">Without Change</option>
+                                                    <option value="WITH CHANGE">With Charge</option>
+                                                    <option value="WITHOUT CHANGE">Without Charge</option>
                                                 </select>
                                                 @error('editChangeType') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
@@ -432,7 +432,7 @@
                                                 @error('editServiceType') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
 
-                                            @if ($editServiceType === 'PMS')
+                                            @if (in_array($editServiceType, ['PMS', 'Other'], true))
                                             <div class="col-md-4">
                                                 <label class="form-label">Number of PMS</label>
                                                 <input type="text" class="form-control @error('editPmsNumber') is-invalid @enderror" wire:model="editPmsNumber">
