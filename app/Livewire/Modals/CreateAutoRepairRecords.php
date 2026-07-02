@@ -32,7 +32,7 @@ class CreateAutoRepairRecords extends Component
         $currentSalesman = Auth::id();
 
         if ($existingClient) {
-            if ($existingClient->salesman_id !== $currentSalesman) {
+            if ((int) $existingClient->salesmanId !== $currentSalesman) {
                 session()->flash('error', "The client is already taken!");
                 return;
             } 

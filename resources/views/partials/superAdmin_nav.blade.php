@@ -4,13 +4,23 @@
             <div class="sb-sidenav-menu">
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">Administrator</div>
-                    <a class="nav-link collapsed" href={{route('superAdminDashboard.view')}} data-bs-toggle="collapse" data-bs-target="#collapseAdmin"
-                        aria-expanded="false" aria-controls="collapseAdmin">
+                    @php
+                        $administratorMenuOpen = request()->routeIs(
+                            'superAdminDashboard.view',
+                            'superAdmin.departments_list',
+                            'manageSalesExecutive.view',
+                            'AutoPartsRecord.view',
+                            'autoPartsMaintenence.view'
+                        );
+                    @endphp
+                    <a class="nav-link {{ $administratorMenuOpen ? '' : 'collapsed' }}" href="#collapseAdmin"
+                        data-bs-toggle="collapse" data-bs-target="#collapseAdmin"
+                        aria-expanded="{{ $administratorMenuOpen ? 'true' : 'false' }}" aria-controls="collapseAdmin">
                         <div class="sb-nav-link-icon"><i class="fas fa-user-shield"></i></div>
                         Administrator
                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
-                    <div class="collapse" id="collapseAdmin" aria-labelledby="headingOne"
+                    <div class="collapse {{ $administratorMenuOpen ? 'show' : '' }}" id="collapseAdmin" aria-labelledby="headingOne"
                         data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
                             <a class="nav-link" href="{{route('superAdmin.departments_list')}}">
