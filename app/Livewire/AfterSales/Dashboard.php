@@ -75,6 +75,8 @@ class Dashboard extends Component
         }
     }
 
+    
+
     public function updatedMaintenanceCompanySearch()
     {
         if ($this->section === 'other') {
@@ -127,7 +129,7 @@ class Dashboard extends Component
 
         if ($client->status !== 'Sold') {
             $this->selectedClientId = null;
-            $this->showNotice('danger', 'Client/unit found, but status is "'.$client->status.'". PMS requires status Sold.');
+            $this->showNotice('danger', 'Client/unit found, but status is "' . $client->status . '". PMS requires status Sold.');
 
             return;
         }
@@ -212,7 +214,15 @@ class Dashboard extends Component
             'change_type.in' => 'Please select a valid type.',
             'warranty_type.in' => 'Please select a valid warranty type.',
             'job_order_number.required' => 'Please enter the JO Number.',
+            'saleControlNo.required' => 'Please enter a Sale Control No.',
         ]);
+
+        // Dito natin kukunin ang salesList_no mula sa database gamit ang Client ID kung 'asap' ang section
+        $salesListNo = null;
+        if ($this->section === 'asap' && $this->selectedClientId) {
+            $client = clients::find($this->selectedClientId);
+            $salesListNo = $client ? $client->salesList_no : null;
+        }
 
         $values = [
             'client_id' => $this->section === 'asap' ? $this->selectedClientId : null,
@@ -226,6 +236,8 @@ class Dashboard extends Component
             'job_order_date' => $this->job_order_date ?: null,
             'description' => $this->description,
             'remarks' => $this->remarks,
+            // Gagamitin na natin ang $salesListNo na galing mismo sa record ng kliyente
+            'salesList_no' => $salesListNo,
         ];
 
         if ($this->section === 'other') {
@@ -244,7 +256,6 @@ class Dashboard extends Component
 
         $this->resetForm();
         $this->showNotice('success', $message);
-
     }
 
     private function saveOtherRecord(array $values): ?string
@@ -350,7 +361,7 @@ class Dashboard extends Component
             && filled($this->maintenanceCompanySearch)
         ) {
             $maintenanceSearchResults = $this->pendingMaintenanceRecords()
-                ->where('company_name', 'like', '%'.trim($this->maintenanceCompanySearch).'%')
+                ->where('company_name', 'like', '%' . trim($this->maintenanceCompanySearch) . '%')
                 ->latest()
                 ->limit(10)
                 ->get();
@@ -367,20 +378,20 @@ class Dashboard extends Component
                 $search = trim($this->jobOrderSearch);
 
                 $query->where(function ($searchQuery) use ($search) {
-                    $searchQuery->where('job_order_number', 'like', '%'.$search.'%');
+                    $searchQuery->where('job_order_number', 'like', '%' . $search . '%');
 
                     if ($this->section === 'asap') {
                         $searchQuery->orWhereHas('client', function ($clientQuery) use ($search) {
-                            $clientQuery->where('company_name', 'like', '%'.$search.'%');
+                            $clientQuery->where('company_name', 'like', '%' . $search . '%');
                         });
                     } else {
                         $searchQuery->orWhereHas('maintenanceRecord', function ($maintenanceQuery) use ($search) {
-                            $maintenanceQuery->where('company_name', 'like', '%'.$search.'%');
+                            $maintenanceQuery->where('company_name', 'like', '%' . $search . '%');
                         })->orWhereIn(
                             'job_order_number',
                             ClientRecordForMaintenanceAndRepair::query()
                                 ->select('job_order_number')
-                                ->where('company_name', 'like', '%'.$search.'%')
+                                ->where('company_name', 'like', '%' . $search . '%')
                         );
                     }
                 });

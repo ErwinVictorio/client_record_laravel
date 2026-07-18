@@ -18,6 +18,7 @@ class AfterSalesRecord extends Model
         'job_order_date',
         'description',
         'remarks',
+        'salesList_no',
     ];
 
     protected $casts = [

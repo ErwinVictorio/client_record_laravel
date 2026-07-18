@@ -49,7 +49,7 @@
                 <div class="row g-3 mb-3">
                     <div class="col-lg-6">
                         <div class="border rounded p-3 h-100">
-                            <h6 class="fw-bold mb-3">Client Details</h6>
+                            <h6 class="fw-bold mb-3">Client Detailssss</h6>
                             <dl class="row mb-0">
                                 <dt class="col-sm-5 text-muted">Company</dt>
                                 <dd class="col-sm-7 fw-semibold">{{ $client->company_name ?? 'N/A' }}</dd>

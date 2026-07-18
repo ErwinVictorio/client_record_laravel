@@ -89,7 +89,6 @@
                     @endif
 
                     <div class="row g-4">
-                        <!-- LEFT SIDE: SEARCH CARD (Lalabas kung ASAP o OTHER ang section) -->
                         @if ($section === 'asap')
                         <div class="col-lg-5">
                             <div class="card border-0 shadow-sm">
@@ -106,12 +105,48 @@
 
                                     @if ($selectedClient)
                                     <div class="border rounded p-3 bg-light">
-                                        <div class="fw-bold mb-2">{{ $selectedClient->company_name }}</div>
+                                        <div class="fw-bold mb-2 text-primary">{{ $selectedClient->company_name }}</div>
                                         <div class="small text-muted">Sales No: {{ $selectedClient->salesList_no ?? 'N/A' }}</div>
                                         <div class="small text-muted">Contact: {{ $selectedClient->contact_number }}</div>
                                         <div class="small text-muted">Vehicle/Unit: {{ $selectedClient->item_name ?? 'N/A' }}</div>
                                         <div class="small text-muted">Model: {{ $selectedClient->model_number ?? 'N/A' }}</div>
                                         <div class="small text-muted">Year Model: {{ $selectedClient->year_model ?? 'N/A' }}</div>
+
+                                        <!-- Vehicle/Unit Specifications Breakdown -->
+                                        @php
+                                        $vehicles = $selectedClient->vehicle_specifications ?? [];
+                                        @endphp
+
+                                        <div class="mt-3 pt-2 border-top" style="font-size: 0.75rem;">
+                                            <span class="fw-semibold text-dark d-block mb-2">Unit Specifications:</span>
+                                            @if (is_array($vehicles) && count($vehicles) > 0)
+                                            @foreach ($vehicles as $vehicle)
+                                            <div class="mb-2 p-2 bg-white rounded border shadow-sm">
+                                                <div class="d-flex align-items-center mb-1">
+                                                    <span class="badge text-bg-primary me-1">
+                                                        {{ $vehicle['brand'] ?? 'N/A' }}
+                                                    </span>
+                                                    <span class="badge text-bg-secondary">
+                                                        {{ $vehicle['model'] ?? 'N/A' }}
+                                                    </span>
+                                                </div>
+                                                <div class="text-muted row g-1 mt-1" style="font-size: 0.72rem;">
+                                                    <div class="col-6"><strong>Capacity:</strong> {{ $vehicle['loading_capacity'] ?? 'N/A' }}</div>
+                                                    <div class="col-6"><strong>Height:</strong> {{ $vehicle['lifting_height'] ?? 'N/A' }}</div>
+                                                    <div class="col-6"><strong>Mast:</strong> {{ $vehicle['mast_type'] ?? 'N/A' }}</div>
+                                                    <div class="col-6"><strong>Power:</strong> {{ $vehicle['power_type'] ?? 'N/A' }}</div>
+                                                    <div class="col-6"><strong>Tire:</strong> {{ $vehicle['tire'] ?? 'N/A' }}</div>
+                                                    <div class="col-6"><strong>Fork:</strong> {{ $vehicle['fork_length'] ?? 'N/A' }}</div>
+                                                    @if(!empty($vehicle['attachment']) && $vehicle['attachment'] !== 'N/A')
+                                                    <div class="col-12 mt-1"><strong>Attachment:</strong> {{ $vehicle['attachment'] }}</div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                            @else
+                                            <span class="text-muted bg-white p-2 border d-block rounded text-center">No specifications available.</span>
+                                            @endif
+                                        </div>
                                     </div>
                                     @else
                                     <div class="text-muted small">Search a sold unit before creating an MSD record.</div>
@@ -306,19 +341,39 @@
                     </div>
 
                     <div class="card border-0 shadow-sm mt-4 mb-4">
-                        <div class="card-header bg-white d-flex flex-wrap gap-3 justify-content-between align-items-center">
-                            <div class="fw-bold"><i class="fas fa-list-check me-2"></i>JO Information</div>
-                            <input type="text" class="form-control w-auto" wire:model.live.debounce.300ms="jobOrderSearch" placeholder="Search Client Name or JO Number" aria-label="Search Client Name or JO Number">
+                        <div class="card-header bg-white d-flex flex-wrap gap-3 justify-content-between align-items-center py-3">
+                            <div class="fw-bold text-dark fs-6">
+                                <i class="fas fa-list-check text-primary me-2"></i>JO Information
+                            </div>
+
+                            <!-- Pinahabang Search Input na may Magnifying Glass Icon -->
+                            <div class="input-group shadow-sm flex-grow-1" style="max-width: 500px;">
+                                <span class="input-group-text bg-light border-end-0 text-muted">
+                                    <i class="fas fa-magnifying-glass"></i>
+                                </span>
+                                <input
+                                    type="text"
+                                    class="form-control bg-light border-start-0 ps-0"
+                                    wire:model.live.debounce.300ms="jobOrderSearch"
+                                    placeholder="Search Client Name or JO Number..."
+                                    aria-label="Search Client Name or JO Number">
+                                @if(!empty($jobOrderSearch))
+                                <button class="btn btn-light border border-start-0 text-muted" type="button" wire:click="$set('jobOrderSearch', '')">
+                                    <i class="fas fa-xmark"></i>
+                                </button>
+                                @endif
+                            </div>
                         </div>
                         <div class="card-body table-responsive">
                             <table class="table table-hover align-middle">
                                 <thead>
                                     <tr>
+                                        <th>JO Number</th>
                                         <th>Service</th>
                                         <th>Type</th>
                                         <th>Warranty</th>
-                                        <th>JO Number</th>
                                         <th>Date</th>
+                                        <th>Sales List No</th>
                                         <th>Client</th>
                                         <th>Vehicle/Unit</th>
                                         <th>Description</th>
@@ -333,6 +388,7 @@
                                     $recordVehicles = $maintenanceRecord?->vehicle_specifications ?? [];
                                     @endphp
                                     <tr>
+                                        <td>{{ $record->job_order_number }}</td>
                                         <td>{{ $record->service_type }}</td>
                                         <td>
                                             <span class="badge bg-primary">
@@ -340,9 +396,11 @@
                                             </span>
                                         </td>
                                         <td>{{ $record->warranty_type ?? 'N/A' }}</td>
-                                        <td>{{ $record->job_order_number }}</td>
+
                                         <td>{{ $record->job_order_date?->format('F d, Y') ?? 'N/A' }}</td>
+                                        <td>{{ $record->client->salesList_no ?? $maintenanceRecord?->salesList_no ?? 'N/A' }}</td>
                                         <td>{{ $record->client->company_name ?? $maintenanceRecord?->company_name ?? 'N/A' }}</td>
+
                                         <td style="min-width: 220px;">
                                             @if ($record->client?->item_name)
                                             {{ $record->client->item_name }}
@@ -398,6 +456,8 @@
                                         </h5>
                                         <button type="button" class="btn-close" wire:click="cancelEdit" aria-label="Close"></button>
                                     </div>
+
+
                                     <div class="modal-body">
                                         @if ($editClientId && $selectedEditClient)
                                         <div class="alert alert-light border mb-3">

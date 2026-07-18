@@ -5,7 +5,7 @@
                 <form wire:submit.prevent="updateRecord">
                     <div class="modal-header">
                         <h5 class="modal-title" id="msdEditModalLabel_{{ $recordId }}">
-                            <i class="fas fa-pen-to-square me-2"></i>Edit MSD Record
+                            <i class="fas fa-pen-to-square me-2"></i>Edit MSD Record SS 
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -31,7 +31,7 @@
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <label class="form-label">Type</label>
-                                <select class="form-select @error('changeType') is-invalid @enderror" wire:model.live="changeType">
+                                <select disabled class="form-select @error('changeType') is-invalid @enderror" wire:model.live="changeType">
                                     <option value="">Select Type</option>
                                     <option value="WITH CHANGE">With Charge</option>
                                     <option value="WITHOUT CHANGE">Without Charge</option>
@@ -42,7 +42,7 @@
                             @if ($clientId)
                             <div class="col-md-4">
                                 <label class="form-label">Warranty Type</label>
-                                <select class="form-select @error('warrantyType') is-invalid @enderror" wire:model="warrantyType" @disabled($changeType === 'WITH CHANGE')>
+                                <select disabled class="form-select @error('warrantyType') is-invalid @enderror" wire:model="warrantyType" @disabled($changeType === 'WITH CHANGE')>
                                     <option value="">Select Warranty</option>
                                     <option value="UNDER WARRANTY">UNDER WARRANTY</option>
                                     <option value="OUT OF WARRANTY">OUT OF WARRANTY</option>
@@ -53,7 +53,7 @@
 
                             <div class="col-md-4">
                                 <label class="form-label">Service Type</label>
-                                <select class="form-select @error('serviceType') is-invalid @enderror" wire:model.live="serviceType">
+                                <select disabled class="form-select @error('serviceType') is-invalid @enderror" wire:model.live="serviceType">
                                     <option value="">Select Service Type</option>
                                     <option value="PMS">PMS</option>
                                     <option value="Other">Other</option>
@@ -64,29 +64,29 @@
                             @if (in_array($serviceType, ['PMS', 'Other'], true))
                             <div class="col-md-4">
                                 <label class="form-label">Number of PMS</label>
-                                <input type="text" class="form-control @error('pmsNumber') is-invalid @enderror" wire:model="pmsNumber">
+                                <input disabled type="text" class="form-control @error('pmsNumber') is-invalid @enderror" wire:model="pmsNumber">
                                 @error('pmsNumber') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             @endif
 
                             <div class="col-md-4">
                                 <label class="form-label">JO Number</label>
-                                <input type="text" class="form-control @error('jobOrderNumber') is-invalid @enderror" wire:model="jobOrderNumber">
+                                <input disabled type="text" class="form-control @error('jobOrderNumber') is-invalid @enderror" wire:model="jobOrderNumber">
                                 @error('jobOrderNumber') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Date JO</label>
-                                <input type="date" class="form-control @error('jobOrderDate') is-invalid @enderror" wire:model="jobOrderDate">
+                                <input disabled type="date" class="form-control @error('jobOrderDate') is-invalid @enderror" wire:model="jobOrderDate">
                                 @error('jobOrderDate') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-12">
                                 <label class="form-label">Description</label>
-                                <textarea rows="3" class="form-control @error('description') is-invalid @enderror" wire:model="description"></textarea>
+                                <textarea disabled rows="3" class="form-control @error('description') is-invalid @enderror" wire:model="description"></textarea>
                                 @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-12">
                                 <label class="form-label">Remarks</label>
-                                <textarea rows="2" class="form-control @error('remarks') is-invalid @enderror" wire:model="remarks"></textarea>
+                                <textarea  rows="2" class="form-control @error('remarks') is-invalid @enderror" wire:model="remarks"></textarea>
                                 @error('remarks') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>

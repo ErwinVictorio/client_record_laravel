@@ -31,14 +31,14 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Clients
                         </button>
-                        <button type="button" wire:click="setTab('auto-repair')" class="nav-link border-0 text-start {{ $activeTab === 'auto-repair' ? 'active' : '' }}">
+                        <!-- <button type="button" wire:click="setTab('auto-repair')" class="nav-link border-0 text-start {{ $activeTab === 'auto-repair' ? 'active' : '' }}">
                             <div class="sb-nav-link-icon"><i class="fas fa-wrench"></i></div>
                             Auto Parts
-                        </button>
-                        <button type="button" wire:click="setTab('maintenance')" class="nav-link border-0 text-start {{ $activeTab === 'maintenance' ? 'active' : '' }}">
+                        </button> -->
+                        <!-- <button type="button" wire:click="setTab('maintenance')" class="nav-link border-0 text-start {{ $activeTab === 'maintenance' ? 'active' : '' }}">
                             <div class="sb-nav-link-icon"><i class="fas fa-tools"></i></div>
                             Repair & Maintenance
-                        </button>
+                        </button> -->
                         <button type="button" wire:click="setTab('pms-records')" class="nav-link border-0 text-start {{ $activeTab === 'pms-records' ? 'active' : '' }}">
                             <div class="sb-nav-link-icon"><i class="fas fa-clipboard-check"></i></div>
                             PMS Record
@@ -46,6 +46,10 @@
                         <button type="button" wire:click="setTab('other-records')" class="nav-link border-0 text-start {{ $activeTab === 'other-records' ? 'active' : '' }}">
                             <div class="sb-nav-link-icon"><i class="fas fa-list-check"></i></div>
                             Other Record
+                        </button>
+                        <button type="button" class="nav-link border-0 text-start {{ $activeTab === 'other-records' ? 'active' : '' }}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-list-check"></i></div>
+                             Stock Status
                         </button>
                         @if ((int) auth()->user()?->role === 0)
                         <a class="nav-link" href="{{ route('superAdminDashboard.view') }}">
@@ -111,7 +115,9 @@
                                         </td>
                                     </tr>
                                     @empty
-                                    <tr><td colspan="8" class="text-center text-muted py-4">No client records found.</td></tr>
+                                    <tr>
+                                        <td colspan="8" class="text-center text-muted py-4">No client records found.</td>
+                                    </tr>
                                     @endforelse
                                 </tbody>
                             </table>
@@ -119,7 +125,7 @@
                         </div>
                     </div>
                     @foreach ($clients as $client)
-                        @include('livewire.warehouse.partials.client-details-modal', ['client' => $client])
+                    @include('livewire.warehouse.partials.client-details-modal', ['client' => $client])
                     @endforeach
                     @endif
 
@@ -150,7 +156,9 @@
                                         <td>{{ $record->address }}</td>
                                     </tr>
                                     @empty
-                                    <tr><td colspan="5" class="text-center text-muted py-4">No auto parts records found.</td></tr>
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted py-4">No auto parts records found.</td>
+                                    </tr>
                                     @endforelse
                                 </tbody>
                             </table>
@@ -186,7 +194,9 @@
                                         <td>{{ $record->address }}</td>
                                     </tr>
                                     @empty
-                                    <tr><td colspan="5" class="text-center text-muted py-4">No repair and maintenance records found.</td></tr>
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted py-4">No repair and maintenance records found.</td>
+                                    </tr>
                                     @endforelse
                                 </tbody>
                             </table>
@@ -236,7 +246,9 @@
                                         </td>
                                     </tr>
                                     @empty
-                                    <tr><td colspan="9" class="text-center text-muted py-4">No PMS records found.</td></tr>
+                                    <tr>
+                                        <td colspan="9" class="text-center text-muted py-4">No PMS records found.</td>
+                                    </tr>
                                     @endforelse
                                 </tbody>
                             </table>
@@ -267,7 +279,7 @@
                                 <tbody>
                                     @forelse ($otherRecords as $record)
                                     @php
-                                        $maintenanceRecord = $otherMaintenanceRecordsByJobOrder->get($record->job_order_number);
+                                    $maintenanceRecord = $otherMaintenanceRecordsByJobOrder->get($record->job_order_number);
                                     @endphp
                                     <tr wire:key="warehouse-other-record-{{ $record->id }}">
                                         <td><span class="badge bg-secondary">Other</span></td>
@@ -285,7 +297,9 @@
                                         </td>
                                     </tr>
                                     @empty
-                                    <tr><td colspan="7" class="text-center text-muted py-4">No other records found.</td></tr>
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted py-4">No other records found.</td>
+                                    </tr>
                                     @endforelse
                                 </tbody>
                             </table>
@@ -308,8 +322,7 @@
                                         rows="6"
                                         class="form-control @error('editingRemarks') is-invalid @enderror"
                                         wire:model="editingRemarks"
-                                        wire:key="warehouse-remarks-textarea-{{ $editingRemarksRecordId ?? 'empty' }}"
-                                    ></textarea>
+                                        wire:key="warehouse-remarks-textarea-{{ $editingRemarksRecordId ?? 'empty' }}"></textarea>
                                     @error('editingRemarks') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="modal-footer">
@@ -328,7 +341,9 @@
 
                             if (remarksTextarea && event?.remarks !== undefined) {
                                 remarksTextarea.value = event.remarks ?? '';
-                                remarksTextarea.dispatchEvent(new Event('input', { bubbles: true }));
+                                remarksTextarea.dispatchEvent(new Event('input', {
+                                    bubbles: true
+                                }));
                             }
 
                             window.bootstrap.Modal.getOrCreateInstance(modalElement).show();
