@@ -383,6 +383,7 @@ class Dashboard extends Component
                     if ($this->section === 'asap') {
                         $searchQuery->orWhereHas('client', function ($clientQuery) use ($search) {
                             $clientQuery->where('company_name', 'like', '%' . $search . '%');
+                            $clientQuery->orWhere('salesList_no', 'like', '%' . $search . '%');
                         });
                     } else {
                         $searchQuery->orWhereHas('maintenanceRecord', function ($maintenanceQuery) use ($search) {
