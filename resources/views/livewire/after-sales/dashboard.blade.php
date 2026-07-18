@@ -205,7 +205,9 @@
                                             </div>
                                         </div>
                                         @else
-
+                                        <div class="text-muted small p-2 text-center border rounded bg-light" style="font-size: 0.8rem;">
+                                            Select a pending record above to link.
+                                        </div>
                                         @endif
                                         @error('selectedMaintenanceRecordId') <div class="text-danger small mt-2">{{ $message }}</div> @enderror
                                     </div>
@@ -215,7 +217,7 @@
                         </div>
                         @endif
 
-                        <!-- RIGHT SIDE: FORM CARD (Kusa itong liliit/lalaki base sa kung may active sidebar card o wala) -->
+                        <!-- RIGHT SIDE: FORM CARD -->
                         <div class="{{ in_array($section, ['asap', 'other'], true) ? 'col-lg-7' : 'col-lg-12' }}">
                             <div class="card shadow-sm border-0">
                                 <div class="card-header bg-white fw-bold">
@@ -258,7 +260,8 @@
                                                 @error('service_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
 
-                                            @if (in_array($service_type, ['PMS', 'Other'], true))
+                                            {{-- Ginawang eksaktong 'PMS' na lang para hindi na magpakita kapag 'Other' ang pinindot --}}
+                                            @if ($service_type === 'PMS')
                                             <div class="col-md-4">
                                                 <label class="form-label">Number of PMS</label>
                                                 <input type="text" class="form-control @error('pms_number') is-invalid @enderror" wire:model="pms_number">
