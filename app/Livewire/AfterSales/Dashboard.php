@@ -75,7 +75,7 @@ class Dashboard extends Component
         }
     }
 
-    
+
 
     public function updatedMaintenanceCompanySearch()
     {

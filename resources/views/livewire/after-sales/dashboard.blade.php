@@ -117,34 +117,65 @@
                                         $vehicles = $selectedClient->vehicle_specifications ?? [];
                                         @endphp
 
-                                        <div class="mt-3 pt-2 border-top" style="font-size: 0.75rem;">
-                                            <span class="fw-semibold text-dark d-block mb-2">Unit Specifications:</span>
+                                        <div class="mt-3 pt-3 border-top">
+                                            <span class="fw-bold text-dark d-block mb-3" style="font-size: 0.8rem;">
+                                                <i class="fas fa-truck-ramp-box me-1 text-muted"></i> Unit Specifications
+                                            </span>
+
                                             @if (is_array($vehicles) && count($vehicles) > 0)
                                             @foreach ($vehicles as $vehicle)
-                                            <div class="mb-2 p-2 bg-white rounded border shadow-sm">
-                                                <div class="d-flex align-items-center mb-1">
-                                                    <span class="badge text-bg-primary me-1">
-                                                        {{ $vehicle['brand'] ?? 'N/A' }}
+                                            <div class="mb-3 p-3 bg-white rounded border shadow-sm">
+                                                <!-- Header: Brand & Model -->
+                                                <div class="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom border-light">
+                                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1">
+                                                        <strong>Brand:</strong> {{ $vehicle['brand'] ?? 'N/A' }}
                                                     </span>
-                                                    <span class="badge text-bg-secondary">
-                                                        {{ $vehicle['model'] ?? 'N/A' }}
+                                                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1">
+                                                        <strong>Model:</strong> {{ $vehicle['model'] ?? 'N/A' }}
                                                     </span>
                                                 </div>
-                                                <div class="text-muted row g-1 mt-1" style="font-size: 0.72rem;">
-                                                    <div class="col-6"><strong>Capacity:</strong> {{ $vehicle['loading_capacity'] ?? 'N/A' }}</div>
-                                                    <div class="col-6"><strong>Height:</strong> {{ $vehicle['lifting_height'] ?? 'N/A' }}</div>
-                                                    <div class="col-6"><strong>Mast:</strong> {{ $vehicle['mast_type'] ?? 'N/A' }}</div>
-                                                    <div class="col-6"><strong>Power:</strong> {{ $vehicle['power_type'] ?? 'N/A' }}</div>
-                                                    <div class="col-6"><strong>Tire:</strong> {{ $vehicle['tire'] ?? 'N/A' }}</div>
-                                                    <div class="col-6"><strong>Fork:</strong> {{ $vehicle['fork_length'] ?? 'N/A' }}</div>
+
+                                                <!-- Technical Details Grid -->
+                                                <div class="row g-2 mt-1 text-muted" style="font-size: 0.75rem;">
+                                                    <div class="col-6 d-flex justify-content-between pe-2">
+                                                        <span class="text-secondary">Capacity:</span>
+                                                        <strong class="text-dark">{{ $vehicle['loading_capacity'] ?? 'N/A' }}</strong>
+                                                    </div>
+                                                    <div class="col-6 d-flex justify-content-between ps-2">
+                                                        <span class="text-secondary">Height:</span>
+                                                        <strong class="text-dark">{{ $vehicle['lifting_height'] ?? 'N/A' }}</strong>
+                                                    </div>
+                                                    <div class="col-6 d-flex justify-content-between pe-2">
+                                                        <span class="text-secondary">Mast:</span>
+                                                        <strong class="text-dark">{{ $vehicle['mast_type'] ?? 'N/A' }}</strong>
+                                                    </div>
+                                                    <div class="col-6 d-flex justify-content-between ps-2">
+                                                        <span class="text-secondary">Power:</span>
+                                                        <strong class="text-dark">{{ $vehicle['power_type'] ?? 'N/A' }}</strong>
+                                                    </div>
+                                                    <div class="col-6 d-flex justify-content-between pe-2">
+                                                        <span class="text-secondary">Tire:</span>
+                                                        <strong class="text-dark">{{ $vehicle['tire'] ?? 'N/A' }}</strong>
+                                                    </div>
+                                                    <div class="col-6 d-flex justify-content-between ps-2">
+                                                        <span class="text-secondary">Fork:</span>
+                                                        <strong class="text-dark">{{ $vehicle['fork_length'] ?? 'N/A' }}</strong>
+                                                    </div>
+
+                                                    <!-- Full-width Attachment section -->
                                                     @if(!empty($vehicle['attachment']) && $vehicle['attachment'] !== 'N/A')
-                                                    <div class="col-12 mt-1"><strong>Attachment:</strong> {{ $vehicle['attachment'] }}</div>
+                                                    <div class="col-12 mt-2 pt-2 border-top border-light-subtle d-flex align-items-start gap-2">
+                                                        <span class="text-secondary text-nowrap">Attachment:</span>
+                                                        <strong class="text-dark">{{ $vehicle['attachment'] }}</strong>
+                                                    </div>
                                                     @endif
                                                 </div>
                                             </div>
                                             @endforeach
                                             @else
-                                            <span class="text-muted bg-white p-2 border d-block rounded text-center">No specifications available.</span>
+                                            <div class="text-muted bg-light p-3 border d-block rounded text-center small shadow-inner">
+                                                <i class="fas fa-info-circle me-1"></i> No specifications available.
+                                            </div>
                                             @endif
                                         </div>
                                     </div>
