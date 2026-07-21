@@ -150,7 +150,7 @@ class Dashboard extends Component
                     ->orWhere('status', 'like', $clientSearch);
             })
             ->latest()
-            ->paginate(10, ['*'], 'clientsPage');
+            ->paginate(20, ['*'], 'clientsPage');
 
         $autoRepairRecords = CreateRecordForAutoRepair::where(function ($query) use ($autoRepairSearch) {
                 $query->where('company_name', 'like', $autoRepairSearch)
@@ -158,7 +158,7 @@ class Dashboard extends Component
                     ->orWhere('email', 'like', $autoRepairSearch);
             })
             ->latest()
-            ->paginate(10, ['*'], 'autoRepairPage');
+            ->paginate(20, ['*'], 'autoRepairPage');
 
         $maintenanceRecords = ClientRecordForMaintenanceAndRepair::where(function ($query) use ($maintenanceSearch) {
                 $query->where('company_name', 'like', $maintenanceSearch)
@@ -166,7 +166,7 @@ class Dashboard extends Component
                     ->orWhere('email', 'like', $maintenanceSearch);
             })
             ->latest()
-            ->paginate(10, ['*'], 'maintenancePage');
+            ->paginate(20, ['*'], 'maintenancePage');
 
         $pmsRecords = AfterSalesRecord::with('client')
             ->where('service_type', 'PMS')
@@ -181,7 +181,7 @@ class Dashboard extends Component
                     });
             })
             ->latest()
-            ->paginate(10, ['*'], 'pmsRecordsPage');
+            ->paginate(20, ['*'], 'pmsRecordsPage');
 
         $otherRecords = AfterSalesRecord::where('service_type', 'Other')
             ->where(function ($query) use ($otherRecordSearch) {

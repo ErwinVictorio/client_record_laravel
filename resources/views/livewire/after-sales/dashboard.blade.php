@@ -96,6 +96,9 @@
                                     <i class="fas fa-magnifying-glass me-2"></i>Units sold from ASAP
                                 </div>
                                 <div class="card-body">
+                                    <div class="text-primary">
+                                        <h6>Client Info</h6>
+                                    </div>
                                     <label class="form-label">Sale Control No.</label>
                                     <div class="input-group mb-3">
                                         <input type="text" class="form-control @error('saleControlNo') is-invalid @enderror" wire:model="saleControlNo" placeholder="Enter Sale Control No.">
