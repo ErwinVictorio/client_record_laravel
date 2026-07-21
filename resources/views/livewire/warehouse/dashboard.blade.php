@@ -95,6 +95,7 @@
                                         <th>Status</th>
                                         <th>Vehicle/Unit</th>
                                         <th>Model</th>
+                                        <th>Remarks</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -108,15 +109,19 @@
                                         <td><span class="badge bg-primary">{{ $client->status }}</span></td>
                                         <td>{{ $client->item_name ?? 'N/A' }}</td>
                                         <td>{{ $client->model_number ?? 'N/A' }}</td>
+                                        <td style="min-width: 220px;">{{ $client->warehouse_remarks ?? 'N/A' }}</td>
                                         <td>
                                             <button type="button" class="btn btn-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#warehouseClientDetails_{{ $client->id }}">
                                                 View
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-primary" wire:click="editClientRemarks({{ $client->id }})">
+                                                Remarks
                                             </button>
                                         </td>
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="8" class="text-center text-muted py-4">No client records found.</td>
+                                        <td colspan="9" class="text-center text-muted py-4">No client records found.</td>
                                     </tr>
                                     @endforelse
                                 </tbody>
@@ -333,8 +338,52 @@
                         </div>
                     </div>
 
+                    <div class="modal fade" id="warehouseClientRemarksModal" tabindex="-1" aria-labelledby="warehouseClientRemarksModalLabel" aria-hidden="true" wire:ignore.self>
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="warehouseClientRemarksModalLabel">Edit Client Remarks</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <label class="form-label">Remarks</label>
+                                    <textarea
+                                        id="warehouseClientRemarksTextarea"
+                                        rows="6"
+                                        class="form-control @error('editingClientRemarks') is-invalid @enderror"
+                                        wire:model="editingClientRemarks"
+                                        wire:key="warehouse-client-remarks-textarea-{{ $editingClientRemarksId ?? 'empty' }}"></textarea>
+                                    @error('editingClientRemarks') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary" wire:click="saveClientRemarks">Save Remarks</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     @script
                     <script>
+                        $wire.on('show-warehouse-client-remarks-modal', (event) => {
+                            const modalElement = document.getElementById('warehouseClientRemarksModal');
+                            const remarksTextarea = document.getElementById('warehouseClientRemarksTextarea');
+
+                            if (remarksTextarea && event?.remarks !== undefined) {
+                                remarksTextarea.value = event.remarks ?? '';
+                                remarksTextarea.dispatchEvent(new Event('input', {
+                                    bubbles: true
+                                }));
+                            }
+
+                            window.bootstrap.Modal.getOrCreateInstance(modalElement).show();
+                        });
+
+                        $wire.on('hide-warehouse-client-remarks-modal', () => {
+                            const modalElement = document.getElementById('warehouseClientRemarksModal');
+                            window.bootstrap.Modal.getOrCreateInstance(modalElement).hide();
+                        });
+
                         $wire.on('show-warehouse-remarks-modal', (event) => {
                             const modalElement = document.getElementById('warehouseRemarksModal');
                             const remarksTextarea = document.getElementById('warehouseRemarksTextarea');

@@ -23,6 +23,8 @@ class Dashboard extends Component
     public $otherRecordSearch = '';
     public $editingRemarksRecordId = null;
     public $editingRemarks = '';
+    public $editingClientRemarksId = null;
+    public $editingClientRemarks = '';
     public $noticeType = '';
     public $noticeMessage = '';
 
@@ -87,6 +89,37 @@ class Dashboard extends Component
         $this->editingRemarks = '';
         $this->showNotice('success', 'Remarks updated successfully.');
         $this->dispatch('hide-warehouse-remarks-modal');
+    }
+
+    public function editClientRemarks(int $clientId)
+    {
+        $this->clearNotice();
+
+        $client = clients::findOrFail($clientId);
+
+        $this->editingClientRemarksId = $client->id;
+        $this->editingClientRemarks = $client->warehouse_remarks ?? '';
+
+        $this->dispatch('show-warehouse-client-remarks-modal', remarks: $this->editingClientRemarks);
+    }
+
+    public function saveClientRemarks()
+    {
+        $this->clearNotice();
+
+        $this->validate([
+            'editingClientRemarksId' => 'required|exists:clients,id',
+            'editingClientRemarks' => 'nullable|string',
+        ]);
+
+        clients::whereKey($this->editingClientRemarksId)->update([
+            'warehouse_remarks' => $this->editingClientRemarks ?: null,
+        ]);
+
+        $this->editingClientRemarksId = null;
+        $this->editingClientRemarks = '';
+        $this->showNotice('success', 'Client remarks updated successfully.');
+        $this->dispatch('hide-warehouse-client-remarks-modal');
     }
 
     private function showNotice($type, $message)

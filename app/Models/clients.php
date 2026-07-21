@@ -31,7 +31,8 @@ class clients extends Model
          'year_model',
          'quantity',
          'specification',
-         'status'
+         'status',
+         'warehouse_remarks',
     ];
 
     protected $casts = [
