@@ -85,10 +85,6 @@
             </div>
           </section>
 
-          <div class="alert alert-info mt-4 mb-0">
-            Vehicle specifications are now added in the Change Status modal.
-          </div>
-
           <div class="modal-footer d-flex justify-content-start mt-4 bg-light p-3 rounded">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button style="background-color: #004998" type="submit" class="btn text-light">

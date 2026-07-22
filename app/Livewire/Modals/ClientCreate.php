@@ -27,20 +27,26 @@ class ClientCreate extends Component
 
         // Linisin ang Company Name para sa checking ng duplicate
         $companyNameCleaned = strtoupper(str_replace(' ', '', trim($this->CompanyName)));
-      
-        // Check kung kinuha na ng ibang salesman ang kliyente na ito gamit ang company name
-        $existingClient = Clients::whereRaw("REPLACE(UPPER(company_name), ' ', '') = ?", [$companyNameCleaned])->first();
         $currentSalesman = Auth::id();
+
+
+        $existingClient = Clients::whereRaw("REPLACE(UPPER(company_name), ' ', '') = ?", [$companyNameCleaned])->first();
+        //  check if the client is alredy exits
+        if ($existingClient) {
+            session()->flash('error', "The client is already Exist");
+            return;
+        }
+
 
         if ($existingClient) {
             if ($existingClient->salesman_id !== $currentSalesman) {
                 session()->flash('error', "The client is already taken!");
                 return;
-            } 
+            }
         }
 
         $this->showConfirmation = true;
-    }       
+    }
 
     public function createClient(): void
     {
@@ -72,7 +78,7 @@ class ClientCreate extends Component
             'contact_number',
             'showConfirmation',
         ]);
-        $this->dispatch('close-modal'); 
+        $this->dispatch('close-modal');
     }
 
     public function render()
