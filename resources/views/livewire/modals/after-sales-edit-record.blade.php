@@ -5,7 +5,7 @@
                 <form wire:submit.prevent="updateRecord">
                     <div class="modal-header">
                         <h5 class="modal-title" id="msdEditModalLabel_{{ $recordId }}">
-                            <i class="fas fa-pen-to-square me-2"></i>Edit MSD Record SS 
+                            <i class="fas fa-pen-to-square me-2"></i>Edit MSD Record
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -33,8 +33,8 @@
                                 <label class="form-label">Type</label>
                                 <select disabled class="form-select @error('changeType') is-invalid @enderror" wire:model.live="changeType">
                                     <option value="">Select Type</option>
-                                    <option value="WITH CHANGE">With Charge</option>
-                                    <option value="WITHOUT CHANGE">Without Charge</option>
+                                    <option value="WITH CHARGE">With Charge</option>
+                                    <option value="WITHOUT CHARGE">Without Charge</option>
                                 </select>
                                 @error('changeType') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
@@ -42,7 +42,7 @@
                             @if ($clientId)
                             <div class="col-md-4">
                                 <label class="form-label">Warranty Type</label>
-                                <select disabled class="form-select @error('warrantyType') is-invalid @enderror" wire:model="warrantyType" @disabled($changeType === 'WITH CHANGE')>
+                                <select disabled class="form-select @error('warrantyType') is-invalid @enderror" wire:model="warrantyType" @disabled($changeType==='WITH CHARGE' )>
                                     <option value="">Select Warranty</option>
                                     <option value="UNDER WARRANTY">UNDER WARRANTY</option>
                                     <option value="OUT OF WARRANTY">OUT OF WARRANTY</option>
@@ -84,9 +84,34 @@
                                 <textarea disabled rows="3" class="form-control @error('description') is-invalid @enderror" wire:model="description"></textarea>
                                 @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Assigned To</label>
+                                <input type="text" class="form-control @error('assign_mechanic') is-invalid @enderror" wire:model="assign_mechanic" placeholder="Mechanic Name">
+                                @error('assign_mechanic') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Status Update</label>
+                                <select class="form-select @error('status_update') is-invalid @enderror" wire:model.live="status_update">
+                                    <option value="">Select Status</option>
+                                    <option value="Finish">Finish</option>
+                                    <option value="Cancel">Cancel</option>
+                                </select>
+                                @error('status_update') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+
+                            <!-- if status is "Cancel" -->
+                            @if ($status_update === 'Cancel')
+                                <div class="col-12">
+                                    <label class="form-label">Reason for Cancellation</label>
+                                    <textarea placeholder="Enter reason for cancellation" rows="2" class="form-control @error('cancellation_reason') is-invalid @enderror" wire:model="cancellation_reason"></textarea>
+                                    @error('cancellation_reason') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
+                            @endif
+
                             <div class="col-12">
                                 <label class="form-label">Remarks</label>
-                                <textarea  rows="2" class="form-control @error('remarks') is-invalid @enderror" wire:model="remarks"></textarea>
+                                <textarea placeholder="Enter remarks" rows="2" class="form-control @error('remarks') is-invalid @enderror" wire:model="remarks"></textarea>
                                 @error('remarks') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>

@@ -284,7 +284,7 @@
                                 </div>
                             </div>
                         </div>
-                        @endif
+                        @endif  
 
                         <!-- RIGHT SIDE: FORM CARD -->
                         <div class="{{ in_array($section, ['asap', 'other'], true) ? 'col-lg-7' : 'col-lg-12' }}">
@@ -301,8 +301,8 @@
                                                 <label class="form-label">Type</label>
                                                 <select class="form-select @error('change_type') is-invalid @enderror" wire:model.live="change_type">
                                                     <option value="">Select Type</option>
-                                                    <option value="WITH CHANGE">With Charge</option>
-                                                    <option value="WITHOUT CHANGE">Without Charge</option>
+                                                    <option value="WITH CHARGE">With Charge</option>
+                                                    <option value="WITHOUT CHARGE">Without Charge</option>
                                                 </select>
                                                 @error('change_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
@@ -310,7 +310,7 @@
                                             @if ($section === 'asap')
                                             <div class="col-md-4">
                                                 <label class="form-label">Warranty Type</label>
-                                                <select class="form-select @error('warranty_type') is-invalid @enderror" wire:model="warranty_type" @disabled($change_type==='WITH CHANGE' )>
+                                                <select class="form-select @error('warranty_type') is-invalid @enderror" wire:model="warranty_type" {{ $change_type === 'WITH CHARGE' ? 'disabled' : '' }}>
                                                     <option value="">Select Warranty</option>
                                                     <option value="UNDER WARRANTY">UNDER WARRANTY</option>
                                                     <option value="OUT OF WARRANTY">OUT OF WARRANTY</option>
@@ -329,7 +329,6 @@
                                                 @error('service_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
 
-                                            {{-- Ginawang eksaktong 'PMS' na lang para hindi na magpakita kapag 'Other' ang pinindot --}}
                                             @if ($service_type === 'PMS')
                                             <div class="col-md-4">
                                                 <label class="form-label">Number of PMS</label>
@@ -350,8 +349,15 @@
                                                 @error('job_order_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
 
+                                            <!-- NEW INPUT FIELD: Assigned To / Mechanic Name -->
+                                            <div class="col-md-4">
+                                                <label class="form-label">Assigned To</label>
+                                                <input type="text" class="form-control @error('assign_mechanic') is-invalid @enderror" wire:model="assign_mechanic" placeholder="Mechanic Name">
+                                                @error('assign_mechanic') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            </div>
+
                                             <div class="col-12">
-                                                <label class="form-label">Description</label>
+                                                <label class="form-label">Job Request</label>
                                                 <textarea rows="3" class="form-control @error('description') is-invalid @enderror" wire:model="description"></textarea>
                                                 @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
@@ -404,6 +410,7 @@
                                     <tr>
                                         <th>JO Number</th>
                                         <th>Service</th>
+                                        <th>Assigned To</th>
                                         <th>Type</th>
                                         <th>Warranty</th>
                                         <th>Date</th>
@@ -424,6 +431,7 @@
                                     <tr>
                                         <td>{{ $record->job_order_number }}</td>
                                         <td>{{ $record->service_type }}</td>
+                                        <td>{{ $record->assign_mechanic ?? 'N/A' }}</td>
                                         <td>
                                             <span class="badge bg-primary">
                                                 {{ $record->change_type ? ucwords(strtolower(str_replace('CHANGE', 'CHARGE', $record->change_type))) : 'N/A' }}
@@ -491,7 +499,6 @@
                                         <button type="button" class="btn-close" wire:click="cancelEdit" aria-label="Close"></button>
                                     </div>
 
-
                                     <div class="modal-body">
                                         @if ($editClientId && $selectedEditClient)
                                         <div class="alert alert-light border mb-3">
@@ -501,6 +508,8 @@
                                                 Vehicle/Unit: {{ $selectedEditClient->item_name ?? 'N/A' }}
                                             </div>
                                         </div>
+
+
                                         @elseif ($editMaintenanceRecordId && $selectedEditMaintenanceRecord)
                                         <div class="alert alert-light border mb-3">
                                             <div class="fw-bold">{{ $selectedEditMaintenanceRecord->company_name }}</div>
@@ -516,8 +525,8 @@
                                                 <label class="form-label">Type</label>
                                                 <select class="form-select @error('editChangeType') is-invalid @enderror" wire:model.live="editChangeType">
                                                     <option value="">Select Type</option>
-                                                    <option value="WITH CHANGE">With Charge</option>
-                                                    <option value="WITHOUT CHANGE">Without Charge</option>
+                                                    <option value="WITH CHARGE">With Charge</option>
+                                                    <option value="WITHOUT CHARGE">Without Charge</option>
                                                 </select>
                                                 @error('editChangeType') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
@@ -525,7 +534,7 @@
                                             @if ($editClientId)
                                             <div class="col-md-4">
                                                 <label class="form-label">Warranty Type</label>
-                                                <select class="form-select @error('editWarrantyType') is-invalid @enderror" wire:model="editWarrantyType" @disabled($editChangeType==='WITH CHANGE' )>
+                                                <select class="form-select @error('editWarrantyType') is-invalid @enderror" wire:model="editWarrantyType" {{ $editChangeType === 'WITH CHARGE' ? 'disabled' : '' }}>
                                                     <option value="">Select Warranty</option>
                                                     <option value="UNDER WARRANTY">UNDER WARRANTY</option>
                                                     <option value="OUT OF WARRANTY">OUT OF WARRANTY</option>
@@ -543,6 +552,8 @@
                                                 </select>
                                                 @error('editServiceType') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
+
+
 
                                             @if (in_array($editServiceType, ['PMS', 'Other'], true))
                                             <div class="col-md-4">

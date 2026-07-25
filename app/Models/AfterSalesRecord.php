@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class AfterSalesRecord extends Model
 {
+    protected $table = 'after_sales_records';
+
     protected $fillable = [
         'client_id',
         'maintenance_record_id',
@@ -19,6 +21,9 @@ class AfterSalesRecord extends Model
         'description',
         'remarks',
         'salesList_no',
+        'assign_mechanic',
+        'status_update',
+        'cancellation_reason',
     ];
 
     protected $casts = [

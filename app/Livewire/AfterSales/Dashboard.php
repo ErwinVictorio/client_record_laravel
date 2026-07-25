@@ -47,6 +47,8 @@ class Dashboard extends Component
 
     public $remarks = '';
 
+    public $assign_mechanic = '';
+
     public $noticeType = '';
 
     public $noticeMessage = '';
@@ -92,7 +94,7 @@ class Dashboard extends Component
 
     public function updatedChangeType($value)
     {
-        if ($this->section === 'asap' && $value === 'WITH CHANGE') {
+        if ($this->section === 'asap' && $value === 'WITH CHARGE') {
             $this->warranty_type = 'OUT OF WARRANTY';
             $this->resetValidation('warranty_type');
         }
@@ -180,18 +182,19 @@ class Dashboard extends Component
     {
         $this->clearNotice();
         $this->resetErrorBag();
-        if ($this->section === 'asap' && $this->change_type === 'WITH CHANGE') {
+        if ($this->section === 'asap' && $this->change_type === 'WITH CHARGE') {
             $this->warranty_type = 'OUT OF WARRANTY';
         }
 
         $rules = [
             'service_type' => 'required|in:PMS,Other',
-            'change_type' => 'required|in:WITH CHANGE,WITHOUT CHANGE',
+            'change_type' => 'required|in:WITH CHARGE,WITHOUT CHARGE',
             'warranty_type' => 'nullable|in:UNDER WARRANTY,OUT OF WARRANTY',
             'job_order_number' => 'required|min:2',
             'job_order_date' => 'nullable|date',
             'description' => 'nullable|string',
             'remarks' => 'nullable|string',
+            'assign_mechanic' => 'nullable|string',
         ];
 
         if ($this->section === 'asap') {
@@ -215,6 +218,7 @@ class Dashboard extends Component
             'warranty_type.in' => 'Please select a valid warranty type.',
             'job_order_number.required' => 'Please enter the JO Number.',
             'saleControlNo.required' => 'Please enter a Sale Control No.',
+            'assign_mechanic.required' => 'Please enter the assigned mechanic.',
         ]);
 
         // Dito natin kukunin ang salesList_no mula sa database gamit ang Client ID kung 'asap' ang section
@@ -236,8 +240,8 @@ class Dashboard extends Component
             'job_order_date' => $this->job_order_date ?: null,
             'description' => $this->description,
             'remarks' => $this->remarks,
-            // Gagamitin na natin ang $salesListNo na galing mismo sa record ng kliyente
             'salesList_no' => $salesListNo,
+            'assign_mechanic' => $this->assign_mechanic,
         ];
 
         if ($this->section === 'other') {
@@ -316,6 +320,7 @@ class Dashboard extends Component
             'job_order_date',
             'description',
             'remarks',
+            'assign_mechanic',
             'selectedMaintenanceRecordId',
             'maintenanceCompanySearch',
             'maintenanceSearchPerformed',
