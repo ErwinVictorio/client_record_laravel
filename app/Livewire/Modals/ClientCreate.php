@@ -9,21 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 class ClientCreate extends Component
 {
-    // Toggle Indicator (Default: corporate)
     public string $client_type = 'corporate';
 
-    // Corporate Specific Fields
     public $CompanyName;
     public $suffix = '';
     public $contact_person;
     public $contact_person_number;
 
-    // Personal Specific Fields
     public $first_name;
     public $middle_name;
     public $last_name;
 
-    // Shared Fields
     public $address;
     public $email;
     public $contact_number;
@@ -31,9 +27,6 @@ class ClientCreate extends Component
 
     public bool $showConfirmation = false;
 
-    /**
-     * Dynamic Validation Rules based on Selected Client Type
-     */
     protected function rules(): array
     {
         if ($this->client_type === 'personal') {
@@ -60,58 +53,82 @@ class ClientCreate extends Component
         ];
     }
 
-    /**
-     * Helper to get full name string for display/checking
-     */
     private function getFormattedPersonalName(): string
     {
         $names = array_filter([
             trim($this->first_name),
             trim($this->middle_name),
-            trim($this->last_name)
+            trim($this->last_name),
         ]);
 
         return implode(' ', $names);
     }
 
-    public function validateAndConfirm(): void
+    private function normalizeBaseName($name): string
     {
-        // Dynamic Validation
-        $this->validate();
+        $name = (string) $name;
+        $upperName = function_exists('mb_strtoupper')
+            ? mb_strtoupper($name, 'UTF-8')
+            : strtoupper($name);
 
-        $currentSalesman = Auth::id();
+        return preg_replace('/[^\p{L}\p{N}]+/u', '', $upperName) ?? '';
+    }
 
-        // Check Duplicates depending on Client Type
+    private function findDuplicateClient()
+    {
         if ($this->client_type === 'personal') {
-            $fullNameCleaned = strtoupper(str_replace(' ', '', $this->getFormattedPersonalName()));
+            $normalizedBaseName = $this->normalizeBaseName($this->getFormattedPersonalName());
 
-            $existingClient = Clients::whereRaw(
-                "REPLACE(UPPER(CONCAT(IFNULL(first_name, ''), IFNULL(middle_name, ''), IFNULL(last_name, ''))), ' ', '') = ?",
-                [$fullNameCleaned]
-            )->first();
+            $baseNameCondition = "REGEXP_REPLACE(
+                UPPER(CONCAT(
+                    COALESCE(first_name, ''),
+                    COALESCE(middle_name, ''),
+                    COALESCE(last_name, '')
+                )),
+                '[^[:alnum:]]',
+                ''
+            ) = ?";
         } else {
-            $companyNameCleaned = strtoupper(str_replace(' ', '', trim($this->CompanyName)));
+            $normalizedBaseName = $this->normalizeBaseName($this->CompanyName);
 
-            $existingClientQuery = Clients::whereRaw(
-                "REPLACE(UPPER(company_name), ' ', '') = ?",
-                [$companyNameCleaned]
-            );
-
-            if ($this->suffix) {
-                $existingClientQuery->where('suffix', $this->suffix);
-            } else {
-                $existingClientQuery->whereNull('suffix');
-            }
-
-            $existingClient = $existingClientQuery->first();
+            // Suffix is deliberately ignored here.
+            $baseNameCondition = "REGEXP_REPLACE(
+                UPPER(COALESCE(company_name, '')),
+                '[^[:alnum:]]',
+                ''
+            ) = ?";
         }
 
-        if ($existingClient) {
-            if ($existingClient->salesman_id !== $currentSalesman) {
-                session()->flash('error', "The client is already taken by another salesman!");
-            } else {
-                session()->flash('error', "The client already exists!");
-            }
+        return Clients::query()
+            ->whereRaw($baseNameCondition, [$normalizedBaseName])
+            ->orWhere('contact_number', $this->contact_number)
+            ->orWhere('email', $this->email)
+            ->first();
+    }
+
+    private function hasDuplicateClient(): bool
+    {
+        $existingClient = $this->findDuplicateClient();
+
+        if (! $existingClient) {
+            return false;
+        }
+
+        session()->flash(
+            'error',
+            $existingClient->salesman_id !== Auth::id()
+                ? 'The client is already taken by another salesman!'
+                : 'You have already registered this client!'
+        );
+
+        return true;
+    }
+
+    public function validateAndConfirm(): void
+    {
+        $this->validate();
+
+        if ($this->hasDuplicateClient()) {
             return;
         }
 
@@ -120,17 +137,26 @@ class ClientCreate extends Component
 
     public function createClient(): void
     {
+        // Prevent direct Livewire requests from bypassing duplicate checks.
+        $this->validate();
+
+        if ($this->hasDuplicateClient()) {
+            $this->showConfirmation = false;
+            return;
+        }
+
         $currentSalesman = Auth::id();
 
         if ($this->client_type === 'personal') {
             $fullName = $this->getFormattedPersonalName();
 
             Clients::create([
-                'company_name'          => 'N/A', // Personal clients don't have a company name
+                'company_name'          => 'N/A',
+                'suffix'                => null,
                 'first_name'            => trim($this->first_name),
                 'middle_name'           => $this->middle_name ? trim($this->middle_name) : null,
                 'last_name'             => trim($this->last_name),
-                'contact_person'        => $fullName, // Mismong client na ang contact person
+                'contact_person'        => $fullName,
                 'contact_number_person' => $this->contact_number,
                 'address'               => $this->address,
                 'email'                 => $this->email,
@@ -158,7 +184,6 @@ class ClientCreate extends Component
         session()->flash('success', 'New Client is Successfully Created');
         $this->dispatch('clients-updated');
 
-        // Reset all public properties
         $this->reset([
             'client_type',
             'CompanyName',
