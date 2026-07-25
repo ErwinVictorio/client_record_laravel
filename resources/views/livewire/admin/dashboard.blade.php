@@ -107,7 +107,7 @@
                               <thead>
                                   <tr>
                                       <th>SalesNo</th>
-                                      <th>Company Name</th>
+                                      <th>Company Name / Personal Name</th>
                                       <th>Sales Executive</th>
                                       <th>Department</th>
                                       <th>Contact Number</th>
@@ -123,34 +123,34 @@
                                   @foreach ($clientList as $client )
                                   <tr wire:key="admin-client-row-{{ $client->id }}">
                                       <td>{{$client->salesList_no ?? 'N/A'}}</td>
-                                      <td>{{$client->company_name}}</td>
+                                      <td>{{$client->display_name}}</td>
                                       <td>{{$client->salesman->first_name . ' ' .$client->salesman->last_name }}</td>
                                       <td>{{$client->salesman->department}}</td>
                                       <td>{{$client->contact_number}}</td>
                                       <td>{{$client->address}}</td>
                                       <td>
                                           @php
-                                          $Sold = $client->status === 'Sold' ? '卖出' : '待处理';
-
-                                          $color = '';
-
+                                          $badgeClass = 'bg-danger';
+                                          $label = '';
                                           switch ($client->status) {
-                                          case 'Sold':
-                                          $color = 'background-color: #004998;';
+                                          case 'For Approval':
+                                          $badgeClass = 'bg-success';
+                                          $label = '(供批准)';
                                           break;
 
-                                          case 'Pending':
-                                          $color = 'background-color: red;';
+                                          case 'Sold':
+                                          $badgeClass = 'bg-primary';
+                                          $label = '(已售)';
                                           break;
 
                                           default:
-                                          $color = 'background-color: #4CAF50;';
-                                          break;
+                                          $badgeClass = 'bg-danger';
+                                          $label = '(编辑)';
+
                                           }
                                           @endphp
-                                          <span
-                                              class="badge rounded-pill text-white px-3 py-2">
-                                              {{ $client->status .' / '. $Sold}}
+                                          <span class="badge rounded-pill text-white px-3 py-2 {{ $badgeClass }}">
+                                              {{ $client->status }} {{ $label }}
                                           </span>
                                       </td>
 
@@ -193,16 +193,13 @@
                           @foreach ($clientList as $client)
                           <livewire:modals.view-client-details
                               :clientId="$client->id"
-                              :wire:key="'admin-view-client-'.$client->id"
-                          />
+                              :wire:key="'admin-view-client-'.$client->id" />
                           <livewire:modals.edit-client-info-for-admin
                               :clientId="$client->id"
-                              :wire:key="'admin-edit-client-info-'.$client->id.'-'.$clientList->currentPage()"
-                          />
+                              :wire:key="'admin-edit-client-info-'.$client->id.'-'.$clientList->currentPage()" />
                           <livewire:modals.delete-client
                               :clientId="$client->id"
-                              :wire:key="'admin-delete-client-'.$client->id.'-'.$clientList->currentPage()"
-                          />
+                              :wire:key="'admin-delete-client-'.$client->id.'-'.$clientList->currentPage()" />
                           @endforeach
                           {{ $clientList->links() }}
                       </div>

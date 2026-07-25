@@ -27,13 +27,39 @@
                   <form wire:submit.prevent='updateClientInfo'>
                   <div class="modal-body">
                     <section class="row gap-3">
-                      <div class="form-floating mb-3 col-lg-5">
+                    <div class="form-floating mb-3 col-lg-5">
                         <input wire:model.live='company_name' type="text" class="form-control" id="company_name" placeholder="company name">
                         <label for="company_name">company name</label>
                          @error('company_name')
                            <span class="text-danger">{{$message}}</span>
                          @enderror
                     </div>
+
+                    @if ($isPersonalClient)
+                      <div class="form-floating mb-3 col-lg-5">
+                          <input wire:model.live="first_name" type="text" class="form-control" id="first_name" placeholder="First Name">
+                          <label for="first_name">First Name</label>
+                          @error('first_name')
+                            <span class="text-danger">{{ $message }}</span>
+                          @enderror
+                      </div>
+
+                      <div class="form-floating mb-3 col-lg-5">
+                          <input wire:model.live="middle_name" type="text" class="form-control" id="middle_name" placeholder="Middle Name">
+                          <label for="middle_name">Middle Name (Optional)</label>
+                          @error('middle_name')
+                            <span class="text-danger">{{ $message }}</span>
+                          @enderror
+                      </div>
+
+                      <div class="form-floating mb-3 col-lg-5">
+                          <input wire:model.live="last_name" type="text" class="form-control" id="last_name" placeholder="Last Name">
+                          <label for="last_name">Last Name</label>
+                          @error('last_name')
+                            <span class="text-danger">{{ $message }}</span>
+                          @enderror
+                      </div>
+                    @endif
 
                     <div class="form-floating mb-3 col-lg-5">
                         <input wire:model.live='contact_number' type="text" class="form-control" id="contact_number" placeholder="contact number">

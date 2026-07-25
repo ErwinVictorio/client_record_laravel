@@ -12,7 +12,7 @@ class SalesManPage extends Component
 {
     use WithPagination;
 
-    public $countedPending, $countedSold,$searchQuery= '' ,$clientSearch = '',$totalPending = '';
+    public $countedPending, $countedSold, $searchQuery = '', $clientSearch = '', $totalPending = '';
 
     public function mount()
     {
@@ -35,8 +35,9 @@ class SalesManPage extends Component
         $this->resetPage();
     }
 
-    public function applySearch(){
-        
+    public function applySearch()
+    {
+
         $this->searchQuery = $this->clientSearch;
         $this->resetPage();
     }
@@ -46,16 +47,20 @@ class SalesManPage extends Component
         $user = Auth::user();
         $search  = '%' . $this->searchQuery . '%';
 
-           $clients = $user->clients()->where(function($query) use ($search){
-            $query->where('company_name','like',$search);
+        $clients = $user->clients()->where(function ($query) use ($search) {
+            $query->where('company_name', 'like', $search);
             $query->orwhere('status', 'like', $search);
+            $query->orwhere('first_name', 'like', $search);
+            $query->orwhere('middle_name', 'like', $search);
+            $query->orwhere('last_name', 'like', $search);
+            $query->orWhereRaw("CONCAT_WS(' ', first_name, middle_name, last_name) LIKE ?", [$search]);
             $query->orwhere('salesList_no', 'like', $search);
             $query->orwhere('email', 'like', $search);
         })
-         ->orderBy('created_at', 'desc')
-         ->paginate(20);
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
 
-        
+
         return view('livewire.sales-man.sales-man-page', [
             'clients' => $clients,
         ]);

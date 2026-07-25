@@ -9,8 +9,12 @@ use Livewire\Attributes\Validate;
 class EditClientInfoForAdmin extends Component
 {
     public $clientId;
+    public bool $isPersonalClient = false;
 
     #[Validate('required')] public $company_name;
+    #[Validate('nullable|string|max:255')] public $first_name;
+    #[Validate('nullable|string|max:255')] public $middle_name;
+    #[Validate('nullable|string|max:255')] public $last_name;
     #[Validate('required')] public $contact_number;
     #[Validate('required|email')] public $email;
     #[Validate('required')] public $address;
@@ -28,6 +32,10 @@ class EditClientInfoForAdmin extends Component
       $client = clients::findOrFail($clientId);
       
       $this->company_name = $client->company_name;
+      $this->first_name = $client->first_name;
+      $this->middle_name = $client->middle_name;
+      $this->last_name = $client->last_name;
+      $this->isPersonalClient = filled($client->first_name) || filled($client->middle_name) || filled($client->last_name);
       $this->contact_number = $client->contact_number;
       $this->email = $client->email;
       $this->address = $client->address;
@@ -44,13 +52,30 @@ class EditClientInfoForAdmin extends Component
      
       $this->validate();
 
+      if ($this->isPersonalClient) {
+          $this->validate([
+              'first_name' => 'required|string|max:255',
+              'middle_name' => 'nullable|string|max:255',
+              'last_name' => 'required|string|max:255',
+          ]);
+      }
+
+      $personalName = trim(implode(' ', array_filter([
+          $this->first_name,
+          $this->middle_name,
+          $this->last_name,
+      ], fn ($name) => filled($name))));
+
       clients::where('id', $this->clientId)
       ->update([
           'company_name' => $this->company_name,
+          'first_name' => filled($this->first_name) ? trim($this->first_name) : null,
+          'middle_name' => filled($this->middle_name) ? trim($this->middle_name) : null,
+          'last_name' => filled($this->last_name) ? trim($this->last_name) : null,
           'contact_number' => $this->contact_number,
           'email' => $this->email,
           'address' => $this->address,
-          'contact_person' => $this->contact_person,
+          'contact_person' => $this->isPersonalClient && $personalName !== '' ? $personalName : $this->contact_person,
           'contact_number_person' => $this->contact_number_person,
           'item_name' => $this->item_name,
           'model_number' => $this->model_number,

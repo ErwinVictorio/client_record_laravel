@@ -116,7 +116,7 @@
             <thead>
                 <tr>
                     <th>Sales List No</th>
-                    <th>Company Name</th>
+                    <th>Company Name/Personal Name</th>
                     <th>Address</th>
                     <th>Email</th>
                     <th>Contact Number</th>
@@ -129,7 +129,7 @@
                 @foreach ($clients as $client)
                 <tr>
                    <td>{{$client->salesList_no ?? 'N/A'}}</td>
-                    <td>{{$client->company_name}}</td>
+                    <td>{{ $client->display_name }}</td>
                     <td>{{$client->address}}</td>
                     <td>{{$client->email}}</td>
                     <td>{{$client->contact_number}}</td>
