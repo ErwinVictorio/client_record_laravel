@@ -9,8 +9,8 @@
       background-image: linear-gradient(to bottom,#033c78, rgba(16, 12, 12, 0.8)), url({{asset('images/bg_image.jpg')}});
     }
     img{
-       height: 120px;
-       width: 120px;
+       height: 200px;
+       width: 200px;
        object-fit: cover;
 
     }
