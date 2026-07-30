@@ -16,7 +16,7 @@
     }
   </style>
   <div id="bg" class="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-center text-white p-5" style="background-color:  #033c78; background-size: cover; background-position: center;">
-      <img src="{{asset('images/asap_logo.jpg.avif')}}" alt="ss">
+      <img src="{{asset('images/white copy.png')}}" alt="ss">
       <h1> ASAP FORKLIFT PHILIPPINES, INC.</h1>
     <h5 class="fw-bold mb-4">Client Record Management System<h5>
   </div>
