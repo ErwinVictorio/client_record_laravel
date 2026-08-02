@@ -72,19 +72,7 @@
             @else
             <!-- CORPORATE CLIENT FIELD -->
 
-            <!-- Suffix -->
-            <div class="col-lg-6">
-              <div class="form-floating">
-                <select wire:model="suffix" class="form-select" id="suffix" aria-label="Company suffix">
-                  <option value="">No suffix</option>
-                  @foreach ($suffixes as $suffixOption)
-                    <option value="{{ $suffixOption->suffix }}">{{ $suffixOption->suffix }}</option>
-                  @endforeach
-                </select>
-                <label for="suffix">Company Suffix (Optional)</label>
-                @error('suffix') <span class="text-danger small">{{ $message }}</span> @enderror
-              </div>
-            </div>
+
 
             <div class="col-lg-6">
               <div class="form-floating">
@@ -94,6 +82,20 @@
               </div>
             </div>
             @endif
+
+            <!-- Suffix -->
+            <div class="col-lg-6">
+              <div class="form-floating">
+                <select wire:model="suffix" class="form-select" id="suffix" aria-label="Company suffix">
+                  <option value="">No suffix</option>
+                  @foreach ($suffixes as $suffixOption)
+                  <option value="{{ $suffixOption->suffix }}">{{ $suffixOption->suffix }}</option>
+                  @endforeach
+                </select>
+                <label for="suffix">Company Suffix (Optional)</label>
+                @error('suffix') <span class="text-danger small">{{ $message }}</span> @enderror
+              </div>
+            </div>
 
             <!-- Address Field -->
             <div class="{{ $client_type === 'personal' ? 'col-lg-12' : 'col-lg-6' }}">
