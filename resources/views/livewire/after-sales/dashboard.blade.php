@@ -111,9 +111,9 @@
                                         <div class="fw-bold mb-2 text-primary">{{ $selectedClient->company_name }}</div>
                                         <div class="small text-muted">Sales No: {{ $selectedClient->salesList_no ?? 'N/A' }}</div>
                                         <div class="small text-muted">Contact: {{ $selectedClient->contact_number }}</div>
-                                        <div class="small text-muted">Vehicle/Unit: {{ $selectedClient->item_name ?? 'N/A' }}</div>
-                                        <div class="small text-muted">Model: {{ $selectedClient->model_number ?? 'N/A' }}</div>
-                                        <div class="small text-muted">Year Model: {{ $selectedClient->year_model ?? 'N/A' }}</div>
+                                        <div class="small text-muted">Address: {{ $selectedClient->address ?? 'N/A' }}</div>
+                                        <div class="small text-muted">Contact Person: {{ $selectedClient->contact_person ?? 'N/A' }}</div>
+                                        <div class="small text-muted">Phone: {{ $selectedClient->contact_number_person ?? 'N/A' }}</div>
 
                                         <!-- Vehicle/Unit Specifications Breakdown -->
                                         @php

@@ -96,11 +96,20 @@ class ClientStatusUpdate extends Component
 
     public function change_status()
     {
+        // Filter out null or empty file inputs
+        $uploadedDocs = array_filter($this->supporting_docs, fn($file) => $file !== null);
+
+        // CHC-CHECK: Kung WALANG na-upload na bagong file AT WALANG umiiral na lumang file
+        if (empty($uploadedDocs) && empty($this->existing_supporting_document_paths)) {
+            $this->addError('supporting_docs', 'Kailangan mag-upload ng kahit isang supporting document (PDF).');
+            return;
+        }
+
         $this->validate([
             'SelectedStatus' => 'required',
             'salesList_no' => 'required',
             'bank_account_number' => 'nullable|string',
-            'supporting_docs' => 'array|min:1',
+            'supporting_docs' => 'array',
             'supporting_docs.*' => 'nullable|file|mimes:pdf|max:5120',
             'vehicles' => 'array|min:1',
             'vehicles.*.brand' => 'required|string',
@@ -114,10 +123,9 @@ class ClientStatusUpdate extends Component
             'vehicles.*.attachment' => 'nullable|string',
         ]);
 
-        $client = clients::find($this->clientId); // get the client base on Id
+        $client = clients::find($this->clientId);
 
-
-        if ($client) { // check if we have client or the result is not found
+        if ($client) {
             $supportingDocumentPaths = $this->normalizeDocumentPaths($client->supporting_document_paths, $client->supporting_document_path);
 
             foreach ($this->supporting_docs as $supportingDoc) {
@@ -129,7 +137,7 @@ class ClientStatusUpdate extends Component
             $firstVehicle = $this->vehicles[0] ?? [];
 
             $client->status = $this->SelectedStatus;
-            $client->salesList_no =  $this->salesList_no;
+            $client->salesList_no = $this->salesList_no;
             $client->bank_account_number = $this->bank_account_number;
             $client->supporting_document_path = $supportingDocumentPaths[0] ?? null;
             $client->supporting_document_paths = $supportingDocumentPaths;
@@ -137,18 +145,16 @@ class ClientStatusUpdate extends Component
             $client->item_name = $firstVehicle['brand'] ?? null;
             $client->model_number = $firstVehicle['model'] ?? null;
             $client->specification = $this->buildSpecificationSummary($firstVehicle);
-            $client->save(); // to save the changes
+            $client->save();
+
             $this->existing_supporting_document_path = $supportingDocumentPaths[0] ?? null;
             $this->existing_supporting_document_paths = $supportingDocumentPaths;
 
-
-            // Flash success message
             session()->flash('success', 'Client status updated successfully.');
             $this->supporting_docs = [];
             $this->addSupportingDocument();
             $this->dispatch('clients-updated');
         } else {
-            // Flash error message if client not found
             session()->flash('error', 'Client not found.');
         }
     }
