@@ -5,6 +5,8 @@
     $vehicleSpecificationLabels = [
         'brand' => 'Brand',
         'model' => 'Model',
+        'engine' => 'Engine',
+        'engine_series' => 'Engine Series',
         'serial_or_plate_number' => 'Serial / Plate Number',
         'loading_capacity' => 'Loading Capacity',
         'lifting_height' => 'Lifting Height',

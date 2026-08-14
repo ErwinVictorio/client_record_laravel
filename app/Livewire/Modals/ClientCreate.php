@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Clients;
 use App\Models\Suffix;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ClientCreate extends Component
 {
@@ -99,10 +100,28 @@ class ClientCreate extends Component
             ) = ?";
         }
 
-        return Clients::query()
-            ->whereRaw($baseNameCondition, [$normalizedBaseName])
-            ->orWhere('contact_number', $this->contact_number)
-            ->orWhere('email', $this->email)
+        $otherSalesmenClients = Clients::query()
+            ->where('salesman_id', '!=', Auth::id());
+
+        // SQLite does not provide MySQL's REGEXP_REPLACE function used in production.
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            return $otherSalesmenClients->get()->first(function (Clients $client) use ($normalizedBaseName) {
+                $clientName = $this->client_type === 'personal'
+                    ? implode(' ', array_filter([$client->first_name, $client->middle_name, $client->last_name]))
+                    : $client->company_name;
+
+                return $this->normalizeBaseName($clientName) === $normalizedBaseName
+                    || $client->contact_number === $this->contact_number
+                    || $client->email === $this->email;
+            });
+        }
+
+        return $otherSalesmenClients
+            ->where(function ($query) use ($baseNameCondition, $normalizedBaseName) {
+                $query->whereRaw($baseNameCondition, [$normalizedBaseName])
+                    ->orWhere('contact_number', $this->contact_number)
+                    ->orWhere('email', $this->email);
+            })
             ->first();
     }
 
@@ -114,12 +133,7 @@ class ClientCreate extends Component
             return false;
         }
 
-        session()->flash(
-            'error',
-            $existingClient->salesman_id !== Auth::id()
-                ? 'The client is already taken by another salesman!'
-                : 'You have already registered this client!'
-        );
+        session()->flash('error', 'The client is already taken by another salesman!');
 
         return true;
     }

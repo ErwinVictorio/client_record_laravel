@@ -45,6 +45,8 @@ class CreateRepairAndMaintenaceRecord extends Component
         $this->vehicles[] = [
             'brand' => '',
             'model' => '',
+            'engine' => '',
+            'engine_series' => '',
             'serial_or_plate_number' => '',
             'loading_capacity' => '',
             'lifting_height' => '',
@@ -78,6 +80,8 @@ class CreateRepairAndMaintenaceRecord extends Component
             'vehicles' => 'required|array|min:1',
             'vehicles.*.brand' => 'required|string',
             'vehicles.*.model' => 'required|string',
+            'vehicles.*.engine' => 'nullable|string',
+            'vehicles.*.engine_series' => 'nullable|string',
             'vehicles.*.serial_or_plate_number' => 'required|string',
             'vehicles.*.loading_capacity' => 'nullable|string',
             'vehicles.*.lifting_height' => 'nullable|string',

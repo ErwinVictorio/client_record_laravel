@@ -125,6 +125,12 @@
                                         @error("vehicles.$index.model") <span class="text-danger small d-block mt-1">{{ $message }}</span> @enderror
                                     </div>
                                     <div class="col-md-4">
+                                        <input wire:model="vehicles.{{ $index }}.engine" type="text" class="form-control form-control-sm" placeholder="Engine">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input wire:model="vehicles.{{ $index }}.engine_series" type="text" class="form-control form-control-sm" placeholder="Engine Series">
+                                    </div>
+                                    <div class="col-md-4">
                                         <input wire:model="vehicles.{{ $index }}.loading_capacity" type="text" class="form-control form-control-sm" placeholder="Loading Capacity">
                                     </div>
                                     <div class="col-md-3">

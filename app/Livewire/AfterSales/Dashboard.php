@@ -7,6 +7,7 @@ use App\Models\ClientRecordForMaintenanceAndRepair;
 use App\Models\clients;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -40,6 +41,8 @@ class Dashboard extends Component
     public $pms_number = '';
 
     public $job_order_number = '';
+
+    public bool $jobOrderNumberTaken = false;
 
     public $job_order_date = '';
 
@@ -90,6 +93,11 @@ class Dashboard extends Component
     public function updatedJobOrderSearch()
     {
         $this->resetPage($this->section === 'asap' ? 'asapPage' : 'otherPage');
+    }
+
+    public function updatedJobOrderNumber($value): void
+    {
+        $this->checkJobOrderAvailability($value, true);
     }
 
     public function updatedChangeType($value)
@@ -221,6 +229,12 @@ class Dashboard extends Component
             'assign_mechanic.required' => 'Please enter the assigned mechanic.',
         ]);
 
+        $this->job_order_number = trim($this->job_order_number);
+
+        if (! $this->checkJobOrderAvailability($this->job_order_number, true)) {
+            return;
+        }
+
         // Dito natin kukunin ang salesList_no mula sa database gamit ang Client ID kung 'asap' ang section
         $salesListNo = null;
         if ($this->section === 'asap' && $this->selectedClientId) {
@@ -244,18 +258,24 @@ class Dashboard extends Component
             'assign_mechanic' => $this->assign_mechanic,
         ];
 
-        if ($this->section === 'other') {
-            $message = $this->saveOtherRecord($values);
+        try {
+            if ($this->section === 'other') {
+                $message = $this->saveOtherRecord($values);
 
-            if (! $message) {
-                return;
+                if (! $message) {
+                    return;
+                }
+            } else {
+                AfterSalesRecord::create([
+                    ...$values,
+                    'user_id' => Auth::id(),
+                ]);
+                $message = 'MSD record saved successfully.';
             }
-        } else {
-            AfterSalesRecord::create([
-                ...$values,
-                'user_id' => Auth::id(),
-            ]);
-            $message = 'MSD record saved successfully.';
+        } catch (UniqueConstraintViolationException) {
+            $this->showDuplicateJobOrderError($this->job_order_number);
+
+            return;
         }
 
         $this->resetForm();
@@ -325,6 +345,54 @@ class Dashboard extends Component
             'maintenanceCompanySearch',
             'maintenanceSearchPerformed',
         ]);
+        $this->jobOrderNumberTaken = false;
+    }
+
+    private function checkJobOrderAvailability($jobOrderNumber, bool $showNotice = false): bool
+    {
+        $jobOrderNumber = trim((string) $jobOrderNumber);
+
+        if ($jobOrderNumber === '') {
+            $this->jobOrderNumberTaken = false;
+            $this->resetValidation('job_order_number');
+
+            return true;
+        }
+
+        $normalizedJobOrderNumber = function_exists('mb_strtolower')
+            ? mb_strtolower($jobOrderNumber, 'UTF-8')
+            : strtolower($jobOrderNumber);
+
+        $afterSalesDuplicate = AfterSalesRecord::query()
+            ->whereRaw('LOWER(TRIM(job_order_number)) = ?', [$normalizedJobOrderNumber])
+            ->exists();
+
+        $maintenanceDuplicate = ClientRecordForMaintenanceAndRepair::query()
+            ->whereRaw('LOWER(TRIM(job_order_number)) = ?', [$normalizedJobOrderNumber])
+            ->exists();
+
+        $this->jobOrderNumberTaken = $afterSalesDuplicate || $maintenanceDuplicate;
+        $this->resetValidation('job_order_number');
+
+        if ($this->jobOrderNumberTaken) {
+            $this->addError('job_order_number', "JO Number {$jobOrderNumber} is already in use. Please enter another JO Number.");
+
+            if ($showNotice) {
+                $this->showNotice('warning', "JO Number {$jobOrderNumber} is already in use. The record was not saved.");
+            }
+        } elseif ($this->noticeType === 'warning' && str_contains($this->noticeMessage, 'already in use')) {
+            $this->clearNotice();
+        }
+
+        return ! $this->jobOrderNumberTaken;
+    }
+
+    private function showDuplicateJobOrderError(string $jobOrderNumber): void
+    {
+        $this->jobOrderNumberTaken = true;
+        $this->resetValidation('job_order_number');
+        $this->addError('job_order_number', "JO Number {$jobOrderNumber} is already in use. Please enter another JO Number.");
+        $this->showNotice('warning', "JO Number {$jobOrderNumber} was taken by another user. The record was not saved.");
     }
 
     private function pendingMaintenanceRecords()

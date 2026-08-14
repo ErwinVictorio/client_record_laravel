@@ -74,6 +74,8 @@ class ClientStatusUpdate extends Component
         $this->vehicles[] = [
             'brand' => '',
             'model' => '',
+            'engine' => '',
+            'engine_series' => '',
             'loading_capacity' => '',
             'lifting_height' => '',
             'mast_type' => '',
@@ -114,6 +116,8 @@ class ClientStatusUpdate extends Component
             'vehicles' => 'array|min:1',
             'vehicles.*.brand' => 'required|string',
             'vehicles.*.model' => 'required|string',
+            'vehicles.*.engine' => 'nullable|string',
+            'vehicles.*.engine_series' => 'nullable|string',
             'vehicles.*.loading_capacity' => 'nullable|string',
             'vehicles.*.lifting_height' => 'nullable|string',
             'vehicles.*.mast_type' => 'nullable|string',
@@ -190,6 +194,8 @@ class ClientStatusUpdate extends Component
     private function buildSpecificationSummary(array $vehicle): ?string
     {
         $labels = [
+            'engine' => 'Engine',
+            'engine_series' => 'Engine Series',
             'loading_capacity' => 'Loading Capacity',
             'lifting_height' => 'Lifting Height',
             'mast_type' => 'Mast Type',

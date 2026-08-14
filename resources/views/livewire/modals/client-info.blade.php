@@ -1,56 +1,63 @@
 <div>
-  <div wire:ignore.self wire:key="client-modal_{{$clientId}}" class="modal fade" id="clientModal_{{$clientId}}" tabindex="-1" aria-labelledby="clientModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-              <form wire:submit.prevent="soldForm">
-                  <div class="modal-header">
-                      <h5 class="modal-title">Product Details (产品详情)</h5>
-         
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
+    <div wire:ignore.self wire:key="client-modal_{{ $clientId }}" class="modal fade" id="clientModal_{{ $clientId }}" tabindex="-1" aria-labelledby="clientModalLabel_{{ $clientId }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form wire:submit.prevent="{{ $showRejectReason ? 'rejectClient' : ($showSoldConfirmation ? 'markAsSold' : 'openSoldConfirmation') }}">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="clientModalLabel_{{ $clientId }}">Client Approval</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
 
-                  <div class="modal-body">
-                      @if (session()->has('success'))
-                          <div class="alert alert-success">
-                              {{ session('success') }}
-                          </div>
-                      @endif
+                    <div class="modal-body">
+                        @if (session()->has('success'))
+                            <div class="alert alert-success">{{ session('success') }}</div>
+                        @endif
 
-                      <div class="form-floating mb-3">
-                          <input wire:model.live='itemName' type="text" class="form-control" id="ItemName" placeholder="Item Name">
-                          <label for="ItemName">Item Name (物品名称)</label>
-                          @error('itemName') <span class="text-danger">{{ $message }}</span> @enderror
-                      </div>
+                        @if (session()->has('error'))
+                            <div class="alert alert-danger">{{ session('error') }}</div>
+                        @endif
 
-                      <div class="form-floating mb-3">
-                          <input wire:model.live='modelNumber' type="text" class="form-control" id="modelNumber" placeholder="Model Number">
-                          <label for="modelNumber">Product Model (产品型号)</label>
-                          @error('modelNumber') <span class="text-danger">{{ $message }}</span> @enderror
-                      </div>
- 
-                      <div class="form-floating mb-3">
-                          <input wire:model.live='Quantity' type="number" class="form-control" id="Quantity" placeholder="Quantity">
-                          <label for="Quantity">Quantity (数量)</label>
-                          @error('Quantity') <span class="text-danger">{{ $message }}</span> @enderror
-                      </div>
+                        @if ($showRejectReason)
+                            <div class="form-floating">
+                                <textarea wire:model="rejectionReason" class="form-control" placeholder="Reason for rejection" id="rejectionReason_{{ $clientId }}" style="height: 120px"></textarea>
+                                <label for="rejectionReason_{{ $clientId }}">Reason for rejection</label>
+                            </div>
+                            @error('rejectionReason')
+                                <span class="text-danger small d-block mt-1">{{ $message }}</span>
+                            @enderror
+                        @elseif ($showSoldConfirmation)
+                            <div class="alert alert-warning mb-0">
+                                <div class="fw-bold mb-1">Confirm Sold Transaction</div>
+                                Are you sure you want to mark this client as Sold? This action will update the client's current status.
+                            </div>
+                        @else
+                            <p class="mb-0">Choose whether to reject this client or mark the sale as sold.</p>
+                        @endif
+                    </div>
 
-                                           
-                      <div class="mb-3">
-                        <div class="form-floating">
-                            <textarea wire:model.live='Specification'  class="form-control" placeholder="Specification" id="Specification" style="height: 100px"></textarea>
-                            <label for="Specification">Specification (规格)</label>
-                          </div>
-                          @error('Specification') <span class="text-danger">{{ $message }}</span> @enderror
-                      </div>
-  
-                  </div>
-
-                  <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button style="background-color: #0d629b" type="submit" class="btn text-light">Sold(已售出)</button>
-                  </div>
-              </form>
-          </div>
-      </div>
-  </div>
+                    <div class="modal-footer">
+                        @if ($showRejectReason)
+                            <button type="button" class="btn btn-secondary" wire:click="cancelReject">Cancel</button>
+                            <button type="submit" class="btn btn-danger" wire:loading.attr="disabled" wire:target="rejectClient">
+                                <span wire:loading wire:target="rejectClient" class="spinner-border spinner-border-sm me-1"></span>
+                              Confirm Reject
+                            </button>
+                        @elseif ($showSoldConfirmation)
+                            <button type="button" class="btn btn-secondary" wire:click="cancelSoldConfirmation">Cancel</button>
+                            <button type="submit" class="btn btn-success" wire:loading.attr="disabled" wire:target="markAsSold">
+                                <span wire:loading wire:target="markAsSold" class="spinner-border spinner-border-sm me-1"></span>
+                                Yes, Mark as Sold
+                            </button>
+                        @else
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-outline-danger" wire:click="showRejectForm">Reject</button>
+                            <button style="background-color: #0d629b" type="button" class="btn text-light" wire:click="openSoldConfirmation">
+                                Sold
+                            </button>
+                        @endif
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

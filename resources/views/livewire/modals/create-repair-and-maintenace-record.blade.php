@@ -137,6 +137,12 @@
                         @error("vehicles.$index.model") <span class="text-danger small">{{ $message }}</span> @enderror
                       </div>
                       <div class="col-md-4">
+                        <input wire:model="vehicles.{{ $index }}.engine" type="text" class="form-control form-control-sm" placeholder="Engine">
+                      </div>
+                      <div class="col-md-4">
+                        <input wire:model="vehicles.{{ $index }}.engine_series" type="text" class="form-control form-control-sm" placeholder="Engine Series">
+                      </div>
+                      <div class="col-md-4">
                         <input wire:model="vehicles.{{ $index }}.serial_or_plate_number" type="text" class="form-control form-control-sm" placeholder="Serial Number / Plate Number">
                         @error("vehicles.$index.serial_or_plate_number") <span class="text-danger small">{{ $message }}</span> @enderror
                       </div>

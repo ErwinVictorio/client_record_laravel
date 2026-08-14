@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Pages;
 
 use Livewire\Component;
+use Livewire\Attributes\On;
 use App\Models\clients;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
@@ -28,6 +29,12 @@ class CahierDashboard extends Component
     public function applySearch(){
         $this->searchQuery = $this->clientSearch;
         $this->resetPage();
+    }
+
+    #[On('clients-updated')]
+    public function refreshClients(): void
+    {
+        $this->mount();
     }
 
     public function render()

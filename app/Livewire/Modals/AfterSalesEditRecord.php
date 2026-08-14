@@ -5,6 +5,7 @@ namespace App\Livewire\Modals;
 use App\Livewire\AfterSales\Dashboard;
 use App\Models\AfterSalesRecord;
 use App\Models\ClientRecordForMaintenanceAndRepair;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
@@ -127,6 +128,14 @@ class AfterSalesEditRecord extends Component
             'cancellation_reason.required_if' => 'Please provide the reason for cancellation.',
         ]);
 
+        $this->jobOrderNumber = trim($this->jobOrderNumber);
+
+        if ($this->jobOrderNumberBelongsToAnotherRecord($this->jobOrderNumber)) {
+            $this->addError('jobOrderNumber', "JO Number {$this->jobOrderNumber} is already in use. Please enter another JO Number.");
+
+            return;
+        }
+
         $values = [
             'service_type' => $this->serviceType,
             'change_type' => $this->changeType,
@@ -145,9 +154,15 @@ class AfterSalesEditRecord extends Component
                 : null,
         ];
 
-        $updated = $isAsapRecord
-            ? $this->updateAsapRecord($record, $values)
-            : $this->updateMaintenanceRecord($record, $values);
+        try {
+            $updated = $isAsapRecord
+                ? $this->updateAsapRecord($record, $values)
+                : $this->updateMaintenanceRecord($record, $values);
+        } catch (UniqueConstraintViolationException) {
+            $this->addError('jobOrderNumber', "JO Number {$this->jobOrderNumber} was taken by another user. Please enter another JO Number.");
+
+            return;
+        }
 
         if (! $updated) {
             $this->addError('jobOrderNumber', 'This Repair & Maintenance record is no longer available for editing.');
@@ -168,6 +183,25 @@ class AfterSalesEditRecord extends Component
         $record->update($values);
 
         return true;
+    }
+
+    private function jobOrderNumberBelongsToAnotherRecord(string $jobOrderNumber): bool
+    {
+        $normalizedJobOrderNumber = function_exists('mb_strtolower')
+            ? mb_strtolower($jobOrderNumber, 'UTF-8')
+            : strtolower($jobOrderNumber);
+
+        $afterSalesDuplicate = AfterSalesRecord::query()
+            ->whereKeyNot($this->recordId)
+            ->whereRaw('LOWER(TRIM(job_order_number)) = ?', [$normalizedJobOrderNumber])
+            ->exists();
+
+        $maintenanceDuplicate = ClientRecordForMaintenanceAndRepair::query()
+            ->when($this->maintenanceRecordId, fn ($query) => $query->whereKeyNot($this->maintenanceRecordId))
+            ->whereRaw('LOWER(TRIM(job_order_number)) = ?', [$normalizedJobOrderNumber])
+            ->exists();
+
+        return $afterSalesDuplicate || $maintenanceDuplicate;
     }
 
     private function updateMaintenanceRecord(AfterSalesRecord $record, array $values): bool

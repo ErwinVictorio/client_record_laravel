@@ -24,6 +24,8 @@
     $vehicleLabels = [
         'brand' => 'Brand / Vehicle Unit',
         'model' => 'Model',
+        'engine' => 'Engine',
+        'engine_series' => 'Engine Series',
         'loading_capacity' => 'Loading Capacity',
         'lifting_height' => 'Lifting Height',
         'mast_type' => 'Mast Type',

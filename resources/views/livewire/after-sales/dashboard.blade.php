@@ -108,7 +108,10 @@
 
                                     @if ($selectedClient)
                                     <div class="border rounded p-3 bg-light">
-                                        <div class="fw-bold mb-2 text-primary">{{ $selectedClient->company_name }}</div>
+                                        <div class="fw-bold mb-2 text-primary">
+                                            <span class="text-muted">Client:</span>
+                                            {{ $selectedClient->company_name }}
+                                        </div>
                                         <div class="small text-muted">Sales No: {{ $selectedClient->salesList_no ?? 'N/A' }}</div>
                                         <div class="small text-muted">Contact: {{ $selectedClient->contact_number }}</div>
                                         <div class="small text-muted">Address: {{ $selectedClient->address ?? 'N/A' }}</div>
@@ -131,47 +134,53 @@
                                                 <!-- Header: Brand & Model -->
                                                 <div class="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom border-light">
                                                     <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1">
-                                                        <strong>Brand:</strong> {{ $vehicle['brand'] ?? 'N/A' }}
+                                                        <strong>Brand:</strong> {{ filled($vehicle['brand'] ?? null) ? $vehicle['brand'] : 'N/A' }}
                                                     </span>
                                                     <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1">
-                                                        <strong>Model:</strong> {{ $vehicle['model'] ?? 'N/A' }}
+                                                        <strong>Model:</strong> {{ filled($vehicle['model'] ?? null) ? $vehicle['model'] : 'N/A' }}
                                                     </span>
                                                 </div>
 
                                                 <!-- Technical Details Grid -->
                                                 <div class="row g-2 mt-1 text-muted" style="font-size: 0.75rem;">
                                                     <div class="col-6 d-flex justify-content-between pe-2">
+                                                        <span class="text-secondary">Engine:</span>
+                                                        <strong class="text-dark">{{ filled($vehicle['engine'] ?? null) ? $vehicle['engine'] : 'N/A' }}</strong>
+                                                    </div>
+                                                    <div class="col-6 d-flex justify-content-between ps-2">
+                                                        <span class="text-secondary">Engine Series:</span>
+                                                        <strong class="text-dark">{{ filled($vehicle['engine_series'] ?? null) ? $vehicle['engine_series'] : 'N/A' }}</strong>
+                                                    </div>
+                                                    <div class="col-6 d-flex justify-content-between pe-2">
                                                         <span class="text-secondary">Capacity:</span>
-                                                        <strong class="text-dark">{{ $vehicle['loading_capacity'] ?? 'N/A' }}</strong>
+                                                        <strong class="text-dark">{{ filled($vehicle['loading_capacity'] ?? null) ? $vehicle['loading_capacity'] : 'N/A' }}</strong>
                                                     </div>
                                                     <div class="col-6 d-flex justify-content-between ps-2">
                                                         <span class="text-secondary">Height:</span>
-                                                        <strong class="text-dark">{{ $vehicle['lifting_height'] ?? 'N/A' }}</strong>
+                                                        <strong class="text-dark">{{ filled($vehicle['lifting_height'] ?? null) ? $vehicle['lifting_height'] : 'N/A' }}</strong>
                                                     </div>
                                                     <div class="col-6 d-flex justify-content-between pe-2">
                                                         <span class="text-secondary">Mast:</span>
-                                                        <strong class="text-dark">{{ $vehicle['mast_type'] ?? 'N/A' }}</strong>
+                                                        <strong class="text-dark">{{ filled($vehicle['mast_type'] ?? null) ? $vehicle['mast_type'] : 'N/A' }}</strong>
                                                     </div>
                                                     <div class="col-6 d-flex justify-content-between ps-2">
                                                         <span class="text-secondary">Power:</span>
-                                                        <strong class="text-dark">{{ $vehicle['power_type'] ?? 'N/A' }}</strong>
+                                                        <strong class="text-dark">{{ filled($vehicle['power_type'] ?? null) ? $vehicle['power_type'] : 'N/A' }}</strong>
                                                     </div>
                                                     <div class="col-6 d-flex justify-content-between pe-2">
                                                         <span class="text-secondary">Tire:</span>
-                                                        <strong class="text-dark">{{ $vehicle['tire'] ?? 'N/A' }}</strong>
+                                                        <strong class="text-dark">{{ filled($vehicle['tire'] ?? null) ? $vehicle['tire'] : 'N/A' }}</strong>
                                                     </div>
                                                     <div class="col-6 d-flex justify-content-between ps-2">
                                                         <span class="text-secondary">Fork:</span>
-                                                        <strong class="text-dark">{{ $vehicle['fork_length'] ?? 'N/A' }}</strong>
+                                                        <strong class="text-dark">{{ filled($vehicle['fork_length'] ?? null) ? $vehicle['fork_length'] : 'N/A' }}</strong>
                                                     </div>
 
                                                     <!-- Full-width Attachment section -->
-                                                    @if(!empty($vehicle['attachment']) && $vehicle['attachment'] !== 'N/A')
                                                     <div class="col-12 mt-2 pt-2 border-top border-light-subtle d-flex align-items-start gap-2">
                                                         <span class="text-secondary text-nowrap">Attachment:</span>
-                                                        <strong class="text-dark">{{ $vehicle['attachment'] }}</strong>
+                                                        <strong class="text-dark">{{ filled($vehicle['attachment'] ?? null) ? $vehicle['attachment'] : 'N/A' }}</strong>
                                                     </div>
-                                                    @endif
                                                 </div>
                                             </div>
                                             @endforeach
@@ -284,7 +293,7 @@
                                 </div>
                             </div>
                         </div>
-                        @endif  
+                        @endif
 
                         <!-- RIGHT SIDE: FORM CARD -->
                         <div class="{{ in_array($section, ['asap', 'other'], true) ? 'col-lg-7' : 'col-lg-12' }}">
@@ -339,7 +348,7 @@
 
                                             <div class="col-md-4">
                                                 <label class="form-label">JO Number</label>
-                                                <input type="text" class="form-control @error('job_order_number') is-invalid @enderror" wire:model="job_order_number">
+                                                <input type="text" class="form-control @error('job_order_number') is-invalid @enderror" wire:model.live.debounce.500ms="job_order_number">
                                                 @error('job_order_number') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                             </div>
 
@@ -370,7 +379,7 @@
                                         </div>
 
                                         <div class="text-end mt-4">
-                                            <button type="submit" class="btn btn-primary px-4">
+                                            <button type="submit" class="btn btn-primary px-4" @disabled($jobOrderNumberTaken)>
                                                 Save Record
                                             </button>
                                         </div>
@@ -419,6 +428,7 @@
                                         <th>Vehicle/Unit</th>
                                         <th>Description</th>
                                         <th>Remarks</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -463,6 +473,18 @@
                                         <td style="min-width: 220px;">
                                             <div>{{ $record->remarks ?? 'N/A' }}</div>
                                         </td>
+                                        <td style="min-width: 150px;">
+                                            @if ($record->status_update === 'Finish')
+                                                <span class="badge bg-success">Finish</span>
+                                            @elseif ($record->status_update === 'Cancel')
+                                                <span class="badge bg-danger">Cancel</span>
+                                                <div class="small text-muted mt-1">
+                                                    {{ filled($record->cancellation_reason) ? $record->cancellation_reason : 'No cancellation reason provided.' }}
+                                                </div>
+                                            @else
+                                                <span class="badge bg-secondary">N/A</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#msdEditModal_{{ $record->id }}">
                                                 <i class="fas fa-pen-to-square me-1"></i>Edit
@@ -471,7 +493,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="10" class="text-center text-muted py-4">No MSD records found.</td>
+                                        <td colspan="13" class="text-center text-muted py-4">No MSD records found.</td>
                                     </tr>
                                     @endforelse
                                 </tbody>

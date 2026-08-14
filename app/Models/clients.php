@@ -60,6 +60,7 @@ class clients extends Model
         'quantity',
         'specification',
         'status',
+        'rejection_reason',
         'warehouse_remarks',
         'first_name',
         'middle_name',

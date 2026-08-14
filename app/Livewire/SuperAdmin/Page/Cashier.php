@@ -4,6 +4,7 @@ namespace App\Livewire\SuperAdmin\Page;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\On;
 use App\Models\clients;
 class Cashier extends Component
 {
@@ -26,6 +27,12 @@ class Cashier extends Component
     public function applySearch(){
         $this->searchQuery = $this->clientSearch;
         $this->resetPage();
+    }
+
+    #[On('clients-updated')]
+    public function refreshClients(): void
+    {
+        $this->mount();
     }
 
     public function render()
