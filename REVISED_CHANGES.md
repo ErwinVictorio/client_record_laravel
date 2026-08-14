@@ -1,0 +1,307 @@
+# Revised Changes Documentation
+
+**Project:** Client Record Laravel  
+**Revision date:** August 14, 2026
+
+This document summarizes the functional, database, interface, validation, and test changes completed during the current revision.
+
+## 1. Vehicle Specifications
+
+Two new optional fields were added to the vehicle specification arrays:
+
+- `engine`
+- `engine_series`
+
+The fields are supported by:
+
+- Client Status Update vehicle form
+- Repair and Maintenance Create Client form
+- Vehicle array initialization
+- Livewire validation
+- Client specification summary
+- Warehouse client details
+- Cashier client details
+- Maintenance record details
+- After Sales Unit Specifications display
+
+Older vehicle records remain compatible. Missing or empty Engine and Engine Series values display as `N/A`.
+
+### Main affected files
+
+- `app/Livewire/Modals/ClientStatusUpdate.php`
+- `app/Livewire/Modals/CreateRepairAndMaintenaceRecord.php`
+- `resources/views/livewire/modals/client-status-update.blade.php`
+- `resources/views/livewire/modals/create-repair-and-maintenace-record.blade.php`
+- `resources/views/livewire/modals/maintenance-record-info.blade.php`
+- `resources/views/livewire/warehouse/partials/client-details-modal.blade.php`
+- `resources/views/livewire/admin/pages/partials/cashier-client-details-modal.blade.php`
+- `resources/views/livewire/after-sales/dashboard.blade.php`
+
+No new vehicle database columns were required because vehicle specifications are stored in the existing JSON fields.
+
+## 2. Cashier Client Approval: Sold and Reject
+
+The old product detail inputs were removed from the Client Approval modal:
+
+- Item Name
+- Product Model
+- Quantity
+- Specification
+
+They were replaced with two actions:
+
+- `Sold`
+- `Reject`
+
+Existing database columns and previously saved product values were not removed or modified.
+
+### Sold flow
+
+1. The cashier clicks **Sold**.
+2. A confirmation warning appears.
+3. The status changes to `Sold` only after clicking **Yes, Mark as Sold**.
+4. Any old rejection reason is cleared.
+5. A stale-status check prevents processing a client that is no longer `For Approval`.
+
+### Reject flow
+
+1. The cashier clicks **Reject**.
+2. A required **Reason for rejection** field appears.
+3. After confirmation, the client status changes from `For Approval` to `Pending`.
+4. The entered reason is saved in `clients.rejection_reason`.
+5. Cashier lists and counters refresh through the `clients-updated` event.
+
+### Migration
+
+`database/migrations/2026_08_14_000001_add_rejection_reason_to_clients_table.php`
+
+Adds only:
+
+```text
+clients.rejection_reason TEXT NULL
+```
+
+No existing client columns are deleted.
+
+### Main affected files
+
+- `app/Livewire/Modals/ClientInfo.php`
+- `resources/views/livewire/modals/client-info.blade.php`
+- `app/Models/clients.php`
+- `app/Livewire/Admin/Pages/CahierDashboard.php`
+- `app/Livewire/SuperAdmin/Page/Cashier.php`
+
+## 3. Repeated Client Registration by the Same Salesman
+
+The Create Client duplicate ownership rule was revised.
+
+### Current behavior
+
+- A salesman can repeatedly register the same client under their own account.
+- The same company name, contact number, and email are allowed when existing matching records belong to the logged-in salesman.
+- Registration remains blocked when any matching client belongs to another salesman.
+- The blocking message is:
+
+```text
+The client is already taken by another salesman!
+```
+
+The project already contains an older migration that removes the unique email index from the clients table, so repeated client email addresses are supported.
+
+### Main affected file
+
+- `app/Livewire/Modals/ClientCreate.php`
+
+## 4. After Sales Vehicle Information
+
+The After Sales Unit Specifications card now displays all available vehicle information:
+
+- Brand
+- Model
+- Engine
+- Engine Series
+- Loading Capacity
+- Lifting Height
+- Mast Type
+- Power Type
+- Tire
+- Fork Length
+- Attachment
+
+Blank values display as `N/A`, including Attachment.
+
+### Main affected file
+
+- `resources/views/livewire/after-sales/dashboard.blade.php`
+
+## 5. MSD Finish and Cancel Status
+
+The Edit MSD Record flow supports:
+
+- `Finish`
+- `Cancel`
+
+When `Cancel` is selected, **Reason for Cancellation** becomes required. Selecting another status clears the cancellation reason.
+
+The JO Information table now contains a Status column:
+
+- Finish uses a green badge.
+- Cancel uses a red badge.
+- The cancellation reason is displayed below a cancelled status.
+- Records without a status display `N/A`.
+
+### Existing database fields used
+
+- `after_sales_records.status_update`
+- `after_sales_records.cancellation_reason`
+
+### Main affected files
+
+- `app/Livewire/Modals/AfterSalesEditRecord.php`
+- `app/Models/AfterSalesRecord.php`
+- `resources/views/livewire/modals/after-sales-edit-record.blade.php`
+- `resources/views/livewire/after-sales/dashboard.blade.php`
+
+## 6. Duplicate JO Number Protection
+
+JO Numbers are now protected from duplicate use.
+
+### Create MSD behavior
+
+- JO availability is checked live while typing.
+- Leading and trailing spaces are ignored.
+- Matching is case-insensitive at the application level.
+- Both tables are checked:
+  - `after_sales_records`
+  - `client_record_for_maintenance_and_repairs`
+- A duplicate JO displays an immediate warning and input validation error.
+- **Save Record** is disabled while the JO is known to be duplicated.
+- Availability is checked again immediately before saving.
+- Unique-constraint race conditions are converted to a user-facing warning.
+
+Example warning:
+
+```text
+JO Number 260801 is already in use. Please enter another JO Number.
+```
+
+### Edit MSD behavior
+
+- A record can keep its own current JO Number.
+- A record cannot change its JO Number to one owned by another After Sales or Maintenance record.
+- Linked Repair and Maintenance records are excluded from false duplicate detection when editing their corresponding MSD record.
+
+### Database protection
+
+`database/migrations/2026_08_14_000002_add_unique_index_to_after_sales_job_order_number.php`
+
+Adds the unique index:
+
+```text
+after_sales_records_job_order_number_unique
+```
+
+Before adding the index, the migration audits normalized existing JO Numbers. It stops with a clear error when legacy duplicates exist and does not delete or rewrite any records.
+
+This migration was successfully applied locally as migration batch 10.
+
+### Main affected files
+
+- `app/Livewire/AfterSales/Dashboard.php`
+- `app/Livewire/Modals/AfterSalesEditRecord.php`
+- `resources/views/livewire/after-sales/dashboard.blade.php`
+
+## 7. Supporting Document Uploads
+
+Supporting Document uploads now accept:
+
+- PDF files
+- Browser-recognized image MIME types (`image/*`)
+- A combination of PDFs and images in the multi-file workflow
+
+Each file retains the existing maximum size of 5 MB.
+
+### Browser filter
+
+```text
+accept="application/pdf,image/*"
+```
+
+### Server validation
+
+```text
+nullable|file|mimetypes:application/pdf,image/*|max:5120
+```
+
+Files that are neither images nor PDFs remain blocked. Labels and validation messages were updated to say **PDF or Images** instead of PDF only.
+
+### Main affected files
+
+- `app/Livewire/Modals/ClientStatusUpdate.php`
+- `resources/views/livewire/modals/client-status-update.blade.php`
+
+## 8. Added Feature Tests
+
+The following focused test files were added:
+
+- `tests/Feature/ClientApprovalTest.php`
+  - Sold confirmation and update
+  - Rejection reason requirement
+  - Rejected status transition to Pending
+  - Existing product values remain unchanged
+  - Stale approval action protection
+
+- `tests/Feature/ClientCreateDuplicateOwnershipTest.php`
+  - Repeated registration by the same salesman
+  - Blocking a matching client owned by another salesman
+
+- `tests/Feature/AfterSalesJobOrderUniquenessTest.php`
+  - Live duplicate JO warning
+  - Case-insensitive and trimmed comparison
+  - Cross-table maintenance JO conflict
+  - Successful available JO creation
+  - Edit self-exclusion and duplicate edit blocking
+
+- `tests/Feature/ClientSupportingDocumentUploadTest.php`
+  - Combined image and PDF uploads
+  - Invalid non-image and non-PDF rejection
+
+All newly added focused test suites passed during implementation.
+
+## 9. Deployment and Verification
+
+Run all outstanding migrations in the target environment:
+
+```powershell
+php artisan migrate
+```
+
+Clear cached Laravel files after deployment:
+
+```powershell
+php artisan optimize:clear
+```
+
+Run the focused revision tests:
+
+```powershell
+php artisan test tests/Feature/ClientApprovalTest.php
+php artisan test tests/Feature/ClientCreateDuplicateOwnershipTest.php
+php artisan test tests/Feature/AfterSalesJobOrderUniquenessTest.php
+php artisan test tests/Feature/ClientSupportingDocumentUploadTest.php
+```
+
+For public supporting-document access, confirm that the Laravel storage link exists:
+
+```powershell
+php artisan storage:link
+```
+
+## 10. Data-Safety Notes
+
+- No existing client or vehicle columns were removed.
+- Existing product columns remain intact even though their inputs were removed from Client Approval.
+- Vehicle Engine and Engine Series use existing JSON storage.
+- Rejection adds one nullable column only.
+- JO uniqueness adds an index only and does not delete duplicate records automatically.
+- Existing uploaded supporting-document paths remain compatible.
