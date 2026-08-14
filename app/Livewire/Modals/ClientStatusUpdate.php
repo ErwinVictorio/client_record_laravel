@@ -103,7 +103,7 @@ class ClientStatusUpdate extends Component
 
         // CHC-CHECK: Kung WALANG na-upload na bagong file AT WALANG umiiral na lumang file
         if (empty($uploadedDocs) && empty($this->existing_supporting_document_paths)) {
-            $this->addError('supporting_docs', 'Kailangan mag-upload ng kahit isang supporting document (PDF).');
+            $this->addError('supporting_docs', 'Kailangan mag-upload ng kahit isang supporting document (PDF o image).');
             return;
         }
 
@@ -112,7 +112,7 @@ class ClientStatusUpdate extends Component
             'salesList_no' => 'required',
             'bank_account_number' => 'nullable|string',
             'supporting_docs' => 'array',
-            'supporting_docs.*' => 'nullable|file|mimes:pdf|max:5120',
+            'supporting_docs.*' => 'nullable|file|mimetypes:application/pdf,image/*|max:5120',
             'vehicles' => 'array|min:1',
             'vehicles.*.brand' => 'required|string',
             'vehicles.*.model' => 'required|string',

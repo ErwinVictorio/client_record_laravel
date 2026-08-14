@@ -56,7 +56,7 @@
                         {{-- Supporting Documents Section --}}
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <label class="form-label fw-bold text-secondary mb-0">Supporting Documents (PDF Lamang, Max 5MB each)</label>
+                                <label class="form-label fw-bold text-secondary mb-0">Supporting Documents (PDF or Images, Max 5MB each)</label>
                                 <button type="button" wire:click="addSupportingDocument" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
                                     + Add More Docs
                                 </button>
@@ -73,7 +73,7 @@
 
                             @foreach ($supporting_docs as $index => $supportingDoc)
                                 <div class="input-group mb-2" wire:key="supporting-doc-{{ $clientId }}-{{ $index }}">
-                                    <input wire:model="supporting_docs.{{ $index }}" type="file" accept="application/pdf" class="form-control">
+                                    <input wire:model="supporting_docs.{{ $index }}" type="file" accept="application/pdf,image/*" class="form-control">
                                     @if (count($supporting_docs) > 1)
                                         <button type="button" wire:click="removeSupportingDocument({{ $index }})" class="btn btn-outline-danger">
                                             Remove
