@@ -1,9 +1,47 @@
 # Revised Changes Documentation
 
 **Project:** Client Record Laravel  
-**Revision date:** August 14, 2026
+**Revision date:** August 15, 2026
 
 This document summarizes the functional, database, interface, validation, and test changes completed during the current revision.
+
+## Client Approval Review Summary
+
+The Client Approval modal now presents the important client and vehicle information before an approver chooses **Reject** or **Sold**.
+
+- Client name or company, type, contact details, address, current status, and assigned salesman are shown.
+- Company records also show their contact person and contact number.
+- Vehicle/product summary shows the item, model number, year model, quantity, and general specification.
+- Detailed JSON vehicle specifications use the standard vehicle labels and omit empty optional entries.
+- Older records without detailed vehicle specifications remain supported through the existing product-column summary and `N/A` fallbacks.
+- The modal is now large, responsive, and scrollable while keeping the existing confirmation, rejection validation, and stale-status protection intact.
+- A focused feature test verifies that client, salesman, and vehicle information render before approval.
+
+### Main affected files
+
+- `app/Livewire/Modals/ClientInfo.php`
+- `resources/views/livewire/modals/client-info.blade.php`
+- `tests/Feature/ClientApprovalTest.php`
+
+## Super Admin Delete Confirmation
+
+- Redesigned the client delete confirmation with a focused warning, clear client name, and responsive action area.
+- Added disabled/loading states to prevent accidental duplicate deletion requests.
+- The modal now explicitly closes through Bootstrap after a successful Livewire deletion.
+- After the closing transition, the modal instance is disposed and any orphaned backdrop/body state is safely removed when no other modal is open.
+- Missing or already-deleted records now show an inline error instead of throwing a page-level exception.
+
+### Main affected files
+
+- `app/Livewire/Modals/ClientDeletePart2.php`
+- `resources/views/livewire/modals/client-delete-part2.blade.php`
+
+The same backdrop-safe close sequence and improved confirmation interface were also applied to the Admin per-client delete modal:
+
+- `app/Livewire/Modals/DeleteClient.php`
+- `resources/views/livewire/modals/delete-client.blade.php`
+
+All remaining delete confirmation flows now use the same reusable UI and backdrop-safe close lifecycle, covering salesman, department, auto repair, and maintenance records. Each list refresh waits until its modal is fully hidden.
 
 ## 1. Vehicle Specifications
 

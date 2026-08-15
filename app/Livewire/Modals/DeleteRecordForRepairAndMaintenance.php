@@ -14,12 +14,17 @@ class DeleteRecordForRepairAndMaintenance extends Component
         $this->company_name = ClientRecordForMaintenanceAndRepair::findOrFail($recordId)->value('company_name'); // to display  the company namen into modal delete comfirmation
     }
 
-    public function delete_Record_maintenance(){
-        ClientRecordForMaintenanceAndRepair::where('id', $this->recordId)
-        ->delete();
+    public function delete_Record_maintenance(): void
+    {
+        $record = ClientRecordForMaintenanceAndRepair::find($this->recordId);
 
-        session()->flash('success','Record is Successfully Deleted');
-        $this->dispatch('maintenance-records-updated');
+        if (! $record) {
+            session()->flash('error', 'Maintenance record not found. It may have already been deleted.');
+            return;
+        }
+
+        $record->delete();
+        $this->dispatch('hide-maintenance-record-modal-'.$this->recordId);
     }
     public function render()
     {

@@ -8,31 +8,38 @@ use Livewire\Component;
 
 class ClientDeletePart2 extends Component
 {
+    public $clientId;
 
-     public $clientId, $company_name;
+    public $company_name;
 
-        #[On('open-delete-modal')]
-        public function setClient($clientId)
-        {
-            $this->clientId = $clientId;
-            $this->company_name = clients::findOrFail($clientId)->company_name;
+    #[On('open-delete-modal')]
+    public function setClient($clientId): void
+    {
+        $client = clients::find($clientId);
+
+        $this->resetErrorBag();
+        session()->forget(['success', 'error']);
+        $this->clientId = $client?->id;
+        $this->company_name = $client?->display_name;
+
+        if (! $client) {
+            session()->flash('error', 'The selected client could not be found.');
+        }
+    }
+
+    public function destroyClient(): void
+    {
+        $client = clients::find($this->clientId);
+
+        if (! $client) {
+            session()->flash('error', 'Client record not found. It may have already been deleted.');
+
+            return;
         }
 
+        $client->delete();
 
-    public function destroyClient()
-    {
-        
-       $record =  clients::where('id', $this->clientId);
-
-       if ($record->count() > 0) {
-         $record->delete();
-
-        session()->flash('success','Client successfully deleted!');
-        $this->dispatch('clients-updated');
-        return;
-       }
-
-        session()->flash('error','No Record Found');
+        $this->dispatch('hide-client-delete-modal');
     }
 
     public function render()

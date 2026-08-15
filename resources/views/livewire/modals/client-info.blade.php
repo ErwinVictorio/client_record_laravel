@@ -1,6 +1,34 @@
+@php
+    $vehicles = $client?->vehicle_specifications ?? [];
+
+    if (is_string($vehicles)) {
+        $vehicles = json_decode($vehicles, true);
+    }
+
+    $vehicles = is_array($vehicles) ? $vehicles : [];
+    $hasPersonalName = $client && collect([$client->first_name, $client->middle_name, $client->last_name])
+        ->contains(fn ($name) => filled($name));
+    $salesAgentName = $client
+        ? trim(($client->salesman?->first_name ?? '') . ' ' . ($client->salesman?->last_name ?? ''))
+        : '';
+    $vehicleLabels = [
+        'brand' => 'Brand / Vehicle Unit',
+        'model' => 'Model',
+        'engine' => 'Engine',
+        'engine_series' => 'Engine Series',
+        'loading_capacity' => 'Loading Capacity',
+        'lifting_height' => 'Lifting Height',
+        'mast_type' => 'Mast Type',
+        'power_type' => 'Power Type',
+        'tire' => 'Tire',
+        'fork_length' => 'Fork Length',
+        'attachment' => 'Attachment',
+    ];
+@endphp
+
 <div>
     <div wire:ignore.self wire:key="client-modal_{{ $clientId }}" class="modal fade" id="clientModal_{{ $clientId }}" tabindex="-1" aria-labelledby="clientModalLabel_{{ $clientId }}" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <form wire:submit.prevent="{{ $showRejectReason ? 'rejectClient' : ($showSoldConfirmation ? 'markAsSold' : 'openSoldConfirmation') }}">
                     <div class="modal-header">
@@ -15,6 +43,99 @@
 
                         @if (session()->has('error'))
                             <div class="alert alert-danger">{{ session('error') }}</div>
+                        @endif
+
+                        @if ($client)
+                            <div class="row g-3 mb-3">
+                                <div class="col-lg-7">
+                                    <div class="border rounded p-3 h-100">
+                                        <h6 class="fw-bold mb-3">Client Information</h6>
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-4 text-muted">{{ $hasPersonalName ? 'Client Name' : 'Company' }}</dt>
+                                            <dd class="col-sm-8 fw-semibold">{{ $client->display_name }}</dd>
+
+                                            <dt class="col-sm-4 text-muted">Client Type</dt>
+                                            <dd class="col-sm-8">{{ $hasPersonalName ? 'Personal' : 'Company' }}</dd>
+
+                                            <dt class="col-sm-4 text-muted">Contact Number</dt>
+                                            <dd class="col-sm-8">{{ $client->contact_number ?: 'N/A' }}</dd>
+
+                                            <dt class="col-sm-4 text-muted">Email</dt>
+                                            <dd class="col-sm-8 text-break">{{ $client->email ?: 'N/A' }}</dd>
+
+                                            <dt class="col-sm-4 text-muted">Address</dt>
+                                            <dd class="col-sm-8 text-break">{{ $client->address ?: 'N/A' }}</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-5">
+                                    <div class="border rounded p-3 h-100">
+                                        <h6 class="fw-bold mb-3">Approval Details</h6>
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-5 text-muted">Status</dt>
+                                            <dd class="col-sm-7"><span class="badge bg-warning text-dark">{{ $client->status ?: 'N/A' }}</span></dd>
+
+                                            <dt class="col-sm-5 text-muted">Salesman</dt>
+                                            <dd class="col-sm-7">{{ $salesAgentName ?: 'N/A' }}</dd>
+
+                                            @unless ($hasPersonalName)
+                                                <dt class="col-sm-5 text-muted">Contact Person</dt>
+                                                <dd class="col-sm-7">{{ $client->contact_person ?: 'N/A' }}</dd>
+
+                                                <dt class="col-sm-5 text-muted">Person's No.</dt>
+                                                <dd class="col-sm-7">{{ $client->contact_number_person ?: 'N/A' }}</dd>
+                                            @endunless
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border rounded p-3 mb-3">
+                                <h6 class="fw-bold mb-3">Vehicle / Product Information</h6>
+                                <div class="row g-3 mb-3">
+                                    <div class="col-sm-6 col-lg-3">
+                                        <div class="small text-muted">Vehicle / Item</div>
+                                        <div class="fw-semibold">{{ $client->item_name ?: 'N/A' }}</div>
+                                    </div>
+                                    <div class="col-sm-6 col-lg-3">
+                                        <div class="small text-muted">Model Number</div>
+                                        <div class="fw-semibold">{{ $client->model_number ?: 'N/A' }}</div>
+                                    </div>
+                                    <div class="col-sm-6 col-lg-3">
+                                        <div class="small text-muted">Year Model</div>
+                                        <div class="fw-semibold">{{ $client->year_model ?: 'N/A' }}</div>
+                                    </div>
+                                    <div class="col-sm-6 col-lg-3">
+                                        <div class="small text-muted">Quantity</div>
+                                        <div class="fw-semibold">{{ $client->quantity ?: 'N/A' }}</div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="small text-muted">General Specification</div>
+                                        <div class="text-break">{{ $client->specification ?: 'N/A' }}</div>
+                                    </div>
+                                </div>
+
+                                @forelse ($vehicles as $index => $vehicle)
+                                    <div class="bg-light border rounded p-3 {{ $loop->last ? '' : 'mb-3' }}">
+                                        <div class="fw-semibold mb-2">Vehicle #{{ $index + 1 }}</div>
+                                        <div class="row g-2">
+                                            @foreach ($vehicleLabels as $field => $label)
+                                                @if (filled($vehicle[$field] ?? null))
+                                                    <div class="col-sm-6 col-lg-4">
+                                                        <div class="small text-muted">{{ $label }}</div>
+                                                        <div class="fw-semibold text-break">{{ $vehicle[$field] }}</div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @empty
+                                    <div class="small text-muted">No detailed vehicle specifications encoded yet.</div>
+                                @endforelse
+                            </div>
+                        @else
+                            <div class="alert alert-danger">Client information is no longer available.</div>
                         @endif
 
                         @if ($showRejectReason)

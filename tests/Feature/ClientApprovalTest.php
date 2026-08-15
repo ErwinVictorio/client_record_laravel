@@ -68,6 +68,27 @@ it('asks for confirmation before marking a client as sold', function () {
     expect($client->fresh()->status)->toBe('For Approval');
 });
 
+it('shows client and vehicle details before approval', function () {
+    $client = createClientAwaitingApproval([
+        'year_model' => '2026',
+        'vehicle_specifications' => [[
+            'brand' => 'Toyota Forklift',
+            'model' => '8FD30',
+            'engine' => 'Diesel',
+            'loading_capacity' => '3 Tons',
+        ]],
+    ]);
+
+    Livewire::test(ClientInfo::class, ['clientId' => $client->id])
+        ->assertSee('Client Information')
+        ->assertSee('Approval Client')
+        ->assertSee('Vehicle / Product Information')
+        ->assertSee('Toyota Forklift')
+        ->assertSee('8FD30')
+        ->assertSee('3 Tons')
+        ->assertSee('Sales Agent');
+});
+
 it('requires a reason before rejecting a client', function () {
     $client = createClientAwaitingApproval();
 

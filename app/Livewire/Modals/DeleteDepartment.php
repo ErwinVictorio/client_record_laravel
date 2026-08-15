@@ -18,11 +18,17 @@ class DeleteDepartment extends Component
         $this->department_name = $department_name;
     }
 
-    public function delete_department(){
+    public function delete_department(): void
+    {
+        $department = Department::find($this->department_id);
 
-        Department::where('id', $this->department_id)->delete();
-        session()->flash('success','Successfully Deleted');
-        $this->dispatch('departments-updated');
+        if (! $department) {
+            session()->flash('error', 'Department not found. It may have already been deleted.');
+            return;
+        }
+
+        $department->delete();
+        $this->dispatch('hide-delete-department-modal-'.$this->department_id);
     }
     public function render()
     {

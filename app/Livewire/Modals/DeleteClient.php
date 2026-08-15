@@ -2,39 +2,39 @@
 
 namespace App\Livewire\Modals;
 
-use Livewire\Component;
 use App\Models\clients;
+use Livewire\Component;
 
 class DeleteClient extends Component
 {
+    public $clientId;
 
-    public $clientId,$company_name;
+    public $company_name;
 
-    public function mount($clientId){
+    public function mount($clientId): void
+    {
+        $client = clients::findOrFail($clientId);
 
-        $this->clientId = $clientId;
-
-        // find client base on id
-        $company_name = clients::findOrFail($clientId)->company_name;
-        
-        $this->company_name = $company_name;
+        $this->clientId = $client->id;
+        $this->company_name = $client->display_name;
     }
 
-    public function destroyClient()
+    public function destroyClient(): void
     {
-        $deleted = clients::where('id', $this->clientId)->delete();
+        $client = clients::find($this->clientId);
 
-        if ($deleted) {
-            session()->flash('success','Client Is Successfully Deleted!');
-            $this->dispatch('clients-updated');
+        if (! $client) {
+            session()->flash('error', 'Client record not found. It may have already been deleted.');
+
             return;
         }
 
-        session()->flash('error','No Record Found');
+        $client->delete();
+
+        // The browser refreshes the table only after Bootstrap finishes hiding
+        // the modal, preventing Livewire from removing it before its backdrop.
+        $this->dispatch('hide-delete-client-modal');
     }
-
-
-
 
     public function render()
     {

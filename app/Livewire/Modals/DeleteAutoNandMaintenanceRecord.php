@@ -11,15 +11,30 @@ class DeleteAutoNandMaintenanceRecord extends Component
     public $company_name,$clientId;
 
     #[On('open-delete-modal')]
-    public function SetClient($clientId){
-        $this->clientId = $clientId;
-        $this->company_name = ClientRecordForMaintenanceAndRepair::findOrFail($clientId)->company_name;
+    public function SetClient($clientId): void
+    {
+        $record = ClientRecordForMaintenanceAndRepair::find($clientId);
+
+        session()->forget(['success', 'error']);
+        $this->clientId = $record?->id;
+        $this->company_name = $record?->company_name;
+
+        if (! $record) {
+            session()->flash('error', 'The selected maintenance record could not be found.');
+        }
     }
 
-    public function destroyClient(){
-        ClientRecordForMaintenanceAndRepair::findOrFail($this->clientId)->delete();
-        session()->flash('success','Successfully Deleted');
-         $this->dispatch('maintenance-records-updated');
+    public function destroyClient(): void
+    {
+        $record = ClientRecordForMaintenanceAndRepair::find($this->clientId);
+
+        if (! $record) {
+            session()->flash('error', 'Maintenance record not found. It may have already been deleted.');
+            return;
+        }
+
+        $record->delete();
+        $this->dispatch('hide-auto-maintenance-delete-modal');
     }
     
 
