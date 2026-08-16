@@ -1,8 +1,8 @@
 <div>
   <div wire:ignore.self class="modal fade" id="EditClientIfo_{{$clientId}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-dialog-centered">
-          <div class="modal-content">
-                  <div class="modal-header">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content border-0 shadow-lg">
+                  <div class="modal-header text-white" style="background-color: #004998">
                     <section class="d-flex gap-2">
                       <div class="d-flex gap-2">
                         <h1 class="modal-title fs-5" id="staticBackdropLabel">
@@ -22,11 +22,13 @@
                     @endif
                     </section>
 
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <form wire:submit.prevent='updateClientInfo'>
-                  <div class="modal-body">
-                    <section class="row gap-3">
+                  <div class="modal-body bg-light p-4">
+                    <div class="bg-white border rounded-3 p-3 p-md-4 shadow-sm">
+                    <h6 class="fw-bold mb-3">Client Information</h6>
+                    <section class="row g-3">
                     <div class="form-floating mb-3 col-lg-5">
                         <input wire:model.live='company_name' type="text" class="form-control" id="company_name" placeholder="company name">
                         <label for="company_name">company name</label>
@@ -106,7 +108,11 @@
                         <label for="bank_account_number">bank account number</label>
                     </div>
 
-                    <h5 class="text-muted">Product Info</h5>
+                    </section>
+                    </div>
+                    <div class="bg-white border rounded-3 p-3 p-md-4 shadow-sm mt-3">
+                    <h6 class="fw-bold mb-3">Product Information</h6>
+                    <section class="row g-3">
 
                     <div class="form-floating mb-3 col-lg-5">
                         <input wire:model.live='model_number' type="text" class="form-control" id="model_number" placeholder="model number">
@@ -123,10 +129,11 @@
                       <label for="specification">specification</label>
                     </div>
                     </section>
+                    </div>
                   </div>
-                  <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button style="background-color: #004998" type="submit" class="btn text-light" wire:loading.attr="disabled">
+                  <div class="modal-footer bg-white">
+                      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button style="background-color: #004998" type="submit" class="btn text-light px-4" wire:loading.attr="disabled" wire:target="updateClientInfo">
                         <span wire:loading wire:target="updateClientInfo" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
                           <path d="M11 2H9v3h2z"/>

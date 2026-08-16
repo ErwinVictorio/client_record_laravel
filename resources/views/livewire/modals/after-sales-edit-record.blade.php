@@ -1,15 +1,15 @@
 <div>
     <div class="modal fade" id="msdEditModal_{{ $recordId }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="msdEditModalLabel_{{ $recordId }}" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
+            <div class="modal-content border-0 shadow-lg">
                 <form wire:submit.prevent="updateRecord">
-                    <div class="modal-header">
+                    <div class="modal-header text-white" style="background-color: #004998">
                         <h5 class="modal-title" id="msdEditModalLabel_{{ $recordId }}">
                             <i class="fas fa-pen-to-square me-2"></i>Edit MSD Record
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body bg-light p-4">
                         @if ($client)
                         <div class="alert alert-light border mb-3">
                             <div class="fw-bold">{{ $client->company_name }}</div>
@@ -28,7 +28,8 @@
                         </div>
                         @endif
 
-                        <div class="row g-3">
+                        <div class="row g-3 bg-white border rounded-3 p-3 p-md-4 shadow-sm">
+                            <h6 class="fw-bold mb-0">Service Update</h6>
                             <div class="col-md-4">
                                 <label class="form-label">Type</label>
                                 <select disabled class="form-select @error('changeType') is-invalid @enderror" wire:model.live="changeType">
@@ -116,9 +117,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer bg-white">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Update Record</button>
+                        <button type="submit" class="btn btn-primary px-4" wire:loading.attr="disabled" wire:target="updateRecord"><span wire:loading wire:target="updateRecord" class="spinner-border spinner-border-sm me-1"></span>Update Record</button>
                     </div>
                 </form>
             </div>

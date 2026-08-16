@@ -1,13 +1,14 @@
 <div>
     <div wire:ignore.self class="modal fade" id="EditDepartmentModal_{{$department_id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
+          <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header text-white" style="background-color: #004998">
               <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Department (编辑部门)</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form wire:submit='Update_Department'>
-            <div class="modal-body">
+            <div class="modal-body bg-light p-4">
+              <div class="bg-white border rounded-3 p-3 p-md-4 shadow-sm">
 
                 @if (session()->has('success'))
                 <div class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
@@ -31,10 +32,12 @@
                       </span>
                     @enderror
                   </div>
+              </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button style="background-color: #004998" type="submit" class="btn text-light">
+            <div class="modal-footer bg-white">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button style="background-color: #004998" type="submit" class="btn text-light px-4" wire:loading.attr="disabled" wire:target="Update_Department">
+                <span wire:loading wire:target="Update_Department" class="spinner-border spinner-border-sm me-1"></span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy-fill" viewBox="0 0 16 16">
                     <path d="M0 1.5A1.5 1.5 0 0 1 1.5 0H3v5.5A1.5 1.5 0 0 0 4.5 7h7A1.5 1.5 0 0 0 13 5.5V0h.086a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5H14v-5.5A1.5 1.5 0 0 0 12.5 9h-9A1.5 1.5 0 0 0 2 10.5V16h-.5A1.5 1.5 0 0 1 0 14.5z"/>
                     <path d="M3 16h10v-5.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5zm9-16H4v5.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5zM9 1h2v4H9z"/>

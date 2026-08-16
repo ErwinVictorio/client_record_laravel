@@ -43,6 +43,20 @@ The same backdrop-safe close sequence and improved confirmation interface were a
 
 All remaining delete confirmation flows now use the same reusable UI and backdrop-safe close lifecycle, covering salesman, department, auto repair, and maintenance records. Each list refresh waits until its modal is fully hidden.
 
+## Edit Modal Interface Refresh
+
+All Livewire edit modals now use a consistent responsive interface:
+
+- Scrollable dialogs with elevated, borderless modal containers
+- Branded blue headers with accessible white close buttons
+- Light modal backgrounds with grouped white information cards
+- Clear section headings for client, product, account, stock-out, and service information
+- Consistent Cancel and primary Save/Update actions
+- Loading spinners and disabled submit buttons while updates are processing
+- Improved spacing and responsive layouts for desktop and mobile
+
+The refresh covers client information, salesman, department, auto repair, repair and maintenance, and After Sales MSD edit modals.
+
 ## 1. Vehicle Specifications
 
 Two new optional fields were added to the vehicle specification arrays:
