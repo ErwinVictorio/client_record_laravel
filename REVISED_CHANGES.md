@@ -357,3 +357,41 @@ php artisan storage:link
 - Rejection adds one nullable column only.
 - JO uniqueness adds an index only and does not delete duplicate records automatically.
 - Existing uploaded supporting-document paths remain compatible.
+
+## 11. Vehicle Specification Dropdowns with Other Values
+
+The free-text inputs for Mast Type, Power Type, and Tire were replaced with consistent dropdowns in all vehicle specification create/update workflows.
+
+### Mast Type options
+
+- `M`
+- `ZM`
+- `ZSM`
+- `Other`
+
+### Power Type options
+
+- `Electric-Li`
+- `Electric Lead Acid`
+- `Diesel`
+- `Other`
+
+### Tire options
+
+- `Solid`
+- `Pneumatic`
+- `Other`
+
+Selecting `Other` displays a required manual text input. The manual value is saved as the final vehicle specification value instead of the literal word `Other`.
+
+Existing custom values remain compatible. A value outside the configured options automatically loads with `Other` selected and the existing value placed in the manual input.
+
+The behavior is shared by:
+
+- Client Status Update
+- Repair and Maintenance Create Client
+- Repair and Maintenance Edit Client
+
+The Maintenance Edit modal now loads and edits the complete `vehicle_specifications` JSON array. Temporary dropdown-selection and manual-input helper fields are removed before persistence, so only clean final vehicle values are stored.
+
+No migration was required because these values continue to use the existing vehicle specification JSON columns.

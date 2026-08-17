@@ -2,12 +2,15 @@
 
 namespace App\Livewire\Modals;
 
+use App\Livewire\Concerns\ManagesVehicleSpecificationOptions;
 use App\Models\ClientRecordForMaintenanceAndRepair;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class EditRepairAndMaintence extends Component
 {
+    use ManagesVehicleSpecificationOptions;
+
     public $recordId;
 
     #[Locked]
@@ -33,6 +36,8 @@ class EditRepairAndMaintence extends Component
 
     public $bank_account_number;
 
+    public array $vehicles = [];
+
     protected function rules(): array
     {
         return [
@@ -46,6 +51,20 @@ class EditRepairAndMaintence extends Component
             'contact_person' => 'required',
             'contact_number_person' => 'required',
             'bank_account_number' => 'nullable',
+            'vehicles' => 'array',
+            'vehicles.*.brand' => 'required|string',
+            'vehicles.*.model' => 'required|string',
+            'vehicles.*.engine' => 'nullable|string',
+            'vehicles.*.engine_series' => 'nullable|string',
+            'vehicles.*.serial_or_plate_number' => 'required|string',
+            'vehicles.*.loading_capacity' => 'nullable|string',
+            'vehicles.*.lifting_height' => 'nullable|string',
+            'vehicles.*.mast_type' => 'nullable|string',
+            'vehicles.*.power_type' => 'nullable|string',
+            'vehicles.*.tire' => 'nullable|string',
+            'vehicles.*.fork_length' => 'nullable|string',
+            'vehicles.*.attachment' => 'nullable|string',
+            ...$this->vehicleSpecificationOptionRules(),
         ];
     }
 
@@ -66,11 +85,41 @@ class EditRepairAndMaintence extends Component
         $this->date_sold = $record->date_sold?->format('Y-m-d');
         $this->contact_number_person = $record->contact_number_person;
         $this->bank_account_number = $record->bank_account_number;
+        $this->vehicles = array_map(
+            fn (array $vehicle) => $this->withVehicleSpecificationSelections($vehicle),
+            is_array($record->vehicle_specifications) ? $record->vehicle_specifications : []
+        );
+    }
+
+    public function addVehicle(): void
+    {
+        $this->vehicles[] = $this->withVehicleSpecificationSelections([
+            'brand' => '',
+            'model' => '',
+            'engine' => '',
+            'engine_series' => '',
+            'serial_or_plate_number' => '',
+            'loading_capacity' => '',
+            'lifting_height' => '',
+            'mast_type' => '',
+            'power_type' => '',
+            'tire' => '',
+            'fork_length' => '',
+            'attachment' => '',
+        ]);
+    }
+
+    public function removeVehicle(int $index): void
+    {
+        unset($this->vehicles[$index]);
+        $this->vehicles = array_values($this->vehicles);
     }
 
     public function updateRecord()
     {
         $this->validate();
+
+        $vehiclesForStorage = $this->vehiclesForStorage($this->vehicles);
 
         // update the record
         $updatedValues = [
@@ -83,7 +132,12 @@ class EditRepairAndMaintence extends Component
             'bank_account_number' => $this->bank_account_number,
             'contact_number_person' => $this->contact_number_person,
             'contact_person' => $this->contact_person,
+            'vehicle_specifications' => $vehiclesForStorage,
         ];
+
+        if (count($vehiclesForStorage) > 0) {
+            $updatedValues['serial_number'] = $vehiclesForStorage[0]['serial_or_plate_number'];
+        }
 
         if ($this->managesJobOrderNumber) {
             $updatedValues['job_order_number'] = $this->job_order_number;
@@ -98,6 +152,6 @@ class EditRepairAndMaintence extends Component
 
     public function render()
     {
-        return view('livewire.modals.edit-repair-and-maintence');
+        return view('livewire.modals.edit-repair-and-maintence', $this->vehicleSpecificationViewData());
     }
 }

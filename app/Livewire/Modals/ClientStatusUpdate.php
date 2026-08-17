@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Modals;
 
+use App\Livewire\Concerns\ManagesVehicleSpecificationOptions;
 use Livewire\Component;
 use App\Models\clients;
 use Livewire\Attributes\Validate;
@@ -10,7 +11,7 @@ use Livewire\WithFileUploads;
 
 class ClientStatusUpdate extends Component
 {
-    use WithFileUploads;
+    use ManagesVehicleSpecificationOptions, WithFileUploads;
 
     public $clientId;
 
@@ -71,7 +72,7 @@ class ClientStatusUpdate extends Component
 
     public function addVehicle()
     {
-        $this->vehicles[] = [
+        $this->vehicles[] = $this->withVehicleSpecificationSelections([
             'brand' => '',
             'model' => '',
             'engine' => '',
@@ -83,7 +84,7 @@ class ClientStatusUpdate extends Component
             'tire' => '',
             'fork_length' => '',
             'attachment' => '',
-        ];
+        ]);
     }
 
     public function removeVehicle($index)
@@ -125,6 +126,7 @@ class ClientStatusUpdate extends Component
             'vehicles.*.tire' => 'nullable|string',
             'vehicles.*.fork_length' => 'nullable|string',
             'vehicles.*.attachment' => 'nullable|string',
+            ...$this->vehicleSpecificationOptionRules(),
         ]);
 
         $client = clients::find($this->clientId);
@@ -138,14 +140,15 @@ class ClientStatusUpdate extends Component
                 }
             }
 
-            $firstVehicle = $this->vehicles[0] ?? [];
+            $vehiclesForStorage = $this->vehiclesForStorage($this->vehicles);
+            $firstVehicle = $vehiclesForStorage[0] ?? [];
 
             $client->status = $this->SelectedStatus;
             $client->salesList_no = $this->salesList_no;
             $client->bank_account_number = $this->bank_account_number;
             $client->supporting_document_path = $supportingDocumentPaths[0] ?? null;
             $client->supporting_document_paths = $supportingDocumentPaths;
-            $client->vehicle_specifications = $this->vehicles;
+            $client->vehicle_specifications = $vehiclesForStorage;
             $client->item_name = $firstVehicle['brand'] ?? null;
             $client->model_number = $firstVehicle['model'] ?? null;
             $client->specification = $this->buildSpecificationSummary($firstVehicle);
@@ -173,7 +176,11 @@ class ClientStatusUpdate extends Component
             $vehicleSpecifications = json_decode($vehicleSpecifications, true);
         }
 
-        return is_array($vehicleSpecifications) ? $vehicleSpecifications : [];
+        if (! is_array($vehicleSpecifications)) {
+            return [];
+        }
+
+        return array_map(fn (array $vehicle) => $this->withVehicleSpecificationSelections($vehicle), $vehicleSpecifications);
     }
 
     private function normalizeDocumentPaths($documentPaths, $legacyDocumentPath = null): array
@@ -219,7 +226,8 @@ class ClientStatusUpdate extends Component
     public function render()
     {
         return view('livewire.modals.client-status-update', [
-            'clientId' => $this->clientId
+            'clientId' => $this->clientId,
+            ...$this->vehicleSpecificationViewData(),
         ]);
     }
 }

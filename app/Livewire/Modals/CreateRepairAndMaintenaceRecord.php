@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Modals;
 
+use App\Livewire\Concerns\ManagesVehicleSpecificationOptions;
 use App\Models\ClientRecordForMaintenanceAndRepair;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Locked;
@@ -9,6 +10,8 @@ use Livewire\Component;
 
 class CreateRepairAndMaintenaceRecord extends Component
 {
+    use ManagesVehicleSpecificationOptions;
+
     public $salesmanId;
 
     #[Locked]
@@ -42,7 +45,7 @@ class CreateRepairAndMaintenaceRecord extends Component
 
     public function addVehicle(): void
     {
-        $this->vehicles[] = [
+        $this->vehicles[] = $this->withVehicleSpecificationSelections([
             'brand' => '',
             'model' => '',
             'engine' => '',
@@ -55,7 +58,7 @@ class CreateRepairAndMaintenaceRecord extends Component
             'tire' => '',
             'fork_length' => '',
             'attachment' => '',
-        ];
+        ]);
     }
 
     public function removeVehicle(int $index): void
@@ -90,6 +93,7 @@ class CreateRepairAndMaintenaceRecord extends Component
             'vehicles.*.tire' => 'nullable|string',
             'vehicles.*.fork_length' => 'nullable|string',
             'vehicles.*.attachment' => 'nullable|string',
+            ...$this->vehicleSpecificationOptionRules(),
             'contact_person' => 'required',
             'contact_number_person' => 'required|numeric',
             'bank_account_number' => 'nullable',
@@ -101,7 +105,8 @@ class CreateRepairAndMaintenaceRecord extends Component
         $this->validate();
 
         $this->salesmanId = Auth::id();
-        $firstVehicle = $this->vehicles[0];
+        $vehiclesForStorage = $this->vehiclesForStorage($this->vehicles);
+        $firstVehicle = $vehiclesForStorage[0];
 
         ClientRecordForMaintenanceAndRepair::create([
             'company_name' => $this->company_name,
@@ -111,7 +116,7 @@ class CreateRepairAndMaintenaceRecord extends Component
             'job_order_number' => $this->managesJobOrderNumber ? $this->job_order_number : null,
             'serial_number' => $firstVehicle['serial_or_plate_number'],
             'date_sold' => $this->date_sold ?: null,
-            'vehicle_specifications' => $this->vehicles,
+            'vehicle_specifications' => $vehiclesForStorage,
             'contact_person' => $this->contact_person,
             'contact_number_person' => $this->contact_number_person,
             'bank_account_number' => $this->bank_account_number,
@@ -139,6 +144,6 @@ class CreateRepairAndMaintenaceRecord extends Component
 
     public function render()
     {
-        return view('livewire.modals.create-repair-and-maintenace-record');
+        return view('livewire.modals.create-repair-and-maintenace-record', $this->vehicleSpecificationViewData());
     }
 }

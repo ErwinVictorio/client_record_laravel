@@ -153,13 +153,46 @@
                         <input wire:model="vehicles.{{ $index }}.lifting_height" type="text" class="form-control form-control-sm" placeholder="Lifting Height">
                       </div>
                       <div class="col-md-3">
-                        <input wire:model="vehicles.{{ $index }}.mast_type" type="text" class="form-control form-control-sm" placeholder="Mast Type">
+                        <select wire:model.live="vehicles.{{ $index }}.mast_type_selection" class="form-select form-select-sm">
+                          <option value="">Select Mast Type</option>
+                          @foreach ($mastTypeOptions as $option)
+                            <option value="{{ $option }}">{{ $option }}</option>
+                          @endforeach
+                          <option value="Other">Other</option>
+                        </select>
+                        @error("vehicles.$index.mast_type_selection") <span class="text-danger small">{{ $message }}</span> @enderror
+                        @if (($vehicle['mast_type_selection'] ?? '') === 'Other')
+                          <input wire:model="vehicles.{{ $index }}.mast_type_other" type="text" class="form-control form-control-sm mt-1" placeholder="Enter Mast Type">
+                          @error("vehicles.$index.mast_type_other") <span class="text-danger small">{{ $message }}</span> @enderror
+                        @endif
                       </div>
                       <div class="col-md-3">
-                        <input wire:model="vehicles.{{ $index }}.power_type" type="text" class="form-control form-control-sm" placeholder="Power Type">
+                        <select wire:model.live="vehicles.{{ $index }}.power_type_selection" class="form-select form-select-sm">
+                          <option value="">Select Power Type</option>
+                          @foreach ($powerTypeOptions as $option)
+                            <option value="{{ $option }}">{{ $option }}</option>
+                          @endforeach
+                          <option value="Other">Other</option>
+                        </select>
+                        @error("vehicles.$index.power_type_selection") <span class="text-danger small">{{ $message }}</span> @enderror
+                        @if (($vehicle['power_type_selection'] ?? '') === 'Other')
+                          <input wire:model="vehicles.{{ $index }}.power_type_other" type="text" class="form-control form-control-sm mt-1" placeholder="Enter Power Type">
+                          @error("vehicles.$index.power_type_other") <span class="text-danger small">{{ $message }}</span> @enderror
+                        @endif
                       </div>
                       <div class="col-md-3">
-                        <input wire:model="vehicles.{{ $index }}.tire" type="text" class="form-control form-control-sm" placeholder="Tire">
+                        <select wire:model.live="vehicles.{{ $index }}.tire_selection" class="form-select form-select-sm">
+                          <option value="">Select Tire</option>
+                          @foreach ($tireOptions as $option)
+                            <option value="{{ $option }}">{{ $option }}</option>
+                          @endforeach
+                          <option value="Other">Other</option>
+                        </select>
+                        @error("vehicles.$index.tire_selection") <span class="text-danger small">{{ $message }}</span> @enderror
+                        @if (($vehicle['tire_selection'] ?? '') === 'Other')
+                          <input wire:model="vehicles.{{ $index }}.tire_other" type="text" class="form-control form-control-sm mt-1" placeholder="Enter Tire Type">
+                          @error("vehicles.$index.tire_other") <span class="text-danger small">{{ $message }}</span> @enderror
+                        @endif
                       </div>
                       <div class="col-md-6">
                         <input wire:model="vehicles.{{ $index }}.fork_length" type="text" class="form-control form-control-sm" placeholder="Fork Length">

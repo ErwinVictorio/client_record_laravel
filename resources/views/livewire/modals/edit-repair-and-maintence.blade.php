@@ -115,6 +115,103 @@
               </div>
   
             </section>
+
+            <section class="bg-white border rounded-3 p-3 p-md-4 shadow-sm mt-3">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold text-success mb-0">Vehicle Specifications</h6>
+                <button type="button" wire:click="addVehicle" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                  + Add More Vehicle
+                </button>
+              </div>
+
+              @forelse ($vehicles as $index => $vehicle)
+                <div class="border rounded p-3 mb-3" wire:key="maintenance-edit-vehicle-{{ $recordId }}-{{ $index }}">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="small fw-bold text-secondary">Vehicle #{{ $index + 1 }}</span>
+                    <button type="button" wire:click="removeVehicle({{ $index }})" class="btn btn-sm btn-outline-danger py-0">
+                      Remove
+                    </button>
+                  </div>
+
+                  <div class="row g-2">
+                    <div class="col-md-4">
+                      <input wire:model="vehicles.{{ $index }}.brand" type="text" class="form-control form-control-sm" placeholder="Brand">
+                      @error("vehicles.$index.brand") <span class="text-danger small">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="col-md-4">
+                      <input wire:model="vehicles.{{ $index }}.model" type="text" class="form-control form-control-sm" placeholder="Model">
+                      @error("vehicles.$index.model") <span class="text-danger small">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="col-md-4">
+                      <input wire:model="vehicles.{{ $index }}.serial_or_plate_number" type="text" class="form-control form-control-sm" placeholder="Serial Number / Plate Number">
+                      @error("vehicles.$index.serial_or_plate_number") <span class="text-danger small">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="col-md-4">
+                      <input wire:model="vehicles.{{ $index }}.engine" type="text" class="form-control form-control-sm" placeholder="Engine">
+                    </div>
+                    <div class="col-md-4">
+                      <input wire:model="vehicles.{{ $index }}.engine_series" type="text" class="form-control form-control-sm" placeholder="Engine Series">
+                    </div>
+                    <div class="col-md-4">
+                      <input wire:model="vehicles.{{ $index }}.loading_capacity" type="text" class="form-control form-control-sm" placeholder="Loading Capacity">
+                    </div>
+                    <div class="col-md-3">
+                      <input wire:model="vehicles.{{ $index }}.lifting_height" type="text" class="form-control form-control-sm" placeholder="Lifting Height">
+                    </div>
+                    <div class="col-md-3">
+                      <select wire:model.live="vehicles.{{ $index }}.mast_type_selection" class="form-select form-select-sm">
+                        <option value="">Select Mast Type</option>
+                        @foreach ($mastTypeOptions as $option)
+                          <option value="{{ $option }}">{{ $option }}</option>
+                        @endforeach
+                        <option value="Other">Other</option>
+                      </select>
+                      @error("vehicles.$index.mast_type_selection") <span class="text-danger small">{{ $message }}</span> @enderror
+                      @if (($vehicle['mast_type_selection'] ?? '') === 'Other')
+                        <input wire:model="vehicles.{{ $index }}.mast_type_other" type="text" class="form-control form-control-sm mt-1" placeholder="Enter Mast Type">
+                        @error("vehicles.$index.mast_type_other") <span class="text-danger small">{{ $message }}</span> @enderror
+                      @endif
+                    </div>
+                    <div class="col-md-3">
+                      <select wire:model.live="vehicles.{{ $index }}.power_type_selection" class="form-select form-select-sm">
+                        <option value="">Select Power Type</option>
+                        @foreach ($powerTypeOptions as $option)
+                          <option value="{{ $option }}">{{ $option }}</option>
+                        @endforeach
+                        <option value="Other">Other</option>
+                      </select>
+                      @error("vehicles.$index.power_type_selection") <span class="text-danger small">{{ $message }}</span> @enderror
+                      @if (($vehicle['power_type_selection'] ?? '') === 'Other')
+                        <input wire:model="vehicles.{{ $index }}.power_type_other" type="text" class="form-control form-control-sm mt-1" placeholder="Enter Power Type">
+                        @error("vehicles.$index.power_type_other") <span class="text-danger small">{{ $message }}</span> @enderror
+                      @endif
+                    </div>
+                    <div class="col-md-3">
+                      <select wire:model.live="vehicles.{{ $index }}.tire_selection" class="form-select form-select-sm">
+                        <option value="">Select Tire</option>
+                        @foreach ($tireOptions as $option)
+                          <option value="{{ $option }}">{{ $option }}</option>
+                        @endforeach
+                        <option value="Other">Other</option>
+                      </select>
+                      @error("vehicles.$index.tire_selection") <span class="text-danger small">{{ $message }}</span> @enderror
+                      @if (($vehicle['tire_selection'] ?? '') === 'Other')
+                        <input wire:model="vehicles.{{ $index }}.tire_other" type="text" class="form-control form-control-sm mt-1" placeholder="Enter Tire Type">
+                        @error("vehicles.$index.tire_other") <span class="text-danger small">{{ $message }}</span> @enderror
+                      @endif
+                    </div>
+                    <div class="col-md-6">
+                      <input wire:model="vehicles.{{ $index }}.fork_length" type="text" class="form-control form-control-sm" placeholder="Fork Length">
+                    </div>
+                    <div class="col-md-6">
+                      <input wire:model="vehicles.{{ $index }}.attachment" type="text" class="form-control form-control-sm" placeholder="Attachment">
+                    </div>
+                  </div>
+                </div>
+              @empty
+                <div class="text-muted small">No vehicle specifications encoded. Click “Add More Vehicle” to add one.</div>
+              @endforelse
+            </section>
   
             {{-- Modal Footer --}}
             <div class="modal-footer bg-white mx-n4 mb-n4 mt-4 px-4">
