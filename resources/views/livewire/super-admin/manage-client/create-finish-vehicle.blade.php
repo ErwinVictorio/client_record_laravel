@@ -190,6 +190,11 @@
                         $status = $client->status === 'Sold' ? 'disabled' : '';
                         @endphp
                         <span class="badge">
+                            <button type="button" class="btn btn-outline-dark"
+                                data-bs-target="#viewClientDetails_{{ $client->id }}" data-bs-toggle="modal">
+                                <i class="fas fa-eye"></i>
+                                View Info
+                            </button>
                             <button class="btn btn-outline-light" {{$status}} style="background-color: #004998;"
                                 data-bs-target="#ModalChangeStatus_{{$client->id}}"
                                 wire:key="change-status-{{$client->id}}" data-bs-toggle="modal">
@@ -208,6 +213,10 @@
         <livewire:modals.client-status-update
             :clientId="$client->id"
             :wire:key="'super-admin-finish-client-status-update-'.$client->id"
+        />
+        <livewire:modals.view-client-details
+            :clientId="$client->id"
+            :wire:key="'super-admin-finish-view-client-details-'.$client->id"
         />
         @endforeach
     </section>

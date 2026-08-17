@@ -395,3 +395,18 @@ The behavior is shared by:
 The Maintenance Edit modal now loads and edits the complete `vehicle_specifications` JSON array. Temporary dropdown-selection and manual-input helper fields are removed before persistence, so only clean final vehicle values are stored.
 
 No migration was required because these values continue to use the existing vehicle specification JSON columns.
+
+## 12. Salesman and Super Admin View Client Information
+
+A read-only `View Info` action was added to the client tables on:
+
+- Salesman My Client
+- Super Admin Finish Vehicle
+
+The shared View Client Details modal now displays complete client/contact information, status, salesman, dates, legacy product fields, rejection reason, every encoded vehicle, and all PDF/image supporting-document links.
+
+Every vehicle displays Brand, Model, Engine, Engine Series, Loading Capacity, Lifting Height, Mast Type, Power Type, Tire, Fork Length, and Attachment. Missing values display as `N/A`.
+
+The modal query is ownership-restricted: the logged-in user can only load client details whose `salesman_id` matches their account. The `clientId` Livewire property is locked against browser-side mutation.
+
+No migration was required. A database-portable full-name search condition was also added to the Salesman page so it works on both MySQL and SQLite test environments.

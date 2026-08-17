@@ -167,6 +167,10 @@
                             $documentCount = 1;
                             }
                             @endphp
+                            <button type="button" data-bs-target="#viewClientDetails_{{ $client->id }}" data-bs-toggle="modal" class="btn btn-outline-dark btn-sm rounded-0">
+                                <i class="fas fa-eye"></i>
+                                View Info
+                            </button>
                             <button {{$status}} data-bs-target="#ModalChangeStatus_{{$client->id}}" wire:key="change-status-{{$client->id}}" data-bs-toggle="modal"
 
                                 style="background-color: #004998" class="btn rounded-0  text-light btn-sm">
@@ -193,6 +197,9 @@
             <livewire:modals.client-supporting-documents
                 :clientId="$client->id"
                 :wire:key="'salesman-client-supporting-documents-'.$client->id" />
+            <livewire:modals.view-client-details
+                :clientId="$client->id"
+                :wire:key="'salesman-view-client-details-'.$client->id" />
             @endforeach
             {{$clients->links()}}
         </div>

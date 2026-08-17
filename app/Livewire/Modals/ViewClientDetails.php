@@ -2,34 +2,30 @@
 
 namespace App\Livewire\Modals;
 
-use Livewire\Component;
 use App\Models\clients;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Locked;
+use Livewire\Component;
 
 class ViewClientDetails extends Component
 {
+    #[Locked]
+    public int $clientId;
 
-    public $clientId,$findClient;
-
-
-    public function mount(){
-        $this->findClient = clients::select(
-            [
-                'contact_person',
-                 'contact_number_person',
-                  'bank_account_number',
-                   'item_name',
-                   'specification',
-                    'quantity',
-                    'model_number',
-                    'address',
-                    'supporting_document_path',
-                    'supporting_document_paths'
-            ])
-         ->where('id', $this->clientId)->get();;
+    public function mount(int $clientId): void
+    {
+        $this->clientId = $clientId;
     }
 
     public function render()
     {
-        return view('livewire.modals.view-client-details');
+        $client = clients::with('salesman')
+            ->whereKey($this->clientId)
+            ->where('salesman_id', Auth::id())
+            ->first();
+
+        return view('livewire.modals.view-client-details', [
+            'client' => $client,
+        ]);
     }
 }

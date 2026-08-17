@@ -3,6 +3,7 @@
 namespace App\Livewire\SalesMan;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
@@ -53,7 +54,11 @@ class SalesManPage extends Component
             $query->orwhere('first_name', 'like', $search);
             $query->orwhere('middle_name', 'like', $search);
             $query->orwhere('last_name', 'like', $search);
-            $query->orWhereRaw("CONCAT_WS(' ', first_name, middle_name, last_name) LIKE ?", [$search]);
+            if (DB::connection()->getDriverName() === 'sqlite') {
+                $query->orWhereRaw("TRIM(COALESCE(first_name, '') || ' ' || COALESCE(middle_name, '') || ' ' || COALESCE(last_name, '')) LIKE ?", [$search]);
+            } else {
+                $query->orWhereRaw("CONCAT_WS(' ', first_name, middle_name, last_name) LIKE ?", [$search]);
+            }
             $query->orwhere('salesList_no', 'like', $search);
             $query->orwhere('email', 'like', $search);
         })
