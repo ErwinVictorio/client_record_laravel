@@ -160,6 +160,60 @@ The client is already taken by another salesman!
 
 The project already contains an older migration that removes the unique email index from the clients table, so repeated client email addresses are supported.
 
+### Duplicate validation details
+
+The create-client modal validates duplicate ownership in `app/Livewire/Modals/ClientCreate.php`.
+
+For corporate clients, the system normalizes the company name before comparison:
+
+- Converts the company name to uppercase.
+- Removes spaces, punctuation, and other non-alphanumeric characters.
+- Ignores the selected company suffix when checking the base company name.
+
+Because the suffix is ignored, these are treated as the same base client name:
+
+```text
+Test Company
+Test Company INC.
+Test-Company, Inc.
+```
+
+For personal clients, the system uses the normalized full name from:
+
+- First name
+- Middle name
+- Last name
+
+The duplicate check only looks at records owned by another salesman:
+
+```text
+clients.salesman_id != current logged-in salesman id
+```
+
+If a record from another salesman matches any of the following, the create action is blocked:
+
+- Same normalized company name or personal full name
+- Same contact number
+- Same email address
+
+This means a user may see the warning even when the exact company name does not appear in their own dashboard. The match can come from a client owned by another salesman, or from a different company record that reuses the same contact number or email address.
+
+Example:
+
+```text
+Input company: Test Company INC.
+Input contact: 0999729154
+
+Existing other-salesman record:
+Company: Weimann PLC
+Contact: 0999729154
+
+Result:
+Blocked, because the contact number is already assigned to another salesman.
+```
+
+When investigating the warning locally, check the client table for the entered company name, email, and contact number across all salesmen, not only the current dashboard list.
+
 ### Main affected file
 
 - `app/Livewire/Modals/ClientCreate.php`
