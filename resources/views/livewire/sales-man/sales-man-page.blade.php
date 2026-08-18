@@ -185,6 +185,10 @@
                                 <span class="badge bg-primary">{{ $documentCount }}</span>
                                 @endif
                             </button>
+                            <button type="button" data-bs-target="#duplicateClientRecord_{{ $client->id }}" data-bs-toggle="modal" class="btn btn-outline-success btn-sm rounded-0">
+                                <i class="fas fa-copy"></i>
+                                New Unit
+                            </button>
                         </td>
                     </tr>
                     @endforeach
@@ -200,6 +204,10 @@
             <livewire:modals.view-client-details
                 :clientId="$client->id"
                 :wire:key="'salesman-view-client-details-'.$client->id" />
+            <livewire:modals.duplicate-client-record
+                :clientId="$client->id"
+                context="salesman"
+                :wire:key="'salesman-duplicate-client-record-'.$client->id" />
             @endforeach
             {{$clients->links()}}
         </div>

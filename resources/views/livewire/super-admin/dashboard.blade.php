@@ -132,7 +132,7 @@
                                             {{$client->salesList_no ?? 'N/A'}}
                                         </span>
                                     </td>
-                                    <td>{{$client->company_name}}</td>
+                                    <td>{{ $client->display_name }}</td>
                                     <td>{{$client->salesman->first_name . ' ' .$client->salesman->last_name }}</td>
                                     <td>{{$client->salesman->department}}</td>
                                     <td>{{$client->contact_number}}</td>
@@ -204,6 +204,11 @@
                                             </svg>
                                             Delete(删除客户端)
                                         </button>
+                                        <button type="button" data-bs-target="#duplicateClientRecord_{{ $client->id }}"
+                                            data-bs-toggle="modal" class="btn btn-outline-success rounded-0">
+                                            <i class="fas fa-copy"></i>
+                                            New Unit
+                                        </button>
                                     </td>
 
                                 </tr>
@@ -219,6 +224,11 @@
                         <livewire:modals.edit-client-info-for-admin
                             :clientId="$client->id"
                             :wire:key="'super-admin-edit-client-info-'.$client->id"
+                        />
+                        <livewire:modals.duplicate-client-record
+                            :clientId="$client->id"
+                            context="super-admin"
+                            :wire:key="'super-admin-duplicate-client-record-'.$client->id"
                         />
                         @endforeach
                         {{ $clientList->links() }}
