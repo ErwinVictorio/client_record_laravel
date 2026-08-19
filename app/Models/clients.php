@@ -40,6 +40,11 @@ class clients extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function afterSalesRecords()
+    {
+        return $this->hasMany(AfterSalesRecord::class, 'client_id');
+    }
+
     protected $table = 'clients';
 
     protected $fillable = [

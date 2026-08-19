@@ -62,6 +62,11 @@
                         (後綴)
                     </a>
 
+                    <a class="nav-link" href="{{ route('admin.data-cleanup') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-trash-alt"></i></div>
+                        Data Cleanup
+                    </a>
+
                 </div>
             </div>
 

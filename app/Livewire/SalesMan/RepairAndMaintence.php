@@ -33,6 +33,7 @@ class RepairAndMaintence extends Component
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($searchQuery) use ($search) {
                     $searchQuery->where('company_name', 'like', '%'.$search.'%')
+                        ->orWhere('job_order_number', 'like', '%'.$search.'%')
                         ->orWhere('serial_number', 'like', '%'.$search.'%')
                         ->orWhere('vehicle_specifications', 'like', '%'.$search.'%');
                 });

@@ -190,7 +190,7 @@ class Dashboard extends Component
                     ->orWhere('remarks', 'like', $otherRecordSearch);
             })
             ->latest()
-            ->paginate(10, ['*'], 'otherRecordsPage');
+            ->paginate(20, ['*'], 'otherRecordsPage');
 
         $otherMaintenanceRecordsByJobOrder = ClientRecordForMaintenanceAndRepair::whereIn(
             'job_order_number',

@@ -29,7 +29,7 @@
             type="search"
             class="form-control"
             wire:model.live.debounce.300ms="search"
-            placeholder="Search by company name or serial number"
+            placeholder="Search by JO number, company name, or serial number"
           >
         </div>
       </div>
@@ -37,7 +37,7 @@
       <table class="table">
        <thead>
          <tr>
-             <th>#</th>
+             <th>JO Number</th>
              <th>Company Name</th>
              <th>Serial / Plate Number</th>
              <th>Date Sold</th>
@@ -59,7 +59,7 @@
        $serialOrPlateNumber = $primaryVehicle['serial_or_plate_number'] ?? $record->serial_number;
      @endphp
      <tr>
-      <td>{{$record->id}}</td>
+      <td>{{ $record->job_order_number ?? 'Not assigned' }}</td>
       <td>{{$record->company_name}}</td>
       <td>{{$serialOrPlateNumber ?? 'N/A'}}</td>
       <td>{{$record->date_sold?->format('F d, Y') ?? 'N/A'}}</td>

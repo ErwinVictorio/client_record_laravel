@@ -13,14 +13,20 @@ class Cashier extends Component
 
     use WithPagination;
 
-    public function mount(){
-        $clientStatusCount = clients::selectRaw('status, COUNT(*) as total')
-         ->whereIn('status',['For Approval', 'Sold'])
-         ->groupBy('status')
-         ->pluck('total', 'status');
+    public function mount(): void
+    {
+        $this->loadCounts();
+    }
 
-         $this->countedAprove = $clientStatusCount['For Approval'] ?? 0;
-         $this->counttedSoldClient = $clientStatusCount['Sold'] ?? 0;
+    private function loadCounts(): void
+    {
+        $clientStatusCount = clients::selectRaw('status, COUNT(*) as total')
+            ->whereIn('status', ['For Approval', 'Sold'])
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $this->countedAprove = $clientStatusCount['For Approval'] ?? 0;
+        $this->counttedSoldClient = $clientStatusCount['Sold'] ?? 0;
     }
 
 
@@ -32,7 +38,8 @@ class Cashier extends Component
     #[On('clients-updated')]
     public function refreshClients(): void
     {
-        $this->mount();
+        $this->loadCounts();
+        $this->resetPage();
     }
 
     public function render()
@@ -40,7 +47,8 @@ class Cashier extends Component
         $search  = '%' . $this->searchQuery . '%';
 
         $clientList = clients::with(['salesman'])
-          ->where( function($query) use ($search){
+          ->whereIn('status', ['For Approval', 'Sold'])
+          ->where(function($query) use ($search){
             $query->where('company_name', 'like',$search)
              ->orWhere('status','like',$search)
               ->orWhere('address','like',$search)

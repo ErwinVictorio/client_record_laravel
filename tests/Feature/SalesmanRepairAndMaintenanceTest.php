@@ -58,7 +58,10 @@ it('does not show JO controls on the salesman repair and maintenance page', func
 it('searches maintenance records by company name and serial or plate number', function () {
     $salesman = createSalesmanForRepairAndMaintenance();
     $companyMatch = createMaintenanceRecordForSalesman($salesman, null);
-    $companyMatch->update(['company_name' => 'Acme Equipment Corporation']);
+    $companyMatch->update([
+        'company_name' => 'Acme Equipment Corporation',
+        'job_order_number' => 'JO-MSD-2026-001',
+    ]);
 
     $serialMatch = createMaintenanceRecordForSalesman($salesman, null);
     $serialMatch->update([
@@ -84,11 +87,16 @@ it('searches maintenance records by company name and serial or plate number', fu
 
     Livewire::actingAs($salesman)
         ->test(RepairAndMaintence::class)
-        ->assertSee('Search by company name or serial number')
+        ->assertSee('Search by JO number, company name, or serial number')
+        ->assertSee('JO Number')
+        ->assertSee('JO-MSD-2026-001')
         ->set('search', 'Acme Equipment')
         ->assertSee('Acme Equipment Corporation')
         ->assertDontSee('Different Client')
         ->assertDontSee('Acme Hidden Record')
+        ->set('search', 'JO-MSD-2026-001')
+        ->assertSee('Acme Equipment Corporation')
+        ->assertDontSee('Different Client')
         ->set('search', 'PLATE-SECONDARY-987')
         ->assertSee('Different Client')
         ->assertDontSee('Acme Equipment Corporation');

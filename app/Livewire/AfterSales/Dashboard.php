@@ -471,7 +471,7 @@ class Dashboard extends Component
                 });
             })
             ->latest()
-            ->paginate(10, ['*'], $this->section === 'asap' ? 'asapPage' : 'otherPage');
+            ->paginate(20, ['*'], $this->section === 'asap' ? 'asapPage' : 'otherPage');
 
         $maintenanceRecordsByJobOrder = collect();
 

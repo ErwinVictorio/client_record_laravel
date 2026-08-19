@@ -320,7 +320,7 @@ it('paginates ASAP and Other records independently', function () {
         'updated_at' => now(),
     ]);
 
-    foreach (range(1, 12) as $number) {
+    foreach (range(1, 21) as $number) {
         AfterSalesRecord::create([
             'client_id' => $clientId,
             'user_id' => $afterSalesUser->id,
@@ -344,11 +344,11 @@ it('paginates ASAP and Other records independently', function () {
     $otherRecords = $component->render()->getData()['records'];
 
     expect($asapRecords->getPageName())->toBe('asapPage')
-        ->and($asapRecords->count())->toBe(10)
-        ->and($asapRecords->total())->toBe(12)
+        ->and($asapRecords->count())->toBe(20)
+        ->and($asapRecords->total())->toBe(21)
         ->and($otherRecords->getPageName())->toBe('otherPage')
-        ->and($otherRecords->count())->toBe(10)
-        ->and($otherRecords->total())->toBe(12);
+        ->and($otherRecords->count())->toBe(20)
+        ->and($otherRecords->total())->toBe(21);
 });
 
 it('searches pending maintenance records by company and excludes records with a JO', function () {

@@ -5,6 +5,22 @@
 
 This document summarizes the functional, database, interface, validation, and test changes completed during the current revision.
 
+## Pagination and Maintenance JO Display
+
+All paginated result sets now default to 20 records per page, including After Sales, Warehouse Other records, and Administrator Data Cleanup. The Sales Executive Repair & Maintenance table now displays the MSD-assigned JO Number instead of the database record ID, and its search includes JO numbers.
+
+## Super Admin Cashier Client Visibility
+
+The Super Admin Cashier page now displays only clients with `For Approval` or `Sold` status. Pending clients are excluded from the table, search results, pagination, and summary totals. The first summary card is labeled **Total For Approval Clients**.
+
+## Vehicle Specification Field Layout
+
+The Client Status Update vehicle form now places Power Type in the original first-field Brand position. Brand was moved to Power Type's previous position between Mast Type and Tire; the two inputs were swapped without changing their stored data keys or validation.
+
+## Administrator Permanent Data Cleanup
+
+Administrators now have a dedicated `/admin/data-cleanup` page for permanently deleting client records by required creation-date range and status filters. The page provides record previews, search, pagination, row selection, current-page selection, linked After Sales warnings, and typed `DELETE` confirmation. Deletion is restricted to records still matching the active filter, clears After Sales client links, and removes supporting documents from public storage. No migration was added; date filtering uses `clients.created_at`.
+
 ## Client Duplicate Matching
 
 Client creation duplicate ownership checks now compare only the normalized company name, or the normalized full name for personal clients. Email address and contact number remain required and format-validated, but they no longer cause an otherwise different client to be flagged as owned by another salesman.

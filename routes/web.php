@@ -13,6 +13,7 @@ use App\Livewire\Salesman\RepairAndMaintence;
 use App\Livewire\Admin\Pages\AutoRepairAndMaintenance;
 use App\Livewire\Admin\Pages\AutoRepairRecords;
 use App\Livewire\Admin\Pages\ManageSuffix;
+use App\Livewire\Admin\Pages\DataCleanup;
 use App\Livewire\Cashier\DepartmentSummary as SummaryDepartment;
 use App\Livewire\SuperAdmin\Dashboard as SuperAdminDashboard;
 use App\Livewire\SuperAdmin\EditUserAccount;
@@ -40,6 +41,7 @@ Route::middleware(['isAdmin'])->prefix('admin')->group(function () {
     Route::get('/auto-repair-record', AutoRepairRecords::class)->name('view.repair_records');
     Route::get('/repair-maintenance-record', AutoRepairAndMaintenance::class)->name('view.repair_maintenance');
     Route::get('/manage-suffix', ManageSuffix::class)->name('admin.manage_suffix');
+    Route::get('/data-cleanup', DataCleanup::class)->name('admin.data-cleanup');
 });
 
 // grouping the cashier related routes
