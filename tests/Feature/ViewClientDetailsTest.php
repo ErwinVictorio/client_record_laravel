@@ -103,6 +103,30 @@ it('does not expose another salesman client through the modal component', functi
         ->assertSee('do not have permission');
 });
 
+it('allows an admin to view every client through the modal component', function () {
+    $owner = createViewDetailsUser('view_details_admin_client_owner', 3);
+    $admin = createViewDetailsUser('view_details_admin', 1);
+    $clientId = createViewDetailsClient($owner);
+
+    Livewire::actingAs($admin)
+        ->test(ViewClientDetails::class, ['clientId' => $clientId])
+        ->assertSee('Complete Vehicle Client')
+        ->assertSee('Vehicle #1')
+        ->assertDontSee('do not have permission');
+});
+
+it('allows a super admin to view every client through the modal component', function () {
+    $owner = createViewDetailsUser('view_details_super_admin_client_owner', 3);
+    $superAdmin = createViewDetailsUser('view_details_super_admin', 0);
+    $clientId = createViewDetailsClient($owner);
+
+    Livewire::actingAs($superAdmin)
+        ->test(ViewClientDetails::class, ['clientId' => $clientId])
+        ->assertSee('Complete Vehicle Client')
+        ->assertSee('Vehicle #1')
+        ->assertDontSee('do not have permission');
+});
+
 it('adds View Info actions to the salesman and super admin client tables', function () {
     $salesman = createViewDetailsUser('view_details_salesman_page');
     createViewDetailsClient($salesman);

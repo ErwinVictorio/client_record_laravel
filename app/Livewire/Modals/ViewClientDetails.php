@@ -19,10 +19,17 @@ class ViewClientDetails extends Component
 
     public function render()
     {
-        $client = clients::with('salesman')
-            ->whereKey($this->clientId)
-            ->where('salesman_id', Auth::id())
-            ->first();
+        $user = Auth::user();
+
+        $clientQuery = clients::with('salesman')
+            ->whereKey($this->clientId);
+
+        // Admins can inspect every client; other roles remain owner-scoped.
+        if (! $user || ! in_array((int) $user->role, [0, 1], true)) {
+            $clientQuery->where('salesman_id', $user?->id);
+        }
+
+        $client = $clientQuery->first();
 
         return view('livewire.modals.view-client-details', [
             'client' => $client,

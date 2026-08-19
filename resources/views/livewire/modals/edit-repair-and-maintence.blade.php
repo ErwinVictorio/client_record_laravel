@@ -135,8 +135,18 @@
 
                   <div class="row g-2">
                     <div class="col-md-4">
-                      <input wire:model="vehicles.{{ $index }}.brand" type="text" class="form-control form-control-sm" placeholder="Brand">
-                      @error("vehicles.$index.brand") <span class="text-danger small">{{ $message }}</span> @enderror
+                      <select wire:model.live="vehicles.{{ $index }}.power_type_selection" class="form-select form-select-sm">
+                        <option value="">Select Power Type</option>
+                        @foreach ($powerTypeOptions as $option)
+                          <option value="{{ $option }}">{{ $option }}</option>
+                        @endforeach
+                        <option value="Other">Other</option>
+                      </select>
+                      @error("vehicles.$index.power_type_selection") <span class="text-danger small">{{ $message }}</span> @enderror
+                      @if (($vehicle['power_type_selection'] ?? '') === 'Other')
+                        <input wire:model="vehicles.{{ $index }}.power_type_other" type="text" class="form-control form-control-sm mt-1" placeholder="Enter Power Type">
+                        @error("vehicles.$index.power_type_other") <span class="text-danger small">{{ $message }}</span> @enderror
+                      @endif
                     </div>
                     <div class="col-md-4">
                       <input wire:model="vehicles.{{ $index }}.model" type="text" class="form-control form-control-sm" placeholder="Model">
@@ -173,18 +183,8 @@
                       @endif
                     </div>
                     <div class="col-md-3">
-                      <select wire:model.live="vehicles.{{ $index }}.power_type_selection" class="form-select form-select-sm">
-                        <option value="">Select Power Type</option>
-                        @foreach ($powerTypeOptions as $option)
-                          <option value="{{ $option }}">{{ $option }}</option>
-                        @endforeach
-                        <option value="Other">Other</option>
-                      </select>
-                      @error("vehicles.$index.power_type_selection") <span class="text-danger small">{{ $message }}</span> @enderror
-                      @if (($vehicle['power_type_selection'] ?? '') === 'Other')
-                        <input wire:model="vehicles.{{ $index }}.power_type_other" type="text" class="form-control form-control-sm mt-1" placeholder="Enter Power Type">
-                        @error("vehicles.$index.power_type_other") <span class="text-danger small">{{ $message }}</span> @enderror
-                      @endif
+                      <input wire:model="vehicles.{{ $index }}.brand" type="text" class="form-control form-control-sm" placeholder="Brand">
+                      @error("vehicles.$index.brand") <span class="text-danger small">{{ $message }}</span> @enderror
                     </div>
                     <div class="col-md-3">
                       <select wire:model.live="vehicles.{{ $index }}.tire_selection" class="form-select form-select-sm">
