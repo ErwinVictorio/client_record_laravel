@@ -202,6 +202,12 @@
                                 Change Status
                                 (更改状态)
                             </button>
+                            <button type="button" class="btn btn-outline-success btn-sm rounded-0"
+                                data-bs-target="#duplicateClientRecord_{{ $client->id }}"
+                                data-bs-toggle="modal">
+                                <i class="fas fa-copy"></i>
+                                New Unit
+                            </button>
                         </span>
                     </td>
                 </tr>
@@ -217,6 +223,11 @@
         <livewire:modals.view-client-details
             :clientId="$client->id"
             :wire:key="'super-admin-finish-view-client-details-'.$client->id"
+        />
+        <livewire:modals.duplicate-client-record
+            :clientId="$client->id"
+            context="super-admin"
+            :wire:key="'super-admin-finish-duplicate-client-record-'.$client->id"
         />
         @endforeach
     </section>

@@ -43,7 +43,12 @@ class ClientCreate extends Component
         }
 
         return [
-            'CompanyName'           => 'required|string|max:255',
+            'CompanyName'           => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^\p{L}+(?: \p{L}+)*$/u',
+            ],
             'suffix'                => 'nullable|string|exists:company_suffix,suffix',
             'contact_person'        => 'required|string',
             'contact_person_number' => 'required|numeric',
@@ -110,18 +115,12 @@ class ClientCreate extends Component
                     ? implode(' ', array_filter([$client->first_name, $client->middle_name, $client->last_name]))
                     : $client->company_name;
 
-                return $this->normalizeBaseName($clientName) === $normalizedBaseName
-                    || $client->contact_number === $this->contact_number
-                    || $client->email === $this->email;
+                return $this->normalizeBaseName($clientName) === $normalizedBaseName;
             });
         }
 
         return $otherSalesmenClients
-            ->where(function ($query) use ($baseNameCondition, $normalizedBaseName) {
-                $query->whereRaw($baseNameCondition, [$normalizedBaseName])
-                    ->orWhere('contact_number', $this->contact_number)
-                    ->orWhere('email', $this->email);
-            })
+            ->whereRaw($baseNameCondition, [$normalizedBaseName])
             ->first();
     }
 

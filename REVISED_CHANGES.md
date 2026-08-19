@@ -5,6 +5,12 @@
 
 This document summarizes the functional, database, interface, validation, and test changes completed during the current revision.
 
+## Client Duplicate Matching
+
+Client creation duplicate ownership checks now compare only the normalized company name, or the normalized full name for personal clients. Email address and contact number remain required and format-validated, but they no longer cause an otherwise different client to be flagged as owned by another salesman.
+
+The Super Admin **My Client** finish-vehicle page now exposes the existing **New Unit** action only for clients owned by the logged-in Super Admin. The action was removed from the all-clients Super Admin dashboard, and server-side ownership checks prevent direct duplication of another salesman's client.
+
 ## Client Approval Review Summary
 
 The Client Approval modal now presents the important client and vehicle information before an approver chooses **Reject** or **Sold**.

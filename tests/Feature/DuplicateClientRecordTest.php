@@ -87,10 +87,9 @@ it('creates a new pending unit record from a salesmans client without copying ve
         ->and($newClient->supporting_document_paths)->toBeNull();
 });
 
-it('keeps the original salesman when super admin creates a new unit record', function () {
-    $salesman = createRepeatUnitSalesman('repeat_unit_admin_owner');
+it('allows super admin context to duplicate only a client owned by the current user', function () {
     $superAdmin = createRepeatUnitSalesman('repeat_unit_super_admin');
-    $sourceClient = createRepeatUnitClient($salesman, ['email' => 'admin-repeat-unit@example.test']);
+    $sourceClient = createRepeatUnitClient($superAdmin, ['email' => 'admin-repeat-unit@example.test']);
 
     Livewire::actingAs($superAdmin)
         ->test(DuplicateClientRecord::class, [
@@ -105,8 +104,21 @@ it('keeps the original salesman when super admin creates a new unit record', fun
         ->where('email', $sourceClient->email)
         ->firstOrFail();
 
-    expect($newClient->salesman_id)->toBe($salesman->id)
+    expect($newClient->salesman_id)->toBe($superAdmin->id)
         ->and($newClient->status)->toBe('Pending');
+});
+
+it('prevents super admin context from duplicating another salesmans client', function () {
+    $owner = createRepeatUnitSalesman('repeat_unit_admin_actual_owner');
+    $superAdmin = createRepeatUnitSalesman('repeat_unit_admin_other_user');
+    $sourceClient = createRepeatUnitClient($owner, ['email' => 'admin-blocked-repeat-unit@example.test']);
+
+    Livewire::actingAs($superAdmin)
+        ->test(DuplicateClientRecord::class, [
+            'clientId' => $sourceClient->id,
+            'context' => 'super-admin',
+        ])
+        ->assertForbidden();
 });
 
 it('prevents a salesman from duplicating another salesmans client', function () {

@@ -56,7 +56,7 @@
                         {{-- Supporting Documents Section --}}
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <label class="form-label fw-bold text-secondary mb-0">Supporting Documents (PDF or Images, Max 5MB each)</label>
+                                <label class="form-label fw-bold text-secondary mb-0">Supporting Documents</label>
                                 <button type="button" wire:click="addSupportingDocument" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
                                     + Add More Docs
                                 </button>

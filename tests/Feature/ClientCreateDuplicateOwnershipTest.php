@@ -93,3 +93,61 @@ it('blocks a matching client owned by another salesman', function () {
 
     expect(clients::count())->toBe(1);
 });
+
+it('allows another company to reuse an existing email and contact number', function () {
+    $owner = createDuplicateTestSalesman('contact_owner');
+    $otherSalesman = createDuplicateTestSalesman('contact_other_salesman');
+    createDuplicateTestClient($owner);
+
+    $component = Livewire::actingAs($otherSalesman)->test(ClientCreate::class);
+
+    foreach (duplicateClientFormData() as $field => $value) {
+        $component->set($field, $value);
+    }
+
+    $component
+        ->set('CompanyName', 'Different Client Corporation')
+        ->call('validateAndConfirm')
+        ->assertHasNoErrors()
+        ->assertSet('showConfirmation', true);
+});
+
+it('allows only letters separated by single spaces in a company name', function (string $companyName) {
+    $salesman = createDuplicateTestSalesman('valid_company_name');
+
+    $component = Livewire::actingAs($salesman)->test(ClientCreate::class);
+
+    foreach (duplicateClientFormData() as $field => $value) {
+        $component->set($field, $value);
+    }
+
+    $component
+        ->set('CompanyName', $companyName)
+        ->call('validateAndConfirm')
+        ->assertHasNoErrors(['CompanyName']);
+})->with([
+    'ordinary name' => 'ABC Company',
+    'spaced abbreviation' => 'A S A P',
+    'unicode letters' => 'Compania Espanola',
+]);
+
+it('rejects invalid spacing or non-letters in a company name', function (string $companyName) {
+    $salesman = createDuplicateTestSalesman('invalid_company_name');
+
+    $component = Livewire::actingAs($salesman)->test(ClientCreate::class);
+
+    foreach (duplicateClientFormData() as $field => $value) {
+        $component->set($field, $value);
+    }
+
+    $component
+        ->set('CompanyName', $companyName)
+        ->call('validateAndConfirm')
+        ->assertHasErrors(['CompanyName' => 'regex']);
+})->with([
+    'leading space' => ' ABC Company',
+    'trailing space' => 'ABC Company ',
+    'double space' => 'ABC  Company',
+    'number' => 'Company 123',
+    'symbol' => 'J&T Express',
+]);

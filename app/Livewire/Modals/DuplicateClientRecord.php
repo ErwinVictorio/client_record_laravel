@@ -75,9 +75,7 @@ class DuplicateClientRecord extends Component
         $this->validate();
 
         $sourceClient = $this->findSourceClient();
-        $salesmanId = $this->context === 'super-admin'
-            ? $sourceClient->salesman_id
-            : Auth::id();
+        $salesmanId = Auth::id();
 
         if ($this->client_type === 'personal') {
             $fullName = $this->getFormattedPersonalName();
@@ -123,7 +121,7 @@ class DuplicateClientRecord extends Component
     {
         $client = clients::query()->whereKey($this->clientId)->firstOrFail();
 
-        if ($this->context !== 'super-admin' && (int) $client->salesman_id !== (int) Auth::id()) {
+        if ((int) $client->salesman_id !== (int) Auth::id()) {
             abort(403);
         }
 
