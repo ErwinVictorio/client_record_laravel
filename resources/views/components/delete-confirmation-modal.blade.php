@@ -9,7 +9,7 @@
 ])
 
 <div wire:ignore.self class="modal fade" id="{{ $modalId }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="{{ $labelId }}" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 shadow-lg">
             <div class="modal-header border-0 pb-0">
                 <h1 class="modal-title fs-5 fw-semibold" id="{{ $labelId }}">Delete {{ ucfirst($itemLabel) }}</h1>

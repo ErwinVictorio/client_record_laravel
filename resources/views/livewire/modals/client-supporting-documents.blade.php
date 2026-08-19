@@ -1,6 +1,6 @@
 <div>
     <div wire:ignore.self class="modal fade" id="ClientSupportingDocuments_{{ $clientId }}" tabindex="-1" aria-labelledby="ClientSupportingDocumentsLabel_{{ $clientId }}" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-6 fw-bold" id="ClientSupportingDocumentsLabel_{{ $clientId }}">

@@ -4,7 +4,7 @@
 
 <div> 
     <div class="modal fade" id="ModalViewSalesManInfo_{{$salesmanID}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
             <div class="modal-content">
                 <div style="background-color:  #004998" class="modal-header">
                     <h1 class="modal-title fs-5 text-light" id="staticBackdropLabel">{{$completeName}}</h1>

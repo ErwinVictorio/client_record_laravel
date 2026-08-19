@@ -1,5 +1,5 @@
 <div wire:ignore.self class="modal fade" tabindex="-1" id="CreateAccountModal" style="background: rgba(0,0,0,0.5);">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 shadow">
             <div class="modal-header text-white" style="background-color: #004998">
                 <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Create New Account</h5>

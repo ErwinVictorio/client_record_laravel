@@ -1,6 +1,6 @@
 <div>
     <div wire:ignore.self class="modal fade" id="ModalChangeStatus_{{ $clientId }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ModalChangeStatusLabel_{{ $clientId }}" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-6 fw-bold" id="ModalChangeStatusLabel_{{ $clientId }}">

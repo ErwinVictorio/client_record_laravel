@@ -314,7 +314,7 @@
                     @endif
 
                     <div class="modal fade" id="warehouseRemarksModal" tabindex="-1" aria-labelledby="warehouseRemarksModalLabel" aria-hidden="true" wire:ignore.self>
-                        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="warehouseRemarksModalLabel">Edit Remarks</h5>
@@ -339,7 +339,7 @@
                     </div>
 
                     <div class="modal fade" id="warehouseClientRemarksModal" tabindex="-1" aria-labelledby="warehouseClientRemarksModalLabel" aria-hidden="true" wire:ignore.self>
-                        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="warehouseClientRemarksModalLabel">Edit Client Remarks</h5>

@@ -11241,3 +11241,72 @@ body {
   font-size: 0.75rem;
   border-radius: 0.375rem !important;
 }
+
+/* Keep every form and detail modal usable on short and narrow screens. */
+.modal-dialog-scrollable {
+  height: calc(100dvh - (var(--bs-modal-margin) * 2));
+  max-height: calc(100dvh - (var(--bs-modal-margin) * 2));
+}
+
+.modal-dialog-scrollable .modal-content {
+  max-height: 100%;
+}
+
+/* Forms often wrap modal-body/footer and must participate in the flex layout. */
+.modal-dialog-scrollable .modal-content > form {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.modal-dialog-scrollable .modal-body {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-body .table-responsive {
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-body :is(p, li, dd, td, th, .form-text, .list-group-item) {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 575.98px) {
+  .modal {
+    --bs-modal-margin: 0.5rem;
+    --bs-modal-padding: 0.75rem;
+  }
+
+  .modal-dialog {
+    width: auto;
+    max-width: calc(100vw - (var(--bs-modal-margin) * 2));
+  }
+
+  .modal-dialog-scrollable .modal-content {
+    border-radius: 0.375rem;
+  }
+
+  .modal-header,
+  .modal-footer {
+    flex: 0 0 auto;
+  }
+
+  .modal-body .row > [class*="col-"] {
+    min-width: 0;
+  }
+
+  .modal-body .d-flex {
+    min-width: 0;
+  }
+
+  .modal-body .list-group-item {
+    align-items: flex-start !important;
+    flex-wrap: wrap;
+  }
+}

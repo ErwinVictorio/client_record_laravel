@@ -1,6 +1,6 @@
 <div>
     <div wire:ignore.self class="modal fade" id="deleteClientModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteClientModalLabel" aria-describedby="deleteClientModalDescription" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content border-0 shadow-lg">
                 <div class="modal-header border-0 pb-0">
                     <h1 class="modal-title fs-5 fw-semibold" id="deleteClientModalLabel">Delete Client</h1>
