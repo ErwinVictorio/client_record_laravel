@@ -472,7 +472,7 @@ The Maintenance Edit modal now loads and edits the complete `vehicle_specificati
 
 No migration was required because these values continue to use the existing vehicle specification JSON columns.
 
-## 12. Salesman and Super Admin View Client Information
+## 12. Role-Based View Client Information
 
 A read-only `View Info` action was added to the client tables on:
 
@@ -483,6 +483,17 @@ The shared View Client Details modal now displays complete client/contact inform
 
 Every vehicle displays Brand, Model, Engine, Engine Series, Loading Capacity, Lifting Height, Mast Type, Power Type, Tire, Fork Length, and Attachment. Missing values display as `N/A`.
 
-The modal query is ownership-restricted: the logged-in user can only load client details whose `salesman_id` matches their account. The `clientId` Livewire property is locked against browser-side mutation.
+The modal uses role-based access rules:
+
+- Admin (`role = 1`) can view every client record from the Admin Dashboard.
+- Super Admin (`role = 0`) can view every client record.
+- Salesmen and other non-admin roles remain ownership-restricted and can only load client details whose `salesman_id` matches their account.
+- Unauthenticated users cannot load client information.
+
+Previously, the shared modal always applied `salesman_id = Auth::id()`. This incorrectly blocked Admin and Super Admin accounts from viewing clients owned by salesmen, even though those clients appeared in their dashboard tables. The query now applies the ownership condition only to non-admin roles.
+
+The `clientId` Livewire property remains locked against browser-side mutation.
+
+Regression coverage in `tests/Feature/ViewClientDetailsTest.php` verifies owner access, cross-salesman denial, full Admin access, and full Super Admin access. The focused suite passes with 5 tests and 22 assertions.
 
 No migration was required. A database-portable full-name search condition was also added to the Salesman page so it works on both MySQL and SQLite test environments.
